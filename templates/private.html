@@ -1,0 +1,380 @@
+{% extends 'masterpage/index-1.html' %}
+{% block title3 %} Private Detail {% endblock %}
+{% load static %}
+<!--{% load crispy_forms_tags %}-->
+{% block content %}
+
+
+<div class="content-wrapper">
+    <section class="content-header">
+        <div class="row">
+            <div class="col-md-4">
+                <h5 class="card-title">Manage Private Window Details</h5>
+            </div>
+            <div class="col-md-2" >
+                <div style="text-align-last: center; padding-top:12px; " >
+                    <button id="download_button" type="button" onclick="DownloadModel({{order.id}})" class="btn btn-success btn-light" style="
+                    color: green; border: green solid 1.7px; padding: 6px 17px;" ><i class="fa fa-download mr-1" style="font-weight: bolder;" ></i> DOWNLOAD</button>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div style="text-align-last: center; padding-top:12px; " >
+                    <button type="button" onclick="opensubModel()" class="btn btn-success btn-light" style="
+                    color: blue; border: blue solid 1.7px; padding: 6px 17px;" ><i class="fa fa-plus" style="font-weight: bolder;" ></i> ADD PHOTOS/VIDEOS</button>
+                </div>
+            </div>
+            <div class="col-md-3" style=" padding-top:12px; " >
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="javascript:void(0)"><i class="fa fa-dashboard mr-1"></i> Private</a></li>
+                <li class="breadcrumb-item"><a href="/view/">Window</a></li>
+                <li class="breadcrumb-item active">Private ID :{{order.id}}</li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Main content -->
+    <section class="content" style="min-height: 220px !important;" >
+      <div class="row">
+		  <div class="col-12">
+		    <div class="box">
+              <div class="box-body">
+				<div class="table-responsive">
+					<table class="table text-center" style="color: black !important;" >
+						<thead>
+							<tr>
+                                <th>Date</th>
+                                <th>Description</th>
+                                <th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+                                <td>{{order.date_name}}</td>
+                                <td>{{order.private_description}}</td>
+                                <td>
+                                    <a href="javascript:void(0)" onclick="updateModel({{order.id}})" class="bg-info mr-2">
+                                        <span class="label label-success">
+                                            Edit
+                                        </span>
+                                    </a>
+                                    <a href="javascript:void(0)" onclick="Delete({{order.id}})" class="bg-info ml-2">
+                                        <span class="label label-danger">
+                                            Delete
+                                        </span>
+                                    </a>
+                                    <a href="javascript:void(0)" style="display:none;" id="drive_url" class="bg-info ml-2" target="_blank">
+                                        <span class="label label-info">
+                                            Drive Url
+                                        </span>
+                                    </a>
+                                    <a href="javascript:void(0)" id='delete_button' style="display:none;" onclick="Delete_drive()" class="bg-info ml-2">
+                                        <span class="label label-warning">
+                                            Delete Drive
+                                        </span>
+                                    </a>
+    					        </td>
+    					    </tr>
+						</tbody>
+					</table>
+				  </div>
+              </div>
+            </div>
+		  </div>
+	  </div>
+    </section>
+	<section class="content" style="min-height: 220px !important; display:none;" id="section_div" >
+      <div class="row">
+		  <div class="col-12">
+		    <div class="box">
+              <div class="box-body">
+				<div class="table-responsive">
+					<table class="table text-center" style="color: black !important;" >
+						<thead>
+							<tr>
+                                <th>Video Id</th>
+                                <th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+					    {% for i in lists %}
+					        {% if i.type == "video" %}
+        					    <tr>
+        					        <td>{{i.id}}</td>
+        					        <td>
+                                        <a href="javascript:void(0)" onclick="Delete_1({{i.id}})" class="bg-info ml-2">
+                                            <span class="label label-danger">
+                                                Delete
+                                            </span>
+                                        </a>
+        					        </td>
+        					    </tr>
+        					    {% endif %}
+    					    {% endfor %}
+					    </tbody>
+					</table>
+				</div>
+              </div>
+            </div>
+		  </div>
+	  </div>
+    </section>
+
+
+    <section class="content">
+        <div class="row">
+            {% for i in lists %}
+		    <div class="col-12 col-lg-6 col-xl-3">
+    		    <div class="box">
+                    <div class="box-body">
+                        <div class="product-img" >
+                            <span id="img-{{i.id}}"></span>
+                            <div id="check_value{{i.id}}">
+
+                            </div>
+        					<div class="pro-img-overlay" id="action{{i.id}}">
+        					    <a href="javascript:void(0)" onclick="openphotoModel({{i.id}})" class="bg-info" style="width: auto !important; padding: 10px 25px !important; margin: 0; margin-top: 50px !important;" >View</a>
+        					    <a href="javascript:void(0)" onclick="Delete_1({{i.id}})" class="bg-danger" style="width: auto !important; padding: 10px 25px !important; margin: 0; margin-top: 50px !important;" >Delete</a>
+    					    </div>
+    				    </div>
+                    </div>
+                </div>
+    	    </div>
+    	    {% endfor %}
+        </div>
+    </section>
+
+</div>
+
+<div class="modal center-modal fade" id="categoryModal" tabindex="-1">
+  <div class="modal-dialog">
+	<div class="modal-content">
+	  <div class="modal-header">
+		<h5 class="modal-title " id="add_cat" style="display: none;" >ADD DETAILS</h5>
+		<h5 class="modal-title " id="edit_cat" style="display: none;" >EDIT DETAILS</h5>
+		<button type="button" class="close" data-dismiss="modal">
+		  <span aria-hidden="true">&times;</span>
+		</button>
+	  </div>
+	  <div class="modal-body">
+        <form method="POST" id="Addcategory" enctype="multipart/form-data" action="/view/">
+          <input type="hidden" name="id" id="id" value="" />
+          <div class="form-group">
+            <div class="row">
+              <div class="col-sm-12">
+                {{ m.date_name|as_crispy_field }}
+              </div>
+                <div class="form-group col-md-6 mb-3">
+
+              <div id="div_id_catname_id" class="form-group">
+                <label for="id_catname_id" class=" requiredField">
+                  Category
+                </label>
+                <div class="">
+                  <select name="catname_id" onchange="getsubcat(this.value)" class="select form-control" required
+                    id="id_catname_id">
+                    <option selected>Select Category</option>
+
+                    {% for i in cat_obj %}
+                    <option value="{{i.id}}">{{i.cat_name}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+<!--              <div class="col-sm-12">-->
+<!--                {{ m.date_name|as_crispy_field }}-->
+<!--              </div>-->
+<!--              <div class="col-sm-12">-->
+<!--                {{ m.date_name|as_crispy_field }}-->
+<!--              </div>-->
+
+            </div>
+          </div>
+          {% csrf_token %}
+          <div class="modal-footer">
+            <button type="button" class="btn btn-dark" data-dismiss="modal"><span class="text-light">Close</span></button>
+            <button type="submit" class="btn btn-primary ">Submit</button>
+          </div>
+        </form>
+      </div>
+	</div>
+  </div>
+</div>
+
+<div class="modal center-modal fade" id="subcategoryModal" tabindex="-1">
+  <div class="modal-dialog">
+	<div class="modal-content">
+	  <div class="modal-header">
+		<h5 class="modal-title ">ADD PHOTOS/VIDEOS</h5>
+		<button type="button" class="close" data-dismiss="modal">
+		  <span aria-hidden="true">&times;</span>
+		</button>
+	  </div>
+	  <div class="modal-body">
+        <form method="POST" id="Addcategory" enctype="multipart/form-data">
+          <input type="hidden" name="id" id="id" value="" />
+          <div class="form-group">
+            <div class="row">
+              <div class="col-sm-12">
+                  <input type="file" multiple name="private_img" id="private_img" >
+                  <input type="hidden" id="p_id" name="p_id" value="{{order.id}}" />
+              </div>
+            </div>
+          </div>
+          {% csrf_token %}
+          <div class="modal-footer">
+            <button type="button" class="btn btn-dark" data-dismiss="modal"><span class="text-light">Close</span></button>
+            <button type="submit" class="btn btn-primary ">Submit</button>
+          </div>
+        </form>
+      </div>
+	</div>
+  </div>
+</div>
+
+<div class="modal center-modal fade" id="photoModal" tabindex="-1">
+  <div class="modal-dialog" style="left: 42%;" id="modal_idd">
+	<div class="modal-content" id="modal_openn">
+	    <img src="" alt="" style="width: 160%;" id="photo_id">
+	</div>
+  </div>
+</div>
+
+
+<script>
+
+  function openModel() {
+    $('[name="id"]').val("");
+    $("#Addcategory")[0].reset();
+    $("#add_cat").css('display','block');
+    $("#edit_cat").css('display','none');
+    // document.getElementById("id_private_img").required = true;
+    $('#categoryModal').modal();
+
+  };
+  function opensubModel() {
+    $('#subcategoryModal').modal();
+
+  };
+  function openphotoModel(id) {
+
+      var src_value = $('#photo-'+ id +'').attr('src');
+      var photo_ele = document.getElementById("photo_id");
+      photo_ele.src = src_value;
+      $("#video_id_id").css('display','none');
+      $("#photo_id").css('display','block');
+      $('#photoModal').modal();
+
+  };
+
+    function DownloadModel(id) {
+        let confirmAction = confirm("Download Information");
+        if (confirmAction) {
+            $('#download_button').prop('disabled', true);
+            $('#download_button').css('cursor', 'wait');
+            $.ajax({
+                url: '/download_data/',
+                method: 'POST',
+                data: { 'id': id, csrfmiddlewaretoken: '{{csrf_token}}', 'check':1 },
+                dataType: 'JSON',
+
+                success: function (data) {
+                    if(data.status==true){
+                        alert('Drive Uploaded Successfully.....')
+                        $('#delete_button').css('cursor', 'pointer');
+                        $('#drive_url').attr('href', data.url);
+                        $("#drive_url").css('display','inline');
+                        $("#delete_button").css('display','inline');
+                        $('#download_button').css('cursor', 'not-allowed');
+                    }
+                    else{
+
+                    }
+
+              },
+
+              error: function () {
+                alert('Something is Wrong');
+              }
+            });
+        }
+    }
+    function Delete_drive() {
+        let confirmAction = confirm("Delete Drive");
+        if (confirmAction) {
+            $('#delete_button').prop('disabled', true);
+            $('#delete_button').css('cursor', 'wait');
+            var inputValue = document.getElementById('drive_url').getAttribute('href');
+            $.ajax({
+                url: '/download_data/',
+                method: 'POST',
+                data: {csrfmiddlewaretoken: '{{csrf_token}}', 'check': 0 , 'folder_id': inputValue},
+                dataType: 'JSON',
+
+                success: function (data) {
+                    if(data.status==true){
+                        alert('Drive Delete Successfully.....')
+                        $('#drive_url').attr('href', '');
+                        $('#download_button').prop('disabled', false);
+                        $('#delete_button').css('display','none');
+                        $("#drive_url").css('display','none');
+                        $("#download_button").css('display','inline');
+                        $('#download_button').css('cursor', 'pointer');
+                    }
+                    else{
+
+                    }
+
+              },
+
+              error: function () {
+                alert('Something is Wrong');
+              }
+            });
+        }
+    }
+    function updateModel(id) {
+        $.ajax({
+          url: '/updatepra/',
+          method: 'POST',
+          data: { 'id': id, csrfmiddlewaretoken: '{{csrf_token}}' },
+          dataType: 'JSON',
+
+          success: function (data) {
+            $('[name="id"]').val(data.id);
+            $('#id_date_name').val(data.date_name);
+            $('#id_private_description').val(data.private_description);
+            // document.getElementById("id_private_img").required = false;
+            $("#add_cat").css('display','none');
+            $("#edit_cat").css('display','block');
+            $('#categoryModal').modal();
+          },
+
+          error: function () {
+            alert('Something is Wrong');
+          }
+        });
+    }
+
+    function Delete(id){
+        let confirmAction = confirm("You want to delete Private Item?")
+        if (confirmAction){
+            window.location.href = "/remove_pri/" + id + "";
+        }
+        else{
+
+        }
+    }
+    function Delete_1(id){
+        let confirmAction = confirm("You want to delete Photo?")
+        if (confirmAction){
+            window.location.href = "/remove_photo/" + id + "";
+        }
+        else{
+
+        }
+    }
+
+</script>
+{% endblock %}

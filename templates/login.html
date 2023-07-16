@@ -1,0 +1,99 @@
+{% extends 'index.html' %}
+
+{% load static %}
+{% block title %} {{Title}} Login {% endblock %}
+{% block content %}
+
+<div style="background-color: #ffffff;
+            margin: 0;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            z-index: 99;
+            top: 0;
+            left: 0;" id="login_loader">
+    <img src="{% static 'admin/folder/images/loader.gif' %}" style="max-height: 130px;" alt="loader">
+</div>
+
+<div class="col-lg-4 col-md-8 col-12 centerr marginn" id="temp"  >
+	<div style="height: auto !important;" >
+	  <div class="login-box-body" style="border-top-left-radius: 0px !important;border-bottom-left-radius: 0px !important;" >
+	      <div class="row pbb-80">
+			<div class="col-12">
+			    <div class="col-md-8 nonee display-block mx-auto display-flex h-100"
+                    style=" justify-content: center; display: none; align-items: center;">
+			        <a href="/" >
+                        <img class="width-255" src="{% static 'admin/folder/images/music_club.png' %}" alt="">
+                    </a>
+                </div>
+				<h3 class="text-center pb-5">Welcome <span class="nonne" > To Music Club </span></h3>
+				<p class="login-box-msg ">Please Login to {{Title}} Dashboard</p>
+
+            </div>
+        </div>
+
+		<form method="POST">
+		  <div class="form-group has-feedback">
+		    <label for="exampleInputEmail1">Username</label>
+			<input type="text" name="username" class="form-control rounded" autocomplete="off" id="exampleInputEmail1" placeholder="Enter Email/Username">
+			<span class="icon-adj fa fa-envelope form-control-feedback"></span>
+		  </div>
+		  <div class="form-group has-feedback">
+		    <label for="exampleInputPassword1">Password</label>
+			<input  type="password" name="password" class="form-control rounded" autocomplete="off" id="exampleInputPassword1"  placeholder="Enter Password" >
+			<span class="icon-adj fa fa-lock form-control-feedback"></span>
+		  </div>
+	        {% if messages %}
+
+                {% for message in messages %}
+
+                    <div class="row">
+                        <div class="col-12" >
+                            <div class="fog-pwd text-center">
+                                <div style="border-color: red !important;
+                                            color: red !important;
+                                            background-color: #ff5e5929 !important;"
+                                class="alert alert-info">
+                                {{ message }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% endfor %}
+
+            {% endif %}
+		  <div class="row">
+			  <div class="col-12"  >
+				 <div class="fog-pwd text-right">
+					<a href="/admin/password-reset/" class="text-danger"><i class="fa fa-lock"></i> Forgot Your
+                    Password ?</a><br>
+				  </div>
+			  </div>
+	      </div>
+		  <div class="row">
+			<div class="col-12 text-center">
+			  <button type="submit" class="btn btn-info btn-block margin-top-10">Login</button>
+			</div>
+			<!-- /.col -->
+		  </div>
+		  <input  type="hidden" id="checkauthent" value='0' >
+		  {% csrf_token %}
+		</form>
+
+
+		<!-- /.social-auth-links -->
+
+
+
+	  </div>
+	  <!-- /.login-box-body -->
+	</div>
+	<!-- /.login-box -->
+
+</div>
+
+{% endblock %}

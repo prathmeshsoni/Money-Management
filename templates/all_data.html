@@ -1,0 +1,277 @@
+{% extends 'masterpage/index-1.html' %}
+{% block title3 %} Filter {{main}} {% endblock %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+
+<!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="col-md-12" style="padding: 0;border-bottom: 2px solid rgba(120,130,140,.13);margin-bottom: 25px; display:flex;" >
+                <div class="col-12 col-lg-6 col-xl-4">
+                    <div class="box">
+                        <div class="box-body">
+                            <div class="text-center">
+                                <h3 class="text-muted db">
+                                    Filters
+                                </h3>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% if main == 'account' %}
+                
+                    <div class="col-12 col-lg-6 col-xl-6">
+                        <div class="box">
+                            <div class="box-body">
+                                <div class="text-center">
+                                    <a href="javascript:void(0)">
+                                        <h3 class=" db mr-2" style="width: auto; float: left;">
+                                            <span>
+                                                <i style="margin-right: 20px;" class="fa fa-info-circle" aria-hidden="true"></i>
+                                            </span>
+                                            {% if main == 'account' %}
+                                                Available Balance :
+                                            {% endif %}
+                                        </h3>
+                                        <div style="padding-top: 8px;" >
+                                            {% if main == 'account' %}
+                                                <input type="text" style="width: 70px !important; font-weight: bold; font-size: 15px; font-family: cursive; float: left;" id="balance-3" class="form-control" readonly />
+                                            {% endif %}
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        {% if main == 'all' %}
+            <div class="row">
+                {% for i in list1 %}
+                    <div class="col-12 col-lg-6 col-xl-3">
+                        <div class="box">
+                            <div class="box-body">
+                                <div>
+                                    <a href="/view/type/{{i.type_name}}/">
+                                        <h3 class="box-title mb-0">
+                                            <span>
+                                                <i style="margin-right: 20px;" class="fa fa-info-circle" aria-hidden="true"></i>
+                                            </span>
+                                             {{i.type_name}}
+                                         </h3>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="row">
+                {% for i in list2 %}
+                    <div class="col-12 col-lg-6 col-xl-3">
+                        <div class="box">
+                            <div class="box-body">
+                                <div>
+                                    <a href="/view/account/{{i.account_name}}/">
+                                        <h3 class="box-title mb-0">
+                                            <span>
+                                                <i style="margin-right: 20px;" class="fa fa-info-circle" aria-hidden="true"></i>
+                                            </span>
+                                            {{i.account_name}}
+                                         </h3>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="row">
+                {% for i in list3 %}
+                    <div class="col-12 col-lg-6 col-xl-3">
+                        <div class="box">
+                            <div class="box-body">
+                                <div>
+                                    <a href="/view/category/{{i.cat_name}}/">
+                                        <h3 class="box-title mb-0">
+                                            <span>
+                                                <i style="margin-right: 20px;" class="fa fa-info-circle" aria-hidden="true"></i>
+                                            </span>
+                                            {{i.cat_name}}
+                                         </h3>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="row">
+                {% for i in list %}
+                    <div class="col-12 col-lg-6 col-xl-3">
+                        <div class="box">
+                            <div class="box-body">
+                                <div>
+                                    <a href="
+                                    {% if main == 'account' %}
+                                        {{i.account_name}}/
+                                    {% else %}
+                                        {% if main == 'type' %}
+                                            {{i.type_name}}/
+                                        {% else %}
+                                            {{i.cat_name}}/
+                                        {% endif %}
+                                    {% endif %}
+                                    ">
+                                        <h3 class="box-title mb-0">
+                                            <span>
+                                                <i style="margin-right: 20px;" class="fa fa-info-circle" aria-hidden="true"></i>
+                                            </span>
+                                            {% if main == 'account' %}
+                                                {{i.account_name}}: {{i.amount}} ₹
+                                            {% else %}
+                                                {% if main == 'type' %}
+                                                    {{i.type_name}}
+                                                {% else %}
+                                                    {{i.cat_name}}
+                                                {% endif %}
+                                            {% endif %}
+                                         </h3>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </section>
+<!-- /.content -->
+</div>
+
+<!-- sample modal content -->
+<div class="modal fade bs-example-modal-lg" id="categoryModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title " id="add_cat" style="display: none;" >ADD DETAILS</h5>
+                <h5 class="modal-title " id="edit_cat" style="display: none;" >EDIT DETAILS</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" id="Addcategory" enctype="multipart/form-data" action="/view/">
+                    <input type="hidden" name="id" id="id" value="" />
+                    <div class="form-group">
+                        <div class="row">
+                            <div id="div_id_typename_id" class="col-md-12">
+                                <label for="id_typename_id" class=" requiredField">
+                                    Types
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <div class="form-group">
+                                    <select name="type" class="select form-control" required
+                                        id="id_typename_id">
+                                        <option selected value="">Select Type</option>
+                                        {% for i in type_obj %}
+                                          <option value="{{i.id}}" >{{i.type_name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                    {{ m.date_name|as_crispy_field }}
+                                </div>
+
+                            <div id="div_id_accountname_id" class="col-md-6">
+                                <label for="id_accountname_id" class=" requiredField">
+                                    Accounts
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <div class="form-group">
+                                    <select name="account" class="select form-control" required
+                                        id="id_accountname_id">
+                                        <option selected value="">Select Account</option>
+                                        {% for i in account_obj %}
+                                          <option value="{{i.id}}" >{{i.account_name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div id="div_id_catname_id" class="col-md-6">
+                                <label for="id_catname_id" class=" requiredField">
+                                    Categories
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <div class="form-group">
+                                    <select name="category" class="select form-control" required
+                                        id="id_catname_id">
+                                        <option selected value="">Select Category</option>
+                                        {% for i in cat_obj %}
+                                          <option value="{{i.id}}" >{{i.cat_name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+<!--                                    <div id="div_id_from_id" class="col-md-6">-->
+<!--                                        <label for="id_from_id" class=" requiredField">-->
+<!--                                            From-->
+<!--                                            <span class="text-danger">*</span>-->
+<!--                                        </label>-->
+<!--                                        <div class="form-group">-->
+<!--                                            <select name="from_id" class="select form-control" required-->
+<!--                                                id="id_from_id">-->
+<!--                                                <option selected value="">Select Account</option>-->
+<!--                                                {% for i in account_obj %}-->
+<!--                                                  <option value="{{i.id}}" >{{i.account_name}}</option>-->
+<!--                                                {% endfor %}-->
+<!--                                            </select>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                    <div id="div_id_to_id" class="col-md-6">-->
+<!--                                        <label for="id_to_id" class=" requiredField">-->
+<!--                                            To-->
+<!--                                            <span class="text-danger">*</span>-->
+<!--                                        </label>-->
+<!--                                        <div class="form-group">-->
+<!--                                            <select name="to_id" class="select form-control" required-->
+<!--                                                id="id_to_id">-->
+<!--                                                <option selected value="">Select Account</option>-->
+<!--                                                {% for i in account_obj %}-->
+<!--                                                  <option value="{{i.id}}" >{{i.account_name}}</option>-->
+<!--                                                {% endfor %}-->
+<!--                                            </select>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+
+                            <div class="col-md-12">
+                                {{ m.amount|as_crispy_field }}
+                            </div>
+
+                            <div class="col-md-12">
+                                {{ m.note|as_crispy_field }}
+                            </div>
+                        </div>
+                    </div>
+                    {% csrf_token %}
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-dark" data-dismiss="modal"><span class="text-light">Close</span></button>
+                        <button type="submit" class="btn btn-primary ">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
