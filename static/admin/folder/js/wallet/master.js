@@ -52,18 +52,42 @@ function Delete(id){
                         window.location.href = "/" + category + "/";
                     }
                     else if (data.exists === "orderexist") {
-                        $('#dd').text('Can\'t Delete This (' + data.name + ') ❌');
-                        $('#dd_2').css('display', 'none');
-                        $('#dd_1').css('display', 'none');
-                        $('#dd').css('display', 'block');
+                        // $('#dd').text('Can\'t Delete This (' + data.name + ') ❌');
+                        // $("#alerttopright_").fadeToggle(350);
+                        // $("#alerttopright_").css('display', 'block');
+                        // $("#alerttopright").css('display', 'none');
+                        // $("#alerttopright_1").css('display', 'none');
+                        // $.toast({
+                        //     heading: 'Welcome to my Fab Admin',
+                        //     text: 'Use the predefined ones, or specify a custom position object.',
+                        //     position: 'top-right',
+                        //     loaderBg: '#ff6849',
+                        //     icon: 'success',
+                        //     hideAfter: 3500,
+                        //     stack: 6
+                        // });
+                         $.toast({
+                            heading: 'Failed !!!',
+                            text: 'Can\'t Delete This (' + data.name + ') !!!',
+                            position: 'top-right',
+                            loaderBg: '#fc4b6c !important',
+                            icon: 'error',
+                            hideAfter: 5500
+
+                        });
 
                     }
                     else if (data.exists === "done") {
                         $('#filter_' + id + '').remove();
-                        $('#dd_1').text('(' + data.name + ') Delete Successfully ✔')
-                        $('#dd_2').css('display', 'none');
-                        $('#dd').css('display', 'none');
-                        $('#dd_1').css('display', 'block');
+                        $.toast({
+                            heading: 'Success ',
+                            text: '(' + data.name + ') Delete Successfully ✔',
+                            position: 'top-right',
+                            loaderBg: '#fc4b6c !important',
+                            icon: 'success',
+                            hideAfter: 5500
+
+                        });
                         $('#confirm_delete').val(1);
 
                     }

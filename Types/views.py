@@ -30,7 +30,7 @@ def cat_page(request):
                     return redirect('/type/')
                 else:
                     d.save()
-                    messages.success(request, 'Data Updated Successfully ✔')
+                    messages.warning(request, 'Data Updated Successfully ✔')
                     return redirect('/type/')
             else:
                 if existing_records.exists():

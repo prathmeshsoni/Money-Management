@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-hpxpyx1s9-dl7+h6mdwf^69uy6kz7#jf2&l_k*2al&%=v9!si@'
 
 # SECURITY WARNING: don't run with debug turned on in production! True False
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -85,19 +85,25 @@ WSGI_APPLICATION = 'wallet.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': ENGINE,
+#         'NAME': NAME,
+#         'HOST': HOST,
+#         'USER': USER,
+#         'PASSWORD': PASSWORD,
+#     },
+#     'OPTIONS': {
+#        'init_command': 'SET default_storage_engine=INNODB',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': ENGINE,
-        'NAME': NAME,
-        'HOST': HOST,
-        'USER': USER,
-        'PASSWORD': PASSWORD,
-    },
-    'OPTIONS': {
-       'init_command': 'SET default_storage_engine=INNODB',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

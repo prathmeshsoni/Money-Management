@@ -33,7 +33,7 @@ def cat_page(request):
                     return redirect('/account/')
                 else:
                     d.save()
-                    messages.success(request, 'Data Updated Successfully ✔')
+                    messages.warning(request, 'Data Updated Successfully ✔')
                     return redirect('/account/')
             else:
                 if existing_records.exists():

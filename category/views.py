@@ -32,7 +32,7 @@ def cat_page(request):
                     return redirect('/category/')
                 else:
                     d.save()
-                    messages.success(request, 'Data Updated Successfully ✔')
+                    messages.warning(request, 'Data Updated Successfully ✔')
                     return redirect('/category/')
             else:
                 if existing_records.exists():

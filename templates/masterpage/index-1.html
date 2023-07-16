@@ -33,6 +33,7 @@
     	<link rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/flag-icon/css/flag-icon.css' %}">
     	<link rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/material-design-iconic-font/css/materialdesignicons.css' %}">
     	<link rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/simple-line-icons-master/css/simple-line-icons.css' %}">
+    	<link rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.css' %}">
 
     </head>
     <body class="hold-transition skin-blue-light sidebar-mini" style="min-height: 100% !important; height: 100% !important;" >
@@ -73,7 +74,6 @@
                       <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding: 20px;" >
                             <i class="fa fa-cog " ></i>
-                          <!--<img src="{% static 'admin/folder/images/user5-128x128.jpg" class="user-image rounded-circle" alt="User Image">-->
                         </a>
                         <ul class="dropdown-menu scale-up" style="width: 240px; background: rgba(0, 0, 0, 0.4);" >
                           <li class="user-body">
@@ -179,89 +179,70 @@
     </section>
             </aside>
 
-
-            <div class="content-wrapper">
-                <section class="content-header">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <h5 class="card-title">
-                                {% if cat_master %}
-                                    Manage {{category}}
-                                {% else %}
-                                    {% if private_master %}
-                                        Manage Transaction
-                                    {% else %}
-                                        Filter Master
-                                    {% endif %}
-                                {% endif %}
-                            </h5>
-                        </div>
-                        <div class="col-md-3">
-                            <div style="text-align-last: center; padding-top:12px; " >
-                                <div class="alert alert-danger" id="dd" style="display: none">
-                                </div>
-                                <div class="alert alert-success" id="dd_1" style="display: none">
-                                </div>
-                                {% if messages %}
-                                    {% for message in messages %}
-                                        <div id="dd_2"
-                                            {% if message.tags == 'error' %}
-                                                class="alert alert-danger"
-                                            {% else %}
-                                                class="alert alert-info"
-                                            {% endif %}
-                                        >
-
-                                            {{ message }}
-                                        </div>
-                                    {% endfor %}
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div style="text-align-last: center; padding-top:12px; " >
-                                <button type="button" onclick="openModel()" class="btn btn-sm btn-light" style="
-                                color: blue; border: blue solid 1.7px; padding: 6px 17px;" ><i class="fa fa-plus" style="font-weight: bolder;" ></i>
+            {% if search %}
+            {% else %}
+                <div class="content-wrapper">
+                    <section class="content-header">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h5 class="card-title">
                                     {% if cat_master %}
-                                        ADD {{category}}
-                                    {% else %}
-                                        ADD Transaction
-                                    {% endif %}
-                                </button>
-                            </div>
-                        </div>
-                        <div class="col-md-4" style=" padding-top:12px; " >
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="/admin/"><i class="fa fa-dashboard"></i> Home</a></li>
-                                <li class="breadcrumb-item">
-                                    <a href="/balance/">
-                                        {% if cat_master %}
-                                            Master
-                                        {% else %}
-                                            {% if private_master %}
-                                                Management
-                                            {% else %}
-                                                Filter Master
-                                            {% endif %}
-                                        {% endif %}
-                                    </a>
-                                </li>
-                                <li class="breadcrumb-item active text-capitalize">
-                                    {% if cat_master %}
-                                        {{category}}
+                                        Manage {{category}}
                                     {% else %}
                                         {% if private_master %}
-                                            Transaction
+                                            Manage Transaction
                                         {% else %}
-                                            {{main}}
+                                            Filter Master
                                         {% endif %}
                                     {% endif %}
-                                </li>
-                            </ol>
+                                </h5>
+                            </div>
+                            <div class="col-md-3">
+                            </div>
+                            <div class="col-md-2">
+                                <div style="text-align-last: center; padding-top:12px; " >
+                                    <button type="button" onclick="openModel()" class="btn btn-sm btn-light" style="
+                                    color: blue; border: blue solid 1.7px; padding: 6px 17px;" ><i class="fa fa-plus" style="font-weight: bolder;" ></i>
+                                        {% if cat_master %}
+                                            ADD {{category}}
+                                        {% else %}
+                                            ADD Transaction
+                                        {% endif %}
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-4" style=" padding-top:12px; " >
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="/admin/"><i class="fa fa-dashboard"></i> Home</a></li>
+                                    <li class="breadcrumb-item">
+                                        <a href="/balance/">
+                                            {% if cat_master %}
+                                                Master
+                                            {% else %}
+                                                {% if private_master %}
+                                                    Management
+                                                {% else %}
+                                                    Filter Master
+                                                {% endif %}
+                                            {% endif %}
+                                        </a>
+                                    </li>
+                                    <li class="breadcrumb-item active text-capitalize">
+                                        {% if cat_master %}
+                                            {{category}}
+                                        {% else %}
+                                            {% if private_master %}
+                                                Transaction
+                                            {% else %}
+                                                {{main}}
+                                            {% endif %}
+                                        {% endif %}
+                                    </li>
+                                </ol>
+                            </div>
                         </div>
-                    </div>
-                </section>
-
+                    </section>
+            {% endif %}
             {% block content %}
             {% endblock %}
 
@@ -311,6 +292,7 @@
     	<script src="{% static 'admin/folder/js/pages/data-table.js' %}"></script>
 
     	<script src="{% static 'admin/folder/assets/vendor_components/datatable/datatables.min.js' %}"></script>
+    	<script src="{% static 'admin/folder/assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js' %}"></script>
 
         {% if cat_master %}
             <script src="{% static 'admin/folder/js/wallet/master.js' %}"></script>
@@ -318,6 +300,46 @@
     	    <script src="{% static 'admin/folder/js/wallet/management.js' %}"></script>
         {% endif %}
 
+        {% if messages %}
+            <script>
+                {% for message in messages %}
+                    {% if message.tags == 'error' %}
+                        $.toast({
+                                heading: 'Failed ',
+                                text: '{{message}}',
+                                position: 'top-right',
+                                loaderBg: '#fc4b6c !important',
+                                icon: 'error',
+                                hideAfter: 5500
+
+                        });
+                    {% else %}
+                        $.toast({
+                                {% if message.tags == 'success' %}
+                                    heading: 'Added',
+                                {% else %}
+                                    heading: 'Updated',
+                                {% endif %}
+                                text: '{{message}}',
+                                position: 'top-right',
+                                loaderBg: '#fc4b6c !important',
+                                icon: 'success',
+                                hideAfter: 6000
+
+                        });
+                    {% endif %}
+                {% endfor %}
+            </script>
+        {% endif %}
+        <script>
+            $("#showtopright").click(function() {
+                $("#alerttopright").fadeToggle(350);
+            });
+            $(".myadmin-alert-click").click(function(event) {
+                $(this).fadeToggle(350);
+                return false;
+            });
+        </script>
         {% if request.session.private_admin %}
             <script>
                  window.onload = function exampleFunction(){

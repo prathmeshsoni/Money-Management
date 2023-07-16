@@ -104,7 +104,7 @@ def admin_private(request):
                     return redirect('/view/')
 
                 except:
-                    usee = None;
+                    usee = None
 
                 user1 = authenticate(username=username, password=password)
 
@@ -118,11 +118,8 @@ def admin_private(request):
                 request.session['login_time'] = datetime.now().timestamp()
                 return redirect('/view/')
 
-    # elif request.method == 'GET':
-    return render(request, 'login.html', {"checkcon": 10, "Title": "Private "})
 
-    # elif 'username' in request.session:
-    #     return redirect('/user/dashboard/')
+    return render(request, 'login.html', {"checkcon": 10, "Title": "Private "})
 
 
 # Private LogOut
@@ -153,7 +150,7 @@ def some_view(request):
     return check
 
 
-# View All Details
+# View All Transaction
 def admin_private_view(request):
     check = 0
     user2 = request.session.get('private_admin')
@@ -200,7 +197,7 @@ def admin_private_view(request):
                         final_amount_1 = int(account_list[0]['amount']) + int(amount_txt)
                         msg = f'\n\nDear UPI User, ur A/c {account_txt} Credited by Rs.{amount_txt} on {date_text} for {note_txt} Avl Bal Rs:{final_amount_1} -{account_txt} Bank'
 
-                    sent_massage(msg)
+                    # sent_massage(msg)
 
                 private_data = d.save(commit=False)
                 private_data.user = user_obj
@@ -253,8 +250,6 @@ def sent_massage(msg):
         body=msg,
         from_='+15734982530',
         to='+919157379996'
-        # to='+919016755950'
-
     )
 
 
@@ -267,7 +262,7 @@ def check_balance(request):
     msg = '\n\nAvailable Balance : \n\n'
     for l in account_list:
         msg = msg + l['account_name'] + f' Rs: ' + str(l['amount']) + '\n'
-    sent_massage(msg)
+    # sent_massage(msg)
     return redirect('/view/')
 
 
@@ -301,47 +296,6 @@ def check_avil(user_obj2, a_name):
     return amount_list
 
 
-# View All Photo, Add Photo
-# def private_view(request, hid):
-#     check = some_view(request)
-#     if int(check) == 1:
-#         # call this fun logout_private_admin()
-#         return redirect('/logout/')
-#     else:
-#         if request.method == 'POST':
-#             id = request.POST.get("p_id")
-#             myfile = request.FILES.getlist("private_img")
-#
-#             for f in myfile:
-#                 chek = str(f).split('.')[-1]
-#                 if (chek == "mp4"):
-#                     type = "video"
-#                 else:
-#                     type = "photo"
-#                 pro_obj = Private_SubModel()
-#                 pri_id = ManageModel.objects.get(id=id)
-#                 pro_obj.private_id = pri_id
-#                 pro_obj.private_img = f
-#                 pro_obj.type = type
-#                 pro_obj.save()
-#
-#             return redirect(f"/view/{hid}")
-#         else:
-#             if 'private_admin' in request.session:
-#                 user2 = request.session.get('private_admin')
-#                 order = ManageModel.objects.get(id=hid)
-#                 if order.user.username == user2:
-#                     pro_list = Private_SubModel.objects.filter(private_id=hid)
-#                     d = ManageForm()
-#                     data = {'m': d, 'private_master': 'master', 'private_activee': 'private_masterr', 'lists': pro_list,
-#                             'order': order, "private_1": 0, "checkcon": 0}
-#                 else:
-#                     return redirect('/view/')
-#             else:
-#                 return redirect('/')
-#             return render(request, 'private.html', data)
-
-
 # Private Detail Function
 @api_view(['POST'])
 def updatepra(request):
@@ -351,8 +305,6 @@ def updatepra(request):
     return Response(serializer.data)
 
 
-#
-#
 # Delete Detail Fun
 def remove_pri(request, hid):
     if 'private_admin' in request.session:
@@ -541,74 +493,14 @@ def view_all(request, hid):
 
 def dd(request):
     return render(request, 'admin/account.html')
-#
-#
-# # Delete Photo Fun
-# def remove_photo(request, hid):
-#     if 'private_admin' in request.session:
-#         user2 = request.session.get('private_admin')
-#         obj = Private_SubModel.objects.get(id=hid)
-#         if obj.private_id.user.username == user2:
-#             jj = obj.private_id.id
-#             obj.delete()
-#             return redirect(f'/view/{jj}')
-#         else:
-#             return redirect('/view/')
-#     else:
-#         return redirect('/')
 
 
-#  if check_1 == 1:
-#                     lks = []
-#                     if str(type_txt).lower() == 'transfer'.lower():
-#                         account_txt = d.cleaned_data['from_account']
-#                         to_txt = d.cleaned_data['to_account']
-#                         lks.append(account_txt)
-#                         lks.append(to_txt)
-#                     else:
-#                         account_txt = d.cleaned_data['account']
-#                         lks.append(account_txt)
-#                     amount_list = []
-#                     user_id = request.session.get('private_id')
-#                     user_obj = User.objects.get(id=user_id)
-#                     for k in lks:
-#                         get_a = ManageModel.objects.filter(
-#                             Q(account=k) |
-#                             Q(to_account=k) |
-#                             Q(from_account=k) &
-#                             Q(user=user_obj)
-#                         )
-#                         total_amount = 0
-#                         for j in get_a:
-#                             tye = j.type.type_name
-#                             if str(tye).lower() == 'Expense'.lower():
-#                                 total_amount -= int(j.amount)
-#                             elif str(tye).lower() == 'Available'.lower() or str(tye).lower() == 'Income'.lower():
-#                                 total_amount += int(j.amount)
-#                             elif str(tye).lower() == 'transfer'.lower():
-#                                 if j.to_account.account_name.lower() == k:
-#                                     total_amount -= int(j.amount)
-#                                 else:
-#                                     total_amount += int(j.amount)
-#                         amount_list.append(total_amount)
-#
-#                     datetime_string = str(d.cleaned_data['date_name'])
-#                     from datetime import datetime
-#                     datetime_obj = datetime.strptime(datetime_string, "%Y-%m-%d %H:%M:%S%z")
-#                     date_txt = datetime_obj.strftime("%d %b %Y %I:%M %p")
-#                     amount_txt = d.cleaned_data['amount']
-#                     note_txt = d.cleaned_data['category']
-#                     if str(type_txt).lower() == 'income'.lower():
-#                         amount_list[0] += int(amount_txt)
-#                         msg = f'\n\nDear UPI User, ur A/c {account_txt} Credited by Rs.{amount_txt} on {date_txt} for {note_txt} Avl Bal Rs:{amount_list[0]} -{account_txt} Bank'
-#                     elif str(type_txt).lower() == 'expense'.lower():
-#                         amount_list[0] -= int(amount_txt)
-#                         msg = f'\n\nDear UPI User, ur A/c {account_txt} Debited for Rs.{amount_txt} by {date_txt} for {note_txt} Avl Bal Rs:{amount_list[0]} -{account_txt} Bank'
-#                     elif str(type_txt).lower() == 'transfer'.lower():
-#                         note_txt = d.cleaned_data['note']
-#                         to_account = d.cleaned_data['to_account']
-#                         amount_list[0] -= int(amount_txt)
-#                         amount_list[1] += int(amount_txt)
-#                         msg = f'\n\nDear UPI User, ur A/c {account_txt} To ur A/c {to_account} Transfer Rs.{amount_txt} on {date_txt} for {note_txt} Updated Bal of {account_txt} Rs:{amount_list[0]} - {to_account} Rs:{amount_list[1]}'
-#                     else:
-#                         msg = ''
+def search_page(request):
+    item = {
+        'search': 'search'
+    }
+    return render(
+        request,
+        'search-page.html',
+        item
+    )

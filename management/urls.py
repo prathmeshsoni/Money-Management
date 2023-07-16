@@ -6,6 +6,7 @@ urlpatterns = [
     path('', views.admin_private),
     path('ss/', views.dd),
     path('view/', views.admin_private_view),
+    path('search/', views.search_page),
     path('viewe/', views.viewes),
     path('view/<str:hid>/', views.view_all),
     path('balance/', views.check_balance),
