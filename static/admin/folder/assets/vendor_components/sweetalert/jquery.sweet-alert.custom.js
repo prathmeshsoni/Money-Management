@@ -6,39 +6,8 @@
 
     //examples 
     SweetAlert.prototype.init = function() {
-        
-    //Basic
-    $('#sa-basic').click(function(){
-        swal("Here's a message!");
-    });
 
-    //A title with a text under
-    $('#sa-title').click(function(){
-        swal("Here's a message!", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed lorem erat eleifend ex semper, lobortis purus sed.")
-    });
-
-    //Success Message
-    $('#sa-success').click(function(){
-        swal("Good job!", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed lorem erat eleifend ex semper, lobortis purus sed.", "success")
-    });
-
-    //Warning Message
-    $('#sa-warning').click(function(){
-        swal({   
-            title: "Are you sure?",   
-            text: "You will not be able to recover this imaginary file!",   
-            type: "warning",   
-            showCancelButton: true,   
-            confirmButtonColor: "#DD6B55",   
-            confirmButtonText: "Yes, delete it!",   
-            closeOnConfirm: false 
-        }, function(){   
-            swal("Deleted!", "Your imaginary file has been deleted.", "success"); 
-        });
-    });
-
-    //Parameter
-    $('#sa-params').click(function(){
+    $('[name="sa-params"]').click(function(){
         swal({   
             title: "Are you sure?",   
             text: "You will not be able to recover this imaginary file!",   
@@ -57,26 +26,6 @@
             } 
         });
     });
-
-    //Custom Image
-    $('#sa-image').click(function(){
-        swal({   
-            title: "Govinda!",   
-            text: "Recently joined twitter",   
-            imageUrl: "../../../images/avatar.png" 
-        });
-    });
-
-    //Auto Close Timer
-    $('#sa-close').click(function(){
-         swal({   
-            title: "Auto close alert!",   
-            text: "I will close in 2 seconds.",   
-            timer: 2000,   
-            showConfirmButton: false 
-        });
-    });
-
 
     },
     //init

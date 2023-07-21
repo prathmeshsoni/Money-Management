@@ -1,4 +1,4 @@
-<script src="../static/admin/folder/js/wallet/management.js"></script>{% extends 'masterpage/index-1.html' %}
+{% extends 'masterpage/index-1.html' %}
 {% block title3 %} Transaction Window {% endblock %}
 {% load static %}
 {% load crispy_forms_tags %}
@@ -81,7 +81,7 @@
                 <div class="box">
                   <div class="box-body">
                     <div class="table-responsive">
-                        <table class="table text-center" style="color: black !important;" >
+                        <table class="table text-center" style="color: black !important;"  id="myTable">
                             {% if list %}
                             <thead>
                                 <tr>
@@ -91,17 +91,13 @@
                                     <th>Account</th>
                                     <th>Amount</th>
                                     <th>note</th>
-                                    <th>
-                                        <button id="showtopright" class="btn btn-success btn-rounded btn-sm">
-                                            Action
-                                        </button>
-                                    </th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                     {% for i in list %}
-                                        <tr>
-                                            <td>{{ forloop.revcounter }}</td>
+                                        <tr id="tra_{{ i.id }}" >
+                                            <td id="{{ forloop.revcounter }}" >{{ forloop.revcounter }}</td>
                                             <td>{{i.date_name|date:"j M" }} {{ i.date_name|time:"g:iA" }}</td>
                                             {% if i.type.type_name == 'Transfer' %}
                                                 <td>{{i.from_account}}</td>
@@ -136,7 +132,7 @@
                                                         Edit
                                                     </span>
                                                 </a>
-                                                <a href="javascript:void(0)" onclick="Delete({{i.id}})" class="bg-info ml-2">
+                                                <a href="javascript:void(0)" onclick="Delete({{i.id}}, {{ forloop.revcounter }})" class="bg-info ml-2">
                                                     <span class="label label-danger">
                                                         Delete
                                                     </span>
@@ -145,6 +141,7 @@
                                         </tr>
                                     {% endfor %}
                                 {% else %}
+                                    <input type="hidden" id="nodata" value="0">
                                     <h1>
                                         NO DATA
                                     </h1>
@@ -352,7 +349,7 @@
                                         id="id_typename_id" onchange="check_condition(0)" >
                                         <option selected value="">Select Type</option>
                                         {% for i in type_obj %}
-                                          <option value="{{i.id}}" >{{i.type_name}}</option>
+                                          <option value="{{i.id}}" name="{{ i.type_name }}" >{{i.type_name}}</option>
                                         {% endfor %}
                                     </select>
                                 </div>
@@ -372,8 +369,7 @@
                                         id="id_accountname_id">
                                         <option selected value="">Select Account</option>
                                         {% for i in account_obj %}
-                                            <option value="{{i.id}}" >{{i.account_name}}</option>
-
+                                            <option value="{{i.id}}" name="{{ i.account_name }}" >{{i.account_name}}</option>
                                         {% endfor %}
                                     </select>
                                 </div>
@@ -388,7 +384,7 @@
                                         id="id_from_account">
                                         <option selected value="">Select Account</option>
                                         {% for i in account_obj %}
-                                          <option value="{{i.id}}" >{{i.account_name}}</option>
+                                          <option value="{{i.id}}" name="{{ i.account_name }}" >{{i.account_name}}</option>
                                         {% endfor %}
                                     </select>
                                 </div>
@@ -404,7 +400,7 @@
                                         id="id_to_account">
                                         <option selected value="">Select Account</option>
                                         {% for i in account_obj %}
-                                          <option value="{{i.id}}" >{{i.account_name}}</option>
+                                          <option value="{{i.id}}" name="{{ i.account_name }}" >{{i.account_name}}</option>
                                         {% endfor %}
                                     </select>
                                 </div>
@@ -423,7 +419,7 @@
                                         id="id_catname_id" onchange="add_category()">
                                         <option selected value="">Select Category</option>
                                         {% for i in cat_obj %}
-                                          <option value="{{i.id}}" name="{{i.cat_name}}" >{{i.cat_name}}</option>
+                                          <option value="{{i.id}}" name="{{ i.cat_name|lower }}" >{{i.cat_name}}</option>
                                         {% endfor %}
                                         <option value="add" name="add" >Add Category</option>
                                     </select>

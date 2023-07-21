@@ -52,20 +52,6 @@ function Delete(id){
                         window.location.href = "/" + category + "/";
                     }
                     else if (data.exists === "orderexist") {
-                        // $('#dd').text('Can\'t Delete This (' + data.name + ') ❌');
-                        // $("#alerttopright_").fadeToggle(350);
-                        // $("#alerttopright_").css('display', 'block');
-                        // $("#alerttopright").css('display', 'none');
-                        // $("#alerttopright_1").css('display', 'none');
-                        // $.toast({
-                        //     heading: 'Welcome to my Fab Admin',
-                        //     text: 'Use the predefined ones, or specify a custom position object.',
-                        //     position: 'top-right',
-                        //     loaderBg: '#ff6849',
-                        //     icon: 'success',
-                        //     hideAfter: 3500,
-                        //     stack: 6
-                        // });
                          $.toast({
                             heading: 'Failed !!!',
                             text: 'Can\'t Delete This (' + data.name + ') !!!',
@@ -92,14 +78,25 @@ function Delete(id){
 
                     }
                     else if (data.exists === "confirmdelete") {
-                        let confirmAction = confirm("You want to delete (" + data.name + ") ?");
-                        if (confirmAction){
-                            $('#confirm_delete').val('0');
-                            Delete(id);
-                        }
-                        else{
-
-                        }
+                        swal({
+                            title: "Are you sure?",
+                            text: "You want to delete (" + data.name + ") ?",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Yes, delete it!",
+                            cancelButtonText: "No, cancel pls!",
+                            closeOnConfirm: false,
+                            closeOnCancel: false
+                        }, function(isConfirm){
+                            if (isConfirm) {
+                                swal("Deleted!", "Your Data ("+ data.name +") has been deleted.", "success");
+                                $('#confirm_delete').val('0');
+                                Delete(id);
+                            } else {
+                                swal("Cancelled", "Your Data is safe :)", "error");
+                            }
+                        });
                     }
                 }
                 else{

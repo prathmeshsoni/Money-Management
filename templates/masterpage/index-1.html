@@ -13,10 +13,11 @@
             <title>Admin | {% block title3 %} DashBoard {% endblock %}</title>
 
     	<!-- Bootstrap 4.0-->
+        <link  rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/sweetalert/sweetalert.css' %}"></link>
+
     	<link rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/bootstrap/dist/css/bootstrap.min.css' %}">
     	<script src="https://use.fontawesome.com/c0fc7bc651.js"></script>
     	<!-- Bootstrap extend-->
-    	<link rel="stylesheet" href="{% static 'admin/folder/css/bootstrap.min.css' %}">
     	<link rel="stylesheet" href="{% static 'admin/folder/css/bootstrap-extend.css' %}">
 
     	<link rel="stylesheet" type="text/css" href="{% static 'admin/folder/assets/vendor_components/datatable/datatables.min.css' %}" />
@@ -168,10 +169,10 @@
                         </span>
                       </a>
                       <ul class="treeview-menu {% if filter_master == 'master' %} {{'res-tb-block mt-2'}} {% else %} {{'mt-2'}} {% endif %}" >
-                            <li {% if filter_active == 'type_master' %} class="active mb-1" style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}  style="background: rgb(6 0 255 / 11%);" ><a href="/view/type/"><i class="{% if filter_active == 'type_master' %} {{'fa fa-circle'}} {% else %} {{'fa fa-circle-thin'}} {% endif %}"></i>Types</a></li>
-                            <li {% if filter_active == 'account_master' %} class="active mb-1" style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}  style="background: rgb(6 0 255 / 11%);" ><a href="/view/account/"><i class="{% if filter_active == 'account_master' %} {{'fa fa-circle'}} {% else %} {{'fa fa-circle-thin'}} {% endif %}"></i>Account</a></li>
-                            <li {% if filter_active == 'cat_master' %} class="active mb-1" style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}  style="background: rgb(6 0 255 / 11%);" ><a href="/view/category/"><i class="{% if filter_active == 'cat_master' %} {{'fa fa-circle'}} {% else %} {{'fa fa-circle-thin'}} {% endif %}"></i>Category</a></li>
-                            <li {% if filter_active == 'all_master' %} class="active mb-1" style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}  style="background: rgb(6 0 255 / 11%);" ><a href="/view/all/"><i class="{% if filter_active == 'all_master' %} {{'fa fa-circle'}} {% else %} {{'fa fa-circle-thin'}} {% endif %}"></i>All Filter</a></li>
+                            <li {% if filter_active == 'type_master' %} class="active mb-1" style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}  style="background: rgb(6 0 255 / 11%);" ><a href="/view/type"><i class="{% if filter_active == 'type_master' %} {{'fa fa-circle'}} {% else %} {{'fa fa-circle-thin'}} {% endif %}"></i>Types</a></li>
+                            <li {% if filter_active == 'account_master' %} class="active mb-1" style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}  style="background: rgb(6 0 255 / 11%);" ><a href="/view/account"><i class="{% if filter_active == 'account_master' %} {{'fa fa-circle'}} {% else %} {{'fa fa-circle-thin'}} {% endif %}"></i>Account</a></li>
+                            <li {% if filter_active == 'cat_master' %} class="active mb-1" style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}  style="background: rgb(6 0 255 / 11%);" ><a href="/view/category"><i class="{% if filter_active == 'cat_master' %} {{'fa fa-circle'}} {% else %} {{'fa fa-circle-thin'}} {% endif %}"></i>Category</a></li>
+                            <li {% if filter_active == 'all_master' %} class="active mb-1" style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}  style="background: rgb(6 0 255 / 11%);" ><a href="/view/all"><i class="{% if filter_active == 'all_master' %} {{'fa fa-circle'}} {% else %} {{'fa fa-circle-thin'}} {% endif %}"></i>All Filter</a></li>
                       </ul>
                     </li>
                 </ul>
@@ -215,7 +216,8 @@
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="/admin/"><i class="fa fa-dashboard"></i> Home</a></li>
                                     <li class="breadcrumb-item">
-                                        <a href="/balance/">
+<!--                                        <a href="/balance/">-->
+                                        <a href="javascript:void(0)" onclick="buttonclick('Income')">
                                             {% if cat_master %}
                                                 Master
                                             {% else %}
@@ -232,8 +234,10 @@
                                             {{category}}
                                         {% else %}
                                             {% if private_master %}
+                                                <input type="hidden" id="check_account" value="" >
                                                 Transaction
                                             {% else %}
+                                                <input type="hidden" id="check_account" value="{{ main }}" >
                                                 {{main}}
                                             {% endif %}
                                         {% endif %}
@@ -293,6 +297,7 @@
 
     	<script src="{% static 'admin/folder/assets/vendor_components/datatable/datatables.min.js' %}"></script>
     	<script src="{% static 'admin/folder/assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js' %}"></script>
+    	<script src="{% static 'admin/folder/assets/vendor_components/sweetalert/sweetalert.min.js' %}"></script>
 
         {% if cat_master %}
             <script src="{% static 'admin/folder/js/wallet/master.js' %}"></script>
@@ -331,15 +336,6 @@
                 {% endfor %}
             </script>
         {% endif %}
-        <script>
-            $("#showtopright").click(function() {
-                $("#alerttopright").fadeToggle(350);
-            });
-            $(".myadmin-alert-click").click(function(event) {
-                $(this).fadeToggle(350);
-                return false;
-            });
-        </script>
         {% if request.session.private_admin %}
             <script>
                  window.onload = function exampleFunction(){

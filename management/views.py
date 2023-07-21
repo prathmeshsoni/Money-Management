@@ -118,7 +118,6 @@ def admin_private(request):
                 request.session['login_time'] = datetime.now().timestamp()
                 return redirect('/view/')
 
-
     return render(request, 'login.html', {"checkcon": 10, "Title": "Private "})
 
 
@@ -207,7 +206,11 @@ def admin_private_view(request):
                     link = f'account/{account_txt}/'
                 else:
                     link = f'account/{from_txt}/'
-                a = {'status': True, 'link': link}
+                if check_1 == 0:
+                    link = '/' + "/".join("".join(request.META.get('HTTP_REFERER')).split('/')[3:])
+                else:
+                    pass
+                a = {'status': True, 'id': p_id, 'link': link}
                 return JsonResponse(a)
             else:
                 a = {'status': False}
@@ -232,6 +235,7 @@ def admin_private_view(request):
                 }
             else:
                 return redirect('/')
+
             return render(request, 'private_des.html', x)
 
 
@@ -305,18 +309,35 @@ def updatepra(request):
     return Response(serializer.data)
 
 
-# Delete Detail Fun
-def remove_pri(request, hid):
-    if 'private_admin' in request.session:
-        user2 = request.session.get('private_admin')
-        obj = ManageModel.objects.get(id=hid)
-        if obj.user.username == user2:
+
+# def remove_pri(request, hid):
+#     if request.method == 'POST':
+#
+#         user2 = request.session.get('private_admin')
+#         obj = ManageModel.objects.get(id=hid)
+#         if obj.user.username == user2:
+#             obj.delete()
+#             return redirect(request.META.get('HTTP_REFERER'))
+#         else:
+#             return redirect(request.META.get('HTTP_REFERER'))
+#     else:
+#         return redirect('/')
+
+
+# Delete Detail Function
+def remove_pri(request):
+    if request.method == 'POST':
+        try:
+            hid = request.POST.get('id')
+            obj = ManageModel.objects.get(id=hid)
             obj.delete()
-            return redirect(request.META.get('HTTP_REFERER'))
-        else:
-            return redirect(request.META.get('HTTP_REFERER'))
+            a = {'status': True, 'exists': 'done'}
+            return JsonResponse(a)
+        except:
+            a = {'status': True,'exists': 'error'}
+            return JsonResponse(a)
     else:
-        return redirect('/')
+        return redirect('/category/')
 
 
 def view_type(request, hid):

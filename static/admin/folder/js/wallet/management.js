@@ -7,6 +7,84 @@ function openModel() {
     handleFromAccountChange();
     $('#categoryModal').modal();
 }
+function buttonclick(datas){
+    tempurl = window.location.href;
+    demo_url = subStr(tempurl)
+    final_url = splitstr(demo_url, 0)
+    if(final_url){
+        final_1 = splitstr(demo_url, 1)
+        if (final_1 === 'not'){
+            return [0, '/view/']
+        }
+        else{
+            if (final_url === 'type'){
+                if (final_1 === datas.type.toLowerCase() ){
+                    return [1, '/view/type/' + datas.type + '/']
+                }
+                else{
+                    return [0, '/view/type/' + datas.type + '/']
+                }
+
+            }
+            else if(final_url === 'account'){
+                if (datas.type.toLowerCase() === 'transfer'){
+                     if(final_1 === datas.from_account.toLowerCase() ){
+                        return [1, '/view/account/' + datas.from_account + '/']
+                    }
+                    else if(final_1 === datas.to_account.toLowerCase() ){
+                        return [1, '/view/account/' + datas.to_account + '/']
+                    }
+                    else {
+                        return [0, '/view/account/' + datas.to_account + '/']
+                     }
+                }
+                else{
+                    if (final_1 === datas.account.toLowerCase() ) {
+                        return [1, '/view/account/' + datas.account + '/']
+                    }
+                    else{
+                        return [0, '/view/account/' + datas.account + '/']
+                    }
+                }
+
+            }
+            else if(final_url === 'category'){
+                if (final_1 === datas.category.toLowerCase() ) {
+                    return [1, '/view/category/' + datas.category + '/']
+                }
+                else{
+                    return [0, '/view/category/' + datas.category + '/']
+                }
+            }
+            else{
+                return [0, '/view/']
+            }
+        }
+    }
+    else{
+        return [1, '/']
+    }
+
+
+}
+
+function splitstr(str, check_value)
+{
+    const myArray = str.split("/");
+    if (check_value === 1) {
+        if (myArray.length >= 2) {
+            return myArray[check_value].toLowerCase();
+        }
+        else {
+            return '';
+        }
+    }
+    else{
+        return myArray[check_value].toLowerCase();
+    }
+
+
+}
 
 function updateModel(id) {
     var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
@@ -29,7 +107,7 @@ function updateModel(id) {
                 }
                 $('#id_accountname_id').val(data.account);
                 if ( data.category ){
-                    $("#id_catname_id option[name='" + data.category.cat_name + "']").prop("selected", true);
+                    $("#id_catname_id option[name='" + (data.category.cat_name).toLowerCase() + "']").prop("selected", true);
                 }
                 $('#id_to_account').val(data.to_account);
                 $('#id_from_account').val(data.from_account);
@@ -48,14 +126,77 @@ function updateModel(id) {
     });
 }
 
-function Delete(id){
-    let confirmAction = confirm("You want to delete Private Item?")
-    if (confirmAction){
-        window.location.href = "/remove_pri/" + id + "";
-    }
-    else{
+function Delete_1(id){
+    // $('#sa-params').click(function(){
+    swal({
+        title: "Are you sure?",
+        text: "You will not be able to recover this Transaction!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "No, cancel pls!",
+        closeOnConfirm: false,
+        closeOnCancel: false
+    }, function(isConfirm){
+        if (isConfirm) {
+            swal("Deleted!", "Your Transaction has been deleted.", "success");
+            setTimeout(() => {
+                window.location.href = "/remove_pri/" + id + "";
+            }, 3000);
+        } else {
+            swal("Cancelled", "Your Transaction is safe :)", "error");
+        }
+    });
+}
 
-    }
+
+function Delete(id, h_id){
+    swal({
+        title: "Are you sure?",
+        text: "You will not be able to recover Transaction No. (" + h_id + ")",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "No, cancel pls!",
+        closeOnConfirm: false,
+        closeOnCancel: false
+    }, function(isConfirm){
+        if (isConfirm) {
+            swal("Deleted!", "Your Transaction No. (" + h_id + ") has been deleted.", "success");
+            var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+            $.ajax({
+                url: '/remove_pri/',
+                data: {'id': id, csrfmiddlewaretoken: csrf_token },
+                dataType: 'JSON',
+                method: 'POST',
+                success: function (data){
+                    if (data.status === true) {
+                        if (data.exists === "done") {
+                            $('#tra_' + id + '').remove();
+                            $.toast({
+                                heading: 'Success ',
+                                text: 'Transaction No. (' + h_id + ') Delete Successfully ✔',
+                                position: 'top-right',
+                                loaderBg: '#fc4b6c !important',
+                                icon: 'success',
+                                hideAfter: 5500
+
+                            });
+                        }
+                    }
+                    else{
+                    }
+                },
+                error: function (){
+                        window.location.href = "/view/";
+                    },
+            });
+        } else {
+            swal("Cancelled", "Your Transaction is safe :)", "error");
+        }
+    });
 }
 
 
@@ -67,26 +208,113 @@ function subStr(str)
 
 
 function openForm_test() {
+    var value_name = $('[name="id"]').val();
     $('#final-tra').prop('disabled', true);
     $('#final-tra').css('cursor', 'wait');
+    var check_account = $('#check_account').val()
     urrll = window.location.href
     uurl = subStr(urrll)
     var typ = parseInt($('#id_typename_id').val(), 10);
     if (typ === 3){
+        $('#account').val('')
         $.ajax({
               url: '/view/',
               method: 'POST',
               data: $('#Addcategory').serialize(),
               dataType: 'JSON',
               success: function (data) {
-
+                    var serializedData = form_se("#Addcategory");
+                    console.log(serializedData)
                     if (data.status === true) {
-                        if (uurl === ''){
-                            window.location.href = "/view/";
+                        if (value_name){
+                            $.toast({
+                                heading: 'Changed',
+                                text: 'Data Updated Successfully ✔',
+                                position: 'top-right',
+                                loaderBg: '#fc4b6c !important',
+                                icon: 'success',
+                                hideAfter: 2000
+                            });
+                            $('#m_close').click()
+                            setTimeout(() => {
+                                window.location.href = "" + data.link + "";
+                            }, 2000);
                         }
-                        else{
-                            window.location.href = "/view/" + data.link;
+                        else {
+                            refresh_check = buttonclick(serializedData)
+                            if (refresh_check[0] === 0){
+                                $.toast({
+                                    heading: 'Added',
+                                    text: 'Data Saved Successfully ✔',
+                                    position: 'top-right',
+                                    loaderBg: '#fc4b6c !important',
+                                    icon: 'success',
+                                    hideAfter: 2000
+                                });
+                                $('#m_close').click()
+                                setTimeout(() => {
+                                    window.location.href = refresh_check[1];
+                                }, 2000);
+                            }
+                            else{
+                                var nodata = $('#nodata').val();
+                                if (nodata === "0"){
+                                    $.toast({
+                                        heading: 'Added',
+                                        text: 'Data Saved Successfully ✔',
+                                        position: 'top-right',
+                                        loaderBg: '#fc4b6c !important',
+                                        icon: 'success',
+                                        hideAfter: 2000
+                                    });
+                                    $('#m_close').click()
+                                    setTimeout(() => {
+                                        window.location.href = urrll;
+                                    }, 2000);
+                                }
+                                else{
+                                    get_amount(serializedData, 0)
+                                    renderTableRows(serializedData, data.id)
+                                    $('#final-tra').prop('disabled', false);
+                                    $('#final-tra').css('cursor', 'pointer');
+
+                                    $('#m_close').click()
+                                    $.toast({
+                                            heading: 'Added',
+                                            text: 'Data Saved Successfully ✔',
+                                            position: 'top-right',
+                                            loaderBg: '#fc4b6c !important',
+                                            icon: 'success',
+                                            hideAfter: 6000
+                                    });
+                                }
+
+                                // if
+                                // (
+                                //     uurl === '' ||
+                                //     serializedData.from_account.toLowerCase() === check_account.toLowerCase() ||
+                                //     serializedData.to_account.toLowerCase() === check_account.toLowerCase()
+                                // ){
+                                //     get_amount(serializedData, 0)
+                                //     renderTableRows(serializedData, data.id)
+                                //     $('#final-tra').prop('disabled', false);
+                                //     $('#final-tra').css('cursor', 'pointer');
+                                //     $('#m_close').click()
+                                //     $.toast({
+                                //             heading: 'Added',
+                                //             text: 'Data Saved Successfully ✔',
+                                //             position: 'top-right',
+                                //             loaderBg: '#fc4b6c !important',
+                                //             icon: 'success',
+                                //             hideAfter: 6000
+                                //     });
+                                // }
+                                // else{
+                                //     window.location.href = "/view/" + data.link;
+                                // }
+                            }
                         }
+
                     } else {
                         alert('Something is Wrong')
                     }
@@ -134,12 +362,13 @@ function openForm_test() {
 
                     if (data.status === true) {
                         var selectElement = document.getElementById('id_catname_id');
-                        var deleteOption = selectElement.querySelector('option[name="' + data.cat_name + '"]');
+                        var deleteOption = selectElement.querySelector('option[name="' + data.cat_name.toLowerCase() + '"]');
                         deleteOption.remove();
                         var newOption = document.createElement('option');
                         newOption.value = data.cat_id;
-                        newOption.textContent = data.cat_name;
+                        newOption.textContent = data.cat_name.toLowerCase();
                         newOption.selected = true;
+                        newOption.setAttribute('name', data.cat_name.toLowerCase());
                         selectElement.appendChild(newOption);
                         $.ajax({
                               url: '/view/',
@@ -148,11 +377,95 @@ function openForm_test() {
                               dataType: 'JSON',
                               success: function (data) {
                                     if (data.status === true) {
-                                        if (uurl === ''){
-                                            window.location.href = "/view/";
+                                        var serializedData = form_se("#Addcategory");
+                                        console.log(serializedData)
+                                        if( value_name) {
+                                            $.toast({
+                                                heading: 'Added',
+                                                text: 'Data Updated Successfully ✔',
+                                                position: 'top-right',
+                                                loaderBg: '#fc4b6c !important',
+                                                icon: 'success',
+                                                hideAfter: 2000
+                                            });
+                                            $('#m_close').click()
+                                            setTimeout(() => {
+                                                window.location.href = "" + data.link + "";
+                                            }, 2000);
                                         }
                                         else{
-                                            window.location.href = "/view/" + data.link;
+                                            refresh_check = buttonclick(serializedData)
+                                            if (refresh_check[0] === 0){
+                                                $.toast({
+                                                    heading: 'Added',
+                                                    text: 'Data Saved Successfully ✔',
+                                                    position: 'top-right',
+                                                    loaderBg: '#fc4b6c !important',
+                                                    icon: 'success',
+                                                    hideAfter: 2000
+                                                });
+                                                $('#m_close').click()
+                                                setTimeout(() => {
+                                                    window.location.href = refresh_check[1];
+                                                }, 2000);
+                                            }
+                                            else{
+                                                var nodata = $('#nodata').val();
+                                                if (nodata === '0'){
+                                                    $.toast({
+                                                        heading: 'Added',
+                                                        text: 'Data Saved Successfully ✔',
+                                                        position: 'top-right',
+                                                        loaderBg: '#fc4b6c !important',
+                                                        icon: 'success',
+                                                        hideAfter: 2000
+                                                    });
+                                                    $('#m_close').click()
+                                                    setTimeout(() => {
+                                                        window.location.href = urrll;
+                                                    }, 2000);
+                                                }
+                                                else{
+                                                    get_amount(serializedData, 1)
+                                                    renderTableRows(serializedData, data.id)
+                                                    $('#final-tra').prop('disabled', false);
+                                                    $('#final-tra').css('cursor', 'pointer');
+                                                    $('#m_close').click()
+                                                    $.toast({
+                                                        heading: 'Added',
+                                                        text: 'Data Saved Successfully ✔',
+                                                        position: 'top-right',
+                                                        loaderBg: '#fc4b6c !important',
+                                                        icon: 'success',
+                                                        hideAfter: 6000
+                                                    });
+                                                }
+
+                                                // if
+                                                // (
+                                                //     uurl === '' ||
+                                                //     serializedData.account.toLowerCase() === check_account.toLowerCase()
+                                                //
+                                                // ) {
+                                                //     get_amount(serializedData, 1)
+                                                //     renderTableRows(serializedData, data.id)
+                                                //     $('#final-tra').prop('disabled', false);
+                                                //     $('#final-tra').css('cursor', 'pointer');
+                                                //     $('#m_close').click()
+                                                //     $.toast({
+                                                //         heading: 'Added',
+                                                //         text: 'Data Saved Successfully ✔',
+                                                //         position: 'top-right',
+                                                //         loaderBg: '#fc4b6c !important',
+                                                //         icon: 'success',
+                                                //         hideAfter: 6000
+                                                //     });
+                                                // }
+                                                // else{
+                                                //     window.location.href = "/view/" + data.link;
+                                                // }
+                                            }
+
                                         }
                                     } else if(data.name === 'insufficient'){
                                         $('#dd').text('Insufficient Balance. ❌');
@@ -173,6 +486,181 @@ function openForm_test() {
             });
         }
     }
+}
+
+function form_se(form) {
+    var formData = {};
+    $(form).find(":input").each(function () {
+        var name = $(this).attr("name");
+        var value;
+
+        if ($(this).is("select")) {
+            var selectedOption = $(this).find("option:selected");
+            var optionName = selectedOption.attr("name");
+            value = optionName;
+        } else {
+            value = $(this).val();
+        }
+
+        formData[name] = value;
+    });
+    return formData;
+}
+
+
+function renderTableRows(dataArray, id) {
+    const formattedDate = formatDate(dataArray.date_name);
+
+    const rowHTML = createTableRow(dataArray, formattedDate, id)
+    const newRow = document.createElement("tr");
+    newRow.style.background = rowHTML[1];
+    newRow.id = 'tra_'+ id;
+    newRow.innerHTML = rowHTML[0];
+
+    const tableBody = document.querySelector("#myTable tbody");
+    tableBody.insertBefore(newRow, tableBody.firstChild);
+}
+
+function formatDate(inputDate) {
+  const date = new Date(inputDate);
+  const day = date.getDate();
+  const month = date.toLocaleString('default', { month: 'short' });
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+
+  const formattedDate = `${day} ${month} ${hours % 12 === 0 ? 12 : hours % 12}:${minutes.toString().padStart(2, '0')}${ampm}`;
+  return formattedDate;
+}
+
+function createTableRow(i, formattedDate, id) {
+    console.log(i)
+    const valueOfFirstInput = parseInt($('tbody tr:first-child td:first-child').attr('id'), 10) + 1;
+    if (i.account){
+        var color_ = ''
+        var che = 0;
+        if (i.type.toLowerCase() === 'available' || i.type.toLowerCase() === 'income' ){
+            color_ = '#000fff'
+            che = '#cbf8cb';
+        }
+        else if ( i.type.toLowerCase() === 'expense' ){
+            color_ = '#ff0000'
+            che = '#f8cbcb';
+        }
+        else{
+            color_ = '#000'
+            che = '#a3a6a4';
+        }
+
+        return [(
+            '<td id="' + valueOfFirstInput + '">' + valueOfFirstInput + '</td>' +
+            '<td>' + formattedDate + '</td>' +
+            '<td>' + i.category + '</td>' +
+            '<td>' + i.account + '</td>' +
+            '<td style="color: '+ color_ +' !important;">' + i.amount + ' ₹</td>' +
+            '<td>' + i.note + '</td>' +
+            '<td>' +
+            '    <a href="javascript:void(0)" onclick="updateModel(' + id + ',' + valueOfFirstInput + ')" class="bg-info mr-2">' +
+            '        <span class="label label-success">\n' +
+            '            Edit\n' +
+            '    </span>' +
+            '    </a>' +
+            '    <a href="javascript:void(0)" onclick="Delete(' + id + ',' + valueOfFirstInput + ')" class="bg-info ml-2">' +
+            '        <span class="label label-danger">' +
+            '            Delete' +
+            '        </span>' +
+            '    </a>' +
+            '</td>'
+        ), che]
+    }
+    else{
+        var check_account = $('#check_account').val();
+        var color_ = ''
+        var che = 0;
+        if ( i.from_account.toLowerCase() === check_account.toLowerCase() ){
+            color_ = '#ff0000'
+            che = '#f8cbcb';
+        }
+        else if ( i.to_account.toLowerCase() === check_account.toLowerCase() ){
+            color_ = '#000fff'
+            che = '#cbf8cb';
+        }
+        else{
+            color_ = '#000'
+            che = '#a3a6a4';
+        }
+        return [(
+            '<td id="' + valueOfFirstInput + '" >' + valueOfFirstInput + '</td>' +
+            '<td>' + formattedDate + '</td>' +
+            '<td>' + i.from_account + '</td>' +
+            '<td>' + i.to_account + '</td>' +
+            '<td style="color: '+ color_ +' !important;">' + i.amount + ' ₹</td>' +
+            '<td>' + i.note + '</td>' +
+            '<td>' +
+            '    <a href="javascript:void(0)" onclick="updateModel(' + id + ')" class="bg-info mr-2">' +
+            '        <span class="label label-success">\n' +
+            '            Edit\n' +
+            '    </span>' +
+            '    </a>' +
+            '    <a href="javascript:void(0)" onclick="Delete(' + id + ')" class="bg-info ml-2">' +
+            '        <span class="label label-danger">' +
+            '            Delete' +
+            '        </span>' +
+            '    </a>' +
+            '</td>'
+        ), che]
+    }
+}
+
+
+function get_amount(form_data, check){
+    var box_1 = parseInt($("#balance-1").val(), 10)
+    var box_2 = parseInt($("#balance-2").val(), 10)
+    var amount = parseInt(form_data.amount, 10)
+
+    console.log(box_1)
+    console.log(amount)
+    if (check === 1){
+        if (form_data.type.toLowerCase() === 'available' || form_data.type.toLowerCase() === 'income'){
+            box_1 += amount
+        }
+        else{
+            box_2 += amount
+        }
+    }
+    else{
+        console.log(form_data.from_account.toLowerCase())
+        console.log(form_data.to_account.toLowerCase())
+        var check_account = $("#check_account").val()
+        console.log(check_account.toLowerCase())
+        if (form_data.from_account.toLowerCase() === check_account.toLowerCase()) {
+            box_2 += amount
+        }
+        else if (form_data.to_account.toLowerCase() === check_account.toLowerCase()) {
+            box_1 += amount
+        }
+    }
+    var box_3 = box_1 - box_2
+    $("#balance-1").val(box_1)
+    $("#balance-2").val(box_2)
+    $("#balance-3").val(box_3)
+    // {% if i.type.type_name == 'Available' or i.type.type_name == 'Income'%}
+    //     sum += {{ i.amount }};
+    // {% else %}
+    //     {% if i.type.type_name == 'Expense' %}
+    //         subtraction += {{ i.amount }};
+    //     {% else %}
+    //         {% if private_master %}
+    //
+    //         {% else %}
+    //             {% if i.from_account.account_name == main %}
+    //                 subtraction += {{ i.amount }};
+    //             {% else %}
+    //                 sum += {{ i.amount }};
+    //             {% endif %}
+    //         {% endif %}
+    //     {% endif %}
+    // {% endif %}
 }
 
 function check_val(){
