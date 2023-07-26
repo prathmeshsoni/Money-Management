@@ -1,0 +1,374 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Music Club | {% block title %} {% endblock %}</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Music-club">
+  <!--<meta name="keywords" content="Music-club">-->
+  <!--<meta name="author" content="Music-club">-->
+   <link rel="icon" href="{% static 'user/folder/assets/images/favicon/favicon.png' %}" type="image/x-icon">
+  <link rel="shortcut icon" href="{% static 'user/folder/assets/images/avtar/music_clu.png' %}" type="image/x-icon">
+
+  <!--Google font-->
+
+  {% block css %}
+  {% endblock %}
+
+  <!--icon css-->
+  <!--Slick slider css-->
+  <script src="https://use.fontawesome.com/c0fc7bc651.js"></script>
+  <link rel="stylesheet" type="text/css" href="{% static 'user/folder/assets/css/slick.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'user/folder/assets/css/slick-theme.css' %}">
+  <!-- <link href="{% static 'admin/assets/css/components.min.css' %}" rel="stylesheet" type="text/css"> -->
+
+  <!--Animate css-->
+  <link rel="stylesheet" type="text/css" href="{% static 'user/folder/assets/css/animate.css' %}">
+  <!-- Bootstrap css -->
+  <link rel="stylesheet" type="text/css" href="{% static 'user/folder/assets/css/bootstrap.css' %}">
+
+  <!-- Theme css -->
+  <link rel="stylesheet" type="text/css" href="{% static 'user/folder/assets/css/color2.css' %}" >
+
+</head>
+
+<body style="background-color: #f5f6fb!important ;"  >
+    <style>
+        .oorder_detail{
+            align-self: center;
+            /*align-items: center;*/
+        }
+        @media (max-width: 577px){
+            .oorder_detail h5{
+                font-size: 14px;
+                line-height: 1.2;
+            }
+        }
+        .oorder_detail h5{
+            text-transform: capitalize;
+            margin-bottom: 0;
+            font-weight: 500;
+        }
+        .successd{
+            color: #2dd02d;
+        }
+        .warningd{
+            color: red;
+        }
+        .warningsd::-webkit-input-placeholder {
+            font-size: 11px;
+            color: red;
+        }
+        .dipa-none{
+            display: none;
+        }
+    </style>
+  <!-- loader start -->
+  <div class="loader-wrapper">
+    <div>
+      <img src="{% static 'user/folder/assets/images/loader.gif' %}" alt="loader">
+    </div>
+  </div>
+  <!-- loader end -->
+
+  <!--header start-->
+
+  <!--header end-->
+
+    <header id="stickyheader">
+  <div class="mobile-fix-option"></div>
+  <div class="mobile-backk" >
+  <div class="layout-header2">
+    <div class="container">
+      <div class="col-md-12">
+        <div class="main-menu-block">
+          <div class="header-left">
+            <div class="brand-logo logo-sm-center">
+              <a href="/">
+                <img src="{% static 'user/folder/assets/images/avtar/music_club.png' %}" class="img-fluid" style="height: 75px;" alt="logo">
+              </a>
+            </div>
+          </div>
+          <div class="header-right">
+            <div class="icon-block">
+              <ul>
+                 <li class="mobile-wishlist">
+                    <a class="dark-menu-item" href="/">
+                        <!--<i class="fa fa-home" aria-hidden="true"></i>-->
+                        <img src="{% static 'user/folder/assets/images/home.png' %}" style="height: 20px; width:20px;" class="img-fluid" alt="logo">
+                    </a>
+                 </li>
+              </ul>
+            </div>
+            <div class="menu-nav"  >
+                <span class="toggle-nav">
+                  <i class="fa fa-bars "></i>
+                </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  <div class="category-header-2">
+    <div class="custom-container">
+      <div class="row">
+        <div class="col-12">
+          <div class="navbar-menu">
+            <div class="logo-block">
+              <div class="brand-logo logo-sm-center">
+                <a href="/">
+                  <img src="{% static 'user/folder/assets/images/avtar/music_club.png' %}" class="img-fluid" style="height: 95px;" alt="logo">
+                </a>
+              </div>
+            </div>
+            <div class="nav-block">
+              <div class="brand-logo logo-sm-center">
+                <a href="/">
+                  <img src="{% static 'user/folder/assets/images/avtar/music_club.png' %}" class="img-fluid" style="height: 95px;" alt="logo">
+                </a>
+              </div>
+            </div>
+            <div class="menu-block" >
+              <nav id="main-nav">
+                <div class="toggle-nav"><i class="fa fa-bars sidebar-bar"></i></div>
+                <ul id="main-menu" class="sm pixelstrap sm-horizontal">
+                  <li class="mega">
+                    <a class="dark-menu-item" href="/">
+                        <img src="{% static 'user/folder/assets/images/home.png' %}" style="height: 20px; width:20px;" class="img-fluid me-2" alt="logo">
+                        Home
+                    </a>
+                  </li>
+                  <li class="mega">
+                    <a class="dark-menu-item" href="/user/register/">
+                        <!--<i class="fa fa-user-plus me-2" aria-hidden="true"></i>-->
+                        <img src="{% static 'user/folder/assets/images/signup-2.png' %}" style="height: 20px; width:20px;" class="img-fluid me-2  mobile-backkk" alt="logo">
+                        <img src="{% static 'user/folder/assets/images/signup-1.png' %}" style="height: 20px; width:20px;" class="img-fluid me-2  mobile-backk" alt="logo">
+                        Sign Up
+                    </a>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+            <div class="nav-block">
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+  <!-- content start -->
+  {% block content %}
+  
+  {% endblock %}
+  <!-- content start -->
+
+    <!-- latest jquery-->
+    <script src="{% static 'user/folder/assets/js/jquery-3.3.1.min.js' %}"></script>
+    
+    <!-- slick js-->
+    <script src="{% static 'user/folder/assets/js/slick.js' %}"></script>
+    
+    <!-- popper js-->
+    <script src="{% static 'user/folder/assets/js/popper.min.js' %}" ></script>
+    <script src="{% static 'user/folder/assets/js/bootstrap-notify.min.js' %}"></script>
+    
+    <!-- Bootstrap js-->
+    <script src="{% static 'user/folder/assets/js/bootstrap.js' %}"></script>
+    
+    
+    <!-- father icon -->
+    <script src="{% static 'user/folder/assets/js/feather.min.js' %}"></script>
+    <script src="{% static 'user/folder/assets/js/feather-icon.js' %}"></script>
+    
+    <!-- Theme js-->
+    <script src="{% static 'user/folder/assets/js/modal.js' %}"></script>
+    <script src="{% static 'user/folder/assets/js/script.js' %}"></script>
+    <script src="{% static 'admin/global_assets/js/pnotify.min.js' %}"></script>
+    <script src="{% static 'admin/global_assets/js/extra_pnotify.js' %}"></script>
+
+    <script>
+
+        function registerr(){
+            var pass = $('#exampleInputPassword1').val().length;
+    
+            if(pass >= 8){
+                $('#login_loader').css('display', 'flex');
+                $.ajax({
+                  url: '/user/register/',
+                  method: 'POST',
+                  data: $('#registerr_form').serialize(),
+                  dataType: 'JSON',
+                  success: function (data) {
+    
+                    if (data.status == true) {
+    
+                        if (data.exists == "existuser") {
+                            $.notify({
+                                  message: 'Username is taken!',
+                                },{
+                                  element: 'body',
+                                  position: null,
+                                  type: "success",
+                                  allow_dismiss: true,
+                                  newest_on_top: false,
+                                  showProgressbar: true,
+                                  placement: {
+                                    from: "top",
+                                    align: "right"
+                                  },
+                                  offset: 90,
+                                  spacing: 10,
+                                  z_index: 999999999999,
+                                  delay: 6000,
+                                  animate: {
+                                    enter: 'animated fadeInDown',
+                                    exit: 'animated fadeOutUp'
+                                  },
+                                  icon_type: 'class',
+                                  template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert " style="color:#842029 !important;background-color:#f8d7da !important;border-color:#f5c2c7 !important; width: 215px !important;" role="alert">' +
+                                    '<button type="button" aria-hidden="true" class="btn-close" data-notify="dismiss"></button>' +
+                                    '<span style="color:#842029 !important;" data-notify="message">{2}</span>' +
+                                    '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                                    '</div>'
+                                });
+                            $('#exampleInputusername1').val('');
+                            $("#exampleInputusername1").focus();
+                            $("#exampleInputusername1").attr("placeholder", "Enter Another Username......");
+                            $("#exampleInputEmail1").attr("placeholder", "");
+                            $('#exampleInputusername1').addClass('warningsd');
+                            $('#login_loader').css('display', 'none');
+                        }
+                        else if (data.exists == "existemail") {
+                            $.notify({
+                                message: 'Email is taken!',
+                            },{
+                                element: 'body',
+                                position: null,
+                                type: "success",
+                                allow_dismiss: true,
+                                newest_on_top: false,
+                                showProgressbar: true,
+                                placement: {
+                                  from: "top",
+                                  align: "right"
+                                },
+                               offset: 90,
+                                spacing: 10,
+                                z_index: 999999999999,
+                                delay: 6000,
+                                animate: {
+                                enter: 'animated fadeInDown',
+                                exit: 'animated fadeOutUp'
+                                },
+                                icon_type: 'class',
+                                template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert " style="color:#842029 !important;background-color:#f8d7da !important;border-color:#f5c2c7 !important; width: 215px !important;" role="alert">' +
+                                  '<button type="button" aria-hidden="true" class="btn-close" data-notify="dismiss"></button>' +
+                                  '<span style="color:#842029 !important;" data-notify="message">{2}</span>' +
+                                  '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                                  '</div>'
+                              });
+                            $('#exampleInputEmail1').val('');
+                            $("#exampleInputEmail1").focus();
+                            $("#exampleInputEmail1").attr("placeholder", "Enter Another Email ID.......");
+                            $("#exampleInputusername1").attr("placeholder", "");
+                            $('#exampleInputEmail1').addClass('warningsd');
+                            $('#login_loader').css('display', 'none');
+    
+                        }
+                        else if (data.create == "usercreate") {
+                            $.notify({
+                                icon: 'fa fa-check',
+                                title: 'Success!',
+                                message: 'Accout was created for '+ data.u_name +''
+                            },{
+                                element: 'body',
+                                position: null,
+                                type: "info",
+                                allow_dismiss: true,
+                                newest_on_top: false,
+                                showProgressbar: true,
+                                placement: {
+                                    from: "top",
+                                    align: "right"
+                                },
+                                offset: 20,
+                                spacing: 10,
+                                z_index: 999999999999999,
+                                delay: 4300,
+                                animate: {
+                                    enter: 'animated fadeInDown',
+                                    exit: 'animated fadeOutUp'
+                                },
+                                icon_type: 'class',
+                                template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
+                                    '<button type="button" aria-hidden="true" class="btn-close" data-notify="dismiss"></button>' +
+                                    '<span data-notify="icon"></span> ' +
+                                    '<span data-notify="message">{2}</span>' +
+                                    '<div class="progress" data-notify="progressbar">' +
+                                    '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                                    '</div>' +
+                                    '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                                    '</div>'
+                            });
+                            $('#login_loader').css('display', 'none');
+                            setTimeout(function() {
+                                window.location.href = "/user/token";
+                            }, 4500);
+                        }
+    
+                    }
+    
+                    else {
+                      alert('Something is Wrong')
+                    }
+                  }
+    
+                });
+              }
+            else{
+                  $.notify({
+                        message: 'Please enter minimum 8 characters!',
+                    },{
+                        element: 'body',
+                        position: null,
+                        type: "success",
+                        allow_dismiss: true,
+                        newest_on_top: false,
+                        showProgressbar: true,
+                        placement: {
+                          from: "top",
+                          align: "right"
+                        },
+                       offset: 90,
+                        spacing: 10,
+                        z_index: 999999999999,
+                        delay: 5000,
+                        animate: {
+                        enter: 'animated fadeInDown',
+                        exit: 'animated fadeOutUp'
+                        },
+                        icon_type: 'class',
+                        template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert " style="color:#842029 !important;background-color:#f8d7da !important;border-color:#f5c2c7 !important;" role="alert">' +
+                          '<button type="button" aria-hidden="true" class="btn-close" data-notify="dismiss"></button>' +
+                          '<span style="color:#842029 !important;" data-notify="message">{2}</span>' +
+                          '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                          '</div>'
+                      });
+                  $('#exampleInputPassword1').focus();
+              }
+    
+        }
+
+    </script>
+    
+  </body>
+
+</html>

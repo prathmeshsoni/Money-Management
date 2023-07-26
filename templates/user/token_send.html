@@ -1,0 +1,30 @@
+{% extends 'user/index.html' %}
+{% load static %}
+{% block title %} Email Sent   {% endblock %}
+{% block content %}
+<section class="login-page breadcrumb-main">
+    <div class="custom-container col-md-5">
+        <div class="global-container">
+            <div class="card login-form">
+                <div class="card-body" style="box-shadow: 0px 1px 18px 9px #60575773;" >
+                    <h3 class="text-center">Verify Account</h3>
+                    <div class="mb-3" >
+                        <h4>We have sent you a link to verify the account on your email. </h4>
+                    </div>
+                    <div style="float: left; margin: 5px;"  >
+                        <h4>Please Check Your Email.</h4>
+                    </div>
+                    <div style="float: left;margin-left: 160px;margin-top: -60px;padding-bottom: 20px;" >
+                        <a href="https://mail.google.com/">
+                            <img src="{% static 'user/assets/img/email-send.png' %}" alt="">
+                        </a>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+    {% endblock %}
