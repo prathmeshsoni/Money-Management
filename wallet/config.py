@@ -1,6 +1,8 @@
-
+# NAME = 'HOSTNAME',
+# HOST = 'localhost',
+# USER = 'USERNAME',
 ENGINE = 'django.db.backends.mysql',
-NAME = 'HOSTNAME',
+NAME = 'wallet',
 HOST = 'localhost',
-USER = 'USERNAME',
-PASSWORD = 'PASSWORD',
+USER = 'root',
+PASSWORD = '1313',

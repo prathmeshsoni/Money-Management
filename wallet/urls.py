@@ -22,11 +22,10 @@ from django.views.static import serve
 urlpatterns = [
     path('admin_side/', admin.site.urls),
     path('', include('management.urls')),
-    path('management/', include('management.urls')),
     path('type/', include('Types.urls')),
     path('account/', include('account.urls')),
     path('category/', include('category.urls')),
-    # path('user/', include('User.urls')),
+    path('user/', include('User.urls')),
     re_path(r'^hit/uploads/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
 ]
 

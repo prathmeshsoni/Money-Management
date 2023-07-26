@@ -7,69 +7,76 @@ function openModel() {
     handleFromAccountChange();
     $('#categoryModal').modal();
 }
+
+
 function buttonclick(datas){
     tempurl = window.location.href;
     demo_url = subStr(tempurl)
-    final_url = splitstr(demo_url, 0)
-    if(final_url){
-        final_1 = splitstr(demo_url, 1)
-        if (final_1 === 'not'){
-            return [0, '/view/']
-        }
-        else{
-            if (final_url === 'type'){
-                if (final_1 === datas.type.toLowerCase() ){
-                    return [1, '/view/type/' + datas.type + '/']
-                }
-                else{
-                    return [0, '/view/type/' + datas.type + '/']
-                }
-
-            }
-            else if(final_url === 'account'){
-                if (datas.type.toLowerCase() === 'transfer'){
-                     if(final_1 === datas.from_account.toLowerCase() ){
-                        return [1, '/view/account/' + datas.from_account + '/']
-                    }
-                    else if(final_1 === datas.to_account.toLowerCase() ){
-                        return [1, '/view/account/' + datas.to_account + '/']
-                    }
-                    else {
-                        return [0, '/view/account/' + datas.to_account + '/']
-                     }
-                }
-                else{
-                    if (final_1 === datas.account.toLowerCase() ) {
-                        return [1, '/view/account/' + datas.account + '/']
-                    }
-                    else{
-                        return [0, '/view/account/' + datas.account + '/']
-                    }
-                }
-
-            }
-            else if(final_url === 'category'){
-                if (final_1 === datas.category.toLowerCase() ) {
-                    return [1, '/view/category/' + datas.category + '/']
-                }
-                else{
-                    return [0, '/view/category/' + datas.category + '/']
-                }
-            }
-            else{
+    if (demo_url){
+        final_url = splitstr(demo_url, 0)
+        if(final_url){
+            final_1 = splitstr(demo_url, 1)
+            if (final_1 === 'not'){
                 return [0, '/view/']
             }
+            else{
+                if (final_url === 'type'){
+                    if (final_1 === datas.type.toLowerCase() ){
+                        return [1, '/view/type/' + datas.type + '/']
+                    }
+                    else{
+                        return [0, '/view/type/' + datas.type + '/']
+                    }
+
+                }
+                else if(final_url === 'account'){
+                    if (datas.type.toLowerCase() === 'transfer'){
+                         if(final_1 === datas.from_account.toLowerCase() ){
+                            return [1, '/view/account/' + datas.from_account + '/']
+                        }
+                        else if(final_1 === datas.to_account.toLowerCase() ){
+                            return [1, '/view/account/' + datas.to_account + '/']
+                        }
+                        else {
+                            return [0, '/view/account/' + datas.to_account + '/']
+                         }
+                    }
+                    else{
+                        if (final_1 === datas.account.toLowerCase() ) {
+                            return [1, '/view/account/' + datas.account + '/']
+                        }
+                        else{
+                            return [0, '/view/account/' + datas.account + '/']
+                        }
+                    }
+
+                }
+                else if(final_url === 'category'){
+                    if (final_1 === datas.category.toLowerCase() ) {
+                        return [1, '/view/category/' + datas.category + '/']
+                    }
+                    else{
+                        return [0, '/view/category/' + datas.category + '/']
+                    }
+                }
+                else{
+                    return [0, '/view/']
+                }
+            }
+        }
+        else{
+            return [0, '/']
         }
     }
     else{
-        return [1, '/']
+        return [1, '/view/']
     }
 
 
 }
 
-function splitstr(str, check_value)
-{
+
+function splitstr(str, check_value){
     const myArray = str.split("/");
     if (check_value === 1) {
         if (myArray.length >= 2) {
@@ -86,7 +93,9 @@ function splitstr(str, check_value)
 
 }
 
-function updateModel(id) {
+
+function updateModel(id, chek_1) {
+    $("#Addcategory")[0].reset();
     var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
     $.ajax({
           url: '/updatepra/',
@@ -117,7 +126,9 @@ function updateModel(id) {
                 $("#edit_cat").css('display','block');
                 handleToAccountChange();
                 handleFromAccountChange();
-                $('#categoryModal').modal();
+                if(chek_1 === 0){
+                    $('#categoryModal').modal();
+                }
           },
 
           error: function () {
@@ -126,32 +137,10 @@ function updateModel(id) {
     });
 }
 
-function Delete_1(id){
-    // $('#sa-params').click(function(){
-    swal({
-        title: "Are you sure?",
-        text: "You will not be able to recover this Transaction!",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#DD6B55",
-        confirmButtonText: "Yes, delete it!",
-        cancelButtonText: "No, cancel pls!",
-        closeOnConfirm: false,
-        closeOnCancel: false
-    }, function(isConfirm){
-        if (isConfirm) {
-            swal("Deleted!", "Your Transaction has been deleted.", "success");
-            setTimeout(() => {
-                window.location.href = "/remove_pri/" + id + "";
-            }, 3000);
-        } else {
-            swal("Cancelled", "Your Transaction is safe :)", "error");
-        }
-    });
-}
 
-
-function Delete(id, h_id){
+function Delete(id, h_id, s_id){
+    // updateModel(id, 0)
+    var serializedData = form_se("#Addcategory");
     swal({
         title: "Are you sure?",
         text: "You will not be able to recover Transaction No. (" + h_id + ")",
@@ -174,6 +163,12 @@ function Delete(id, h_id){
                 success: function (data){
                     if (data.status === true) {
                         if (data.exists === "done") {
+                            $('#balance-1').val(data.prices['temp_add'])
+                            $('#balance-2').val(data.prices['temp_sub'])
+                            $('#balance-3').val(data.prices['total_amount'])
+                            if (s_id === 0){
+                                get_datas(0);
+                            }
                             $('#tra_' + id + '').remove();
                             $.toast({
                                 heading: 'Success ',
@@ -182,8 +177,8 @@ function Delete(id, h_id){
                                 loaderBg: '#fc4b6c !important',
                                 icon: 'success',
                                 hideAfter: 5500
-
                             });
+                            data_is()
                         }
                     }
                     else{
@@ -200,8 +195,7 @@ function Delete(id, h_id){
 }
 
 
-function subStr(str)
-{
+function subStr(str){
     const myArray = str.split("/view/");
     return myArray[1];
 }
@@ -211,6 +205,7 @@ function openForm_test() {
     var value_name = $('[name="id"]').val();
     $('#final-tra').prop('disabled', true);
     $('#final-tra').css('cursor', 'wait');
+    var searchValue = document.querySelector('input[name="search-param"]');
     var check_account = $('#check_account').val()
     urrll = window.location.href
     uurl = subStr(urrll)
@@ -224,8 +219,10 @@ function openForm_test() {
               dataType: 'JSON',
               success: function (data) {
                     var serializedData = form_se("#Addcategory");
-                    console.log(serializedData)
                     if (data.status === true) {
+                        $('#balance-1').val(data.prices['temp_add'])
+                        $('#balance-2').val(data.prices['temp_sub'])
+                        $('#balance-3').val(data.prices['total_amount'])
                         if (value_name){
                             $.toast({
                                 heading: 'Changed',
@@ -235,10 +232,13 @@ function openForm_test() {
                                 icon: 'success',
                                 hideAfter: 2000
                             });
+                            if (searchValue){
+                                get_datas(0);
+                            }
+                            renderTableRows(serializedData, data.id)
+                            $('#final-tra').prop('disabled', false);
+                            $('#final-tra').css('cursor', 'pointer');
                             $('#m_close').click()
-                            setTimeout(() => {
-                                window.location.href = "" + data.link + "";
-                            }, 2000);
                         }
                         else {
                             refresh_check = buttonclick(serializedData)
@@ -273,7 +273,6 @@ function openForm_test() {
                                     }, 2000);
                                 }
                                 else{
-                                    get_amount(serializedData, 0)
                                     renderTableRows(serializedData, data.id)
                                     $('#final-tra').prop('disabled', false);
                                     $('#final-tra').css('cursor', 'pointer');
@@ -314,7 +313,6 @@ function openForm_test() {
                                 // }
                             }
                         }
-
                     } else {
                         alert('Something is Wrong')
                     }
@@ -377,21 +375,31 @@ function openForm_test() {
                               dataType: 'JSON',
                               success: function (data) {
                                     if (data.status === true) {
+                                        $('#balance-1').val(data.prices['temp_add'])
+                                        $('#balance-2').val(data.prices['temp_sub'])
+                                        $('#balance-3').val(data.prices['total_amount'])
                                         var serializedData = form_se("#Addcategory");
-                                        console.log(serializedData)
                                         if( value_name) {
                                             $.toast({
-                                                heading: 'Added',
+                                                heading: 'Changed',
                                                 text: 'Data Updated Successfully ✔',
                                                 position: 'top-right',
                                                 loaderBg: '#fc4b6c !important',
                                                 icon: 'success',
                                                 hideAfter: 2000
                                             });
+
+                                            if (searchValue){
+                                                get_datas(0);
+                                            }
+                                            renderTableRows(serializedData, data.id)
+                                            $('#final-tra').prop('disabled', false);
+                                            $('#final-tra').css('cursor', 'pointer');
                                             $('#m_close').click()
-                                            setTimeout(() => {
-                                                window.location.href = "" + data.link + "";
-                                            }, 2000);
+
+                                            // setTimeout(() => {
+                                            //     window.location.href = "" + data.link + "";
+                                            // }, 2000);
                                         }
                                         else{
                                             refresh_check = buttonclick(serializedData)
@@ -426,7 +434,6 @@ function openForm_test() {
                                                     }, 2000);
                                                 }
                                                 else{
-                                                    get_amount(serializedData, 1)
                                                     renderTableRows(serializedData, data.id)
                                                     $('#final-tra').prop('disabled', false);
                                                     $('#final-tra').css('cursor', 'pointer');
@@ -467,7 +474,8 @@ function openForm_test() {
                                             }
 
                                         }
-                                    } else if(data.name === 'insufficient'){
+                                    }
+                                    else if(data.name === 'insufficient'){
                                         $('#dd').text('Insufficient Balance. ❌');
                                         $('#dd_2').css('display', 'none');
                                         $('#dd_1').css('display', 'none');
@@ -477,6 +485,7 @@ function openForm_test() {
                                     else{
                                         $('#final-tra').prop('disabled', false);
                                     }
+                                    console.log('hello')
                               }
                         })
                     } else {
@@ -487,6 +496,7 @@ function openForm_test() {
         }
     }
 }
+
 
 function form_se(form) {
     var formData = {};
@@ -510,70 +520,52 @@ function form_se(form) {
 
 function renderTableRows(dataArray, id) {
     const formattedDate = formatDate(dataArray.date_name);
-
-    const rowHTML = createTableRow(dataArray, formattedDate, id)
+    let tableBody = ''
+    var demo = 0;
+    if (dataArray.type.toLowerCase() === 'transfer'){
+        tableBody = document.querySelector("#myTable_1 tbody");
+        demo = 1;
+    }
+    else{
+        tableBody = document.querySelector("#myTable tbody");
+        demo = 2;
+    }
+    const rowHTML = createTableRow(dataArray, formattedDate, id, demo)
     const newRow = document.createElement("tr");
     newRow.style.background = rowHTML[1];
     newRow.id = 'tra_'+ id;
     newRow.innerHTML = rowHTML[0];
 
-    const tableBody = document.querySelector("#myTable tbody");
     tableBody.insertBefore(newRow, tableBody.firstChild);
+    data_is()
 }
 
-function formatDate(inputDate) {
-  const date = new Date(inputDate);
-  const day = date.getDate();
-  const month = date.toLocaleString('default', { month: 'short' });
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
-  const ampm = hours >= 12 ? 'PM' : 'AM';
 
-  const formattedDate = `${day} ${month} ${hours % 12 === 0 ? 12 : hours % 12}:${minutes.toString().padStart(2, '0')}${ampm}`;
-  return formattedDate;
-}
 
-function createTableRow(i, formattedDate, id) {
-    console.log(i)
-    const valueOfFirstInput = parseInt($('tbody tr:first-child td:first-child').attr('id'), 10) + 1;
-    if (i.account){
-        var color_ = ''
-        var che = 0;
-        if (i.type.toLowerCase() === 'available' || i.type.toLowerCase() === 'income' ){
-            color_ = '#000fff'
-            che = '#cbf8cb';
+function createTableRow(i, formattedDate, id, condi) {
+    var searchValue = document.querySelector('input[name="search-param"]');
+    var valueOfFirstInput = '';
+    var value_name = $('[name="id"]').val();
+    if (searchValue || value_name ){
+        if(searchValue){
+            searchValue = searchValue.value;
         }
-        else if ( i.type.toLowerCase() === 'expense' ){
-            color_ = '#ff0000'
-            che = '#f8cbcb';
+        try{
+            const firstTableRowWithId_ = document.querySelector('#myTable_1 tbody tr#tra_' + id);
+            const firstTd_ = firstTableRowWithId_.querySelector('td');
+            valueOfFirstInput = parseInt(firstTd_.id, 10);
+        }catch (error){
+            const firstTableRowWithId_ = document.querySelector('#myTable tbody tr#tra_' + id);
+            const firstTd_ = firstTableRowWithId_.querySelector('td');
+            valueOfFirstInput = parseInt(firstTd_.id, 10);
         }
-        else{
-            color_ = '#000'
-            che = '#a3a6a4';
-        }
-
-        return [(
-            '<td id="' + valueOfFirstInput + '">' + valueOfFirstInput + '</td>' +
-            '<td>' + formattedDate + '</td>' +
-            '<td>' + i.category + '</td>' +
-            '<td>' + i.account + '</td>' +
-            '<td style="color: '+ color_ +' !important;">' + i.amount + ' ₹</td>' +
-            '<td>' + i.note + '</td>' +
-            '<td>' +
-            '    <a href="javascript:void(0)" onclick="updateModel(' + id + ',' + valueOfFirstInput + ')" class="bg-info mr-2">' +
-            '        <span class="label label-success">\n' +
-            '            Edit\n' +
-            '    </span>' +
-            '    </a>' +
-            '    <a href="javascript:void(0)" onclick="Delete(' + id + ',' + valueOfFirstInput + ')" class="bg-info ml-2">' +
-            '        <span class="label label-danger">' +
-            '            Delete' +
-            '        </span>' +
-            '    </a>' +
-            '</td>'
-        ), che]
     }
     else{
+        valueOfFirstInput = parseInt($('#count_1').val(), 10) + 1;
+    }
+    $('#tra_' + id + '').remove();
+    if (i.type.toLowerCase() === 'transfer'){
+
         var check_account = $('#check_account').val();
         var color_ = ''
         var che = 0;
@@ -597,12 +589,49 @@ function createTableRow(i, formattedDate, id) {
             '<td style="color: '+ color_ +' !important;">' + i.amount + ' ₹</td>' +
             '<td>' + i.note + '</td>' +
             '<td>' +
-            '    <a href="javascript:void(0)" onclick="updateModel(' + id + ')" class="bg-info mr-2">' +
+            '    <a href="javascript:void(0)" onclick="updateModel(' + id + ',' + 0 + ')" class="bg-info mr-2">' +
             '        <span class="label label-success">\n' +
             '            Edit\n' +
             '    </span>' +
             '    </a>' +
-            '    <a href="javascript:void(0)" onclick="Delete(' + id + ')" class="bg-info ml-2">' +
+            '    <a href="javascript:void(0)" onclick="Delete(' + id + ',' + valueOfFirstInput + ',' + 1 + ')" class="bg-info ml-2">' +
+            '        <span class="label label-danger">' +
+            '            Delete' +
+            '        </span>' +
+            '    </a>' +
+            '</td>'
+        ), che]
+    }
+    else{
+        var color_ = ''
+        var che = 0;
+        if (i.type.toLowerCase() === 'available' || i.type.toLowerCase() === 'income' ){
+            color_ = '#000fff'
+            che = '#cbf8cb';
+        }
+        else if ( i.type.toLowerCase() === 'expense' ){
+            color_ = '#ff0000'
+            che = '#f8cbcb';
+        }
+        else{
+            color_ = '#000'
+            che = '#a3a6a4';
+        }
+
+        return [(
+            '<td id="' + valueOfFirstInput + '">' + valueOfFirstInput + '</td>' +
+            '<td>' + formattedDate + '</td>' +
+            '<td>' + i.category + '</td>' +
+            '<td>' + i.account + '</td>' +
+            '<td style="color: '+ color_ +' !important;">' + i.amount + ' ₹</td>' +
+            '<td>' + i.note + '</td>' +
+            '<td>' +
+            '    <a href="javascript:void(0)" onclick="updateModel(' + id + ',' + 0 + ')" class="bg-info mr-2">' +
+            '        <span class="label label-success">\n' +
+            '            Edit\n' +
+            '    </span>' +
+            '    </a>' +
+            '    <a href="javascript:void(0)" onclick="Delete(' + id + ',' + valueOfFirstInput + ',' + 1 + ')" class="bg-info ml-2">' +
             '        <span class="label label-danger">' +
             '            Delete' +
             '        </span>' +
@@ -613,55 +642,18 @@ function createTableRow(i, formattedDate, id) {
 }
 
 
-function get_amount(form_data, check){
-    var box_1 = parseInt($("#balance-1").val(), 10)
-    var box_2 = parseInt($("#balance-2").val(), 10)
-    var amount = parseInt(form_data.amount, 10)
+function formatDate(inputDate) {
+  const date = new Date(inputDate);
+  const day = date.getDate();
+  const month = date.toLocaleString('default', { month: 'short' });
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const ampm = hours >= 12 ? 'PM' : 'AM';
 
-    console.log(box_1)
-    console.log(amount)
-    if (check === 1){
-        if (form_data.type.toLowerCase() === 'available' || form_data.type.toLowerCase() === 'income'){
-            box_1 += amount
-        }
-        else{
-            box_2 += amount
-        }
-    }
-    else{
-        console.log(form_data.from_account.toLowerCase())
-        console.log(form_data.to_account.toLowerCase())
-        var check_account = $("#check_account").val()
-        console.log(check_account.toLowerCase())
-        if (form_data.from_account.toLowerCase() === check_account.toLowerCase()) {
-            box_2 += amount
-        }
-        else if (form_data.to_account.toLowerCase() === check_account.toLowerCase()) {
-            box_1 += amount
-        }
-    }
-    var box_3 = box_1 - box_2
-    $("#balance-1").val(box_1)
-    $("#balance-2").val(box_2)
-    $("#balance-3").val(box_3)
-    // {% if i.type.type_name == 'Available' or i.type.type_name == 'Income'%}
-    //     sum += {{ i.amount }};
-    // {% else %}
-    //     {% if i.type.type_name == 'Expense' %}
-    //         subtraction += {{ i.amount }};
-    //     {% else %}
-    //         {% if private_master %}
-    //
-    //         {% else %}
-    //             {% if i.from_account.account_name == main %}
-    //                 subtraction += {{ i.amount }};
-    //             {% else %}
-    //                 sum += {{ i.amount }};
-    //             {% endif %}
-    //         {% endif %}
-    //     {% endif %}
-    // {% endif %}
+  const formattedDate = `${day} ${month} ${hours % 12 === 0 ? 12 : hours % 12}:${minutes.toString().padStart(2, '0')}${ampm}`;
+  return formattedDate;
 }
+
 
 function check_val(){
     var vals = $('#newOptionInput').val();
@@ -674,6 +666,7 @@ function check_val(){
     }
 
 }
+
 
 function add_category(){
     var a = $('#id_catname_id option:selected').attr('name');
@@ -735,7 +728,7 @@ function check_condition(id) {
 }
 
 
-document.getElementById('deleteButton').addEventListener('click', function() {
+function add_button() {
     var val = $('#newOptionInput').val();
     var selectBox = document.getElementById('id_catname_id');
     var existingOptions = selectBox.getElementsByTagName('option');
@@ -774,10 +767,11 @@ document.getElementById('deleteButton').addEventListener('click', function() {
     // selectBox.appendChild(newOption);
     //
     // document.getElementById('newOptionInput').value = ''; // Clear the input field after adding option
-});
+}
+document.getElementById('deleteButton').onclick = add_button;
 
 
-document.getElementById('addButton').addEventListener('click', function() {
+function delete_button() {
     var selectContainer = document.getElementById('selectContainer');
     var selectBox = document.getElementById('id_catname_id');
     var newOptionValue = document.getElementById('newOptionInput').value.toLowerCase();
@@ -813,27 +807,23 @@ document.getElementById('addButton').addEventListener('click', function() {
     selectBox.appendChild(newOption);
 
     // document.getElementById('newOptionInput').value = ''; // Clear the input field after adding option
-});
+}
+document.getElementById('addButton').onclick = delete_button;
 
 
-
-// document.getElementById('id_to_account').onchange =
 function handleToAccountChange() {
 
     var a = $('#id_to_account').val();
     $('#id_from_account option[value="'+ a +'"]').prop('disabled', true);
     $('#id_from_account option[value!="'+ a +'"]').prop('disabled', false);
 };
+document.getElementById('id_to_account').onchange = handleToAccountChange;
 
 
-// document.getElementById('id_from_account').onchange =
 function handleFromAccountChange() {
 
     var a = $('#id_from_account').val();
     $('#id_to_account option[value="'+ a +'"]').prop('disabled', true);
     $('#id_to_account option[value!="'+ a +'"]').prop('disabled', false);
 }
-document.getElementById('id_to_account').onchange = handleToAccountChange;
-
-// Set the onchange event for 'id_from_account'
 document.getElementById('id_from_account').onchange = handleFromAccountChange;

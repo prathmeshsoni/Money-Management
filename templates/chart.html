@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pie Chart with Percentages and Tooltips</title>
+  <!-- Include Chart.js library -->
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Include chartjs-plugin-datalabels -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+  <!-- Include chartjs-plugin-tooltip -->
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-tooltip@1.4.0"></script>
+</head>
+<body>
+  <canvas id="chart_6" width="400" height="400"></canvas>
+
+  <script>
+    function chart_shows(names, values) {
+      var ctx6 = document.getElementById("chart_6").getContext("2d");
+      var data6 = {
+        labels: names,
+        datasets: [
+          {
+            data: values,
+            backgroundColor: [
+              "#26c6da",
+              "#ffb22b",
+              "#1e88e5",
+              "#26c6da",
+              "#ffb22b",
+              "#1e88e5",
+              "#26c6da",
+              "#ffb22b",
+              "#1e88e5",
+              "#26c6da",
+              "#ffb22b",
+              "#1e88e5",
+            ],
+            hoverBackgroundColor: [
+              "#26c6da",
+              "#ffb22b",
+              "#1e88e5",
+              "#26c6da",
+              "#ffb22b",
+              "#1e88e5",
+              "#26c6da",
+              "#ffb22b",
+              "#1e88e5",
+              "#26c6da",
+              "#ffb22b",
+              "#1e88e5",
+            ],
+          },
+        ],
+      };
+
+      var options = {
+        animation: {
+          duration: 3000,
+        },
+        responsive: true,
+        legend: {
+          labels: {
+            fontFamily: "Poppins",
+            fontColor: "#878787",
+          },
+        },
+        plugins: {
+          datalabels: {
+            display: true,
+            color: "#fff",
+            anchor: "end",
+            align: "start",
+            offset: 8,
+            formatter: (value, ctx) => {
+              let sum = 0;
+              let dataArr = ctx.dataset.data;
+              dataArr.map((data) => {
+                sum += data;
+              });
+              let percentage = ((value * 100) / sum).toFixed(2) + "%";
+              return percentage;
+            },
+          },
+          tooltip: {
+            callbacks: {
+              label: function (context) {
+                const label = data6.labels[context.index];
+                const value = data6.datasets[0].data[context.index];
+                const dataset = data6.datasets[0];
+                const sum = dataset.data.reduce((acc, val) => acc + val, 0);
+                const percentage = ((value * 100) / sum).toFixed(2) + "%";
+                return `${label}: ${value} (${percentage})`;
+              },
+            },
+          },
+        },
+        elements: {
+          arc: {
+            borderWidth: 0,
+          },
+        },
+      };
+
+      var pieChart = new Chart(ctx6, {
+        type: "pie",
+        data: data6,
+        options: options,
+      });
+    }
+
+    // Function call with example data
+    chart_shows(
+      ['food', 'default', 'transport', 'salary', 'bouns', 'other', 'study', 'clothes', 'bike', 'collage food', 'chrg', 'medicine'],
+      [100, 300, 230, 400, 200, 150, 70, 90, 120, 210, 300, 99]
+    );
+  </script>
+</body>
+</html>

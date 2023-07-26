@@ -1,5 +1,5 @@
 {% load static %}
-
+{% load crispy_forms_tags %}
 <html lang="en" id="main-html">
 
     <head>
@@ -85,10 +85,10 @@
                                 </div>
                             {% else %}
                                 <div class="col-12 text-left">
-                                    <a style="color: #FFF !important; background: none !important;" href=""><i class="fa fa fa-vcard-o"></i> Change Password</a>
+                                    <a style="color: #FFF !important; background: none !important;" href="/change-password/"><i class="fa fa fa-vcard-o"></i> Change Password</a>
                                 </div>
                 				<div class="col-12 text-left">
-                                    <a style="color: #FFF !important; background: none !important; " href="/admin/logout/"><i class="fa fa-power-off"></i> Logout</a>
+                                    <a style="color: #FFF !important; background: none !important; " href="/logout/"><i class="fa fa-power-off"></i> Logout</a>
                                 </div>
                             {% endif %}
                             </div>
@@ -113,7 +113,7 @@
                         <img src="" style="width: 40px !important;height: 41px !important;" class="rounded-circle" alt="">
                         <span style="color: black;" >
                             {% if request.session.private_admin %} {{request.session.private_admin}}{% endif %}
-
+                            <input type="hidden" name="count_1" id="count_1" value="" />
                         </span>
                       </a>
                     </li>
@@ -173,6 +173,20 @@
                             <li {% if filter_active == 'account_master' %} class="active mb-1" style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}  style="background: rgb(6 0 255 / 11%);" ><a href="/view/account"><i class="{% if filter_active == 'account_master' %} {{'fa fa-circle'}} {% else %} {{'fa fa-circle-thin'}} {% endif %}"></i>Account</a></li>
                             <li {% if filter_active == 'cat_master' %} class="active mb-1" style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}  style="background: rgb(6 0 255 / 11%);" ><a href="/view/category"><i class="{% if filter_active == 'cat_master' %} {{'fa fa-circle'}} {% else %} {{'fa fa-circle-thin'}} {% endif %}"></i>Category</a></li>
                             <li {% if filter_active == 'all_master' %} class="active mb-1" style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}  style="background: rgb(6 0 255 / 11%);" ><a href="/view/all"><i class="{% if filter_active == 'all_master' %} {{'fa fa-circle'}} {% else %} {{'fa fa-circle-thin'}} {% endif %}"></i>All Filter</a></li>
+                      </ul>
+                    </li>
+                </ul>
+                <ul class="sidebar-menu" data-widget="tree">
+                    <li class="treeview {% if search_master == 'master' %} {{'menu-open'}} {% endif %} ">
+                      <a href="#">
+                        <i class="fa fa-filter"></i>
+                        <span>Search Master</span>
+                        <span class="pull-right-container">
+                          <i class="fa fa-angle-right pull-right"></i>
+                        </span>
+                      </a>
+                      <ul class="treeview-menu {% if search_master == 'master' %} {{'res-tb-block mt-2'}} {% else %} {{'mt-2'}} {% endif %}" >
+                        <li {% if search_active == 'search_master' %} class="active mb-1" style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}  style="background: rgb(6 0 255 / 11%);" ><a href="/search/"><i class="{% if search_active == 'search_master' %} {{'fa fa-circle'}} {% else %} {{'fa fa-circle-thin'}} {% endif %}"></i>Search Page</a></li>
                       </ul>
                     </li>
                 </ul>
@@ -250,6 +264,141 @@
             {% block content %}
             {% endblock %}
 
+            {% if cat_master %}
+            {% else %}
+            <!-- sample modal content -->
+                <div class="modal fade bs-example-modal-lg" id="categoryModal" tabindex="-1">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title " id="add_cat" style="display: none;" >ADD DETAILS</h5>
+                            <h5 class="modal-title " id="edit_cat" style="display: none;" >EDIT DETAILS</h5>
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="POST" id="Addcategory" enctype="multipart/form-data" onsubmit="openForm_test(); return false;">
+                                <input type="hidden" name="id" id="id" value="" />
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div id="div_id_typename_id" class="col-md-12">
+                                            <label for="id_typename_id" class=" requiredField">
+                                                Types
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="form-group">
+                                                <select name="type" class="select form-control"
+                                                    id="id_typename_id" onchange="check_condition(0)" >
+                                                    <option selected value="">Select Type</option>
+                                                    {% for i in type_obj %}
+                                                      <option value="{{i.id}}" name="{{ i.type_name }}" >{{i.type_name}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                                {{ m.date_name|as_crispy_field }}
+                                            </div>
+
+                                        <div id="div_id_accountname_id" class="col-md-6">
+                                            <label for="id_accountname_id" class=" requiredField">
+                                                Accounts
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="form-group">
+                                                <select name="account" class="select form-control"
+                                                    id="id_accountname_id">
+                                                    <option selected value="">Select Account</option>
+                                                    {% for i in account_obj %}
+                                                        <option value="{{i.id}}" name="{{ i.account_name }}" >{{i.account_name}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div id="div_id_from_account" class="col-md-6" style="display:none;" >
+                                            <label for="id_from_account" class=" requiredField">
+                                                From
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="form-group">
+                                                <select name="from_account" class="select form-control" required
+                                                    id="id_from_account">
+                                                    <option selected value="">Select Account</option>
+                                                    {% for i in account_obj %}
+                                                      <option value="{{i.id}}" name="{{ i.account_name }}" >{{i.account_name}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div id="div_id_to_account" class="col-md-6" style="display:none;" >
+                                            <label for="id_to_account" class=" requiredField">
+                                                To
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="form-group">
+                                                <select name="to_account" class="select form-control"
+                                                    id="id_to_account">
+                                                    <option selected value="">Select Account</option>
+                                                    {% for i in account_obj %}
+                                                      <option value="{{i.id}}" name="{{ i.account_name }}" >{{i.account_name}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            {{ m.amount|as_crispy_field }}
+                                        </div>
+
+                                        <div id="div_id_catname_id" class="col-md-6">
+                                            <label for="id_catname_id" class=" requiredField">
+                                                Categories
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="form-group">
+                                                <select name="category" class="select form-control"
+                                                    id="id_catname_id" onchange="add_category()">
+                                                    <option selected value="">Select Category</option>
+                                                    {% for i in cat_obj %}
+                                                      <option value="{{i.id}}" name="{{ i.cat_name|lower }}" >{{i.cat_name}}</option>
+                                                    {% endfor %}
+                                                    <option value="add" name="add" >Add Category</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3" style="display: none;" id="add-cat">
+                                            <div class="form-group" >
+                                                <label for="newOptionInput" class="requiredField">
+                                                    Add Category
+                                                </label>
+                                                <div>
+                                                    <input type="text" name="newOptionInput" placeholder="Enter Amount..." class="numberinput form-control" id="newOptionInput" onkeyup="check_val()" >
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3" style="display: none;" id="add-cat-1" >
+                                            <button type="button" class="btn btn-primary mt-4" id="addButton" >Add</button>
+                                            <button type="button" class="btn btn-primary mt-4" id="deleteButton" style="display: none;" >Delete</button>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            {{ m.note|as_crispy_field }}
+                                        </div>
+                                    </div>
+                                </div>
+                                {% csrf_token %}
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-dark" id="m_close" data-dismiss="modal"><span class="text-light">Close</span></button>
+                                    <button type="submit" class="btn btn-primary " id="final-tra" >Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
 
             <footer class="main-footer">
                 <div class="pull-right d-none d-sm-inline-block">
@@ -273,8 +422,269 @@
             <div class="control-sidebar-bg"></div>
 
         </div>
+        <!-- Include Chart.js library -->
+        <!-- Include Chart.js library -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <!-- Include chartjs-plugin-datalabels -->
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+
 
         <script src="{% static 'admin/folder/assets/vendor_components/jquery-3.3.1/jquery-3.3.1.js' %}"></script>
+        <script>
+            $( document ).ready(function() {
+                // function chart_shows(names, values){
+                // if( $('#chart_6').length > 0 ){
+                //     console.log('hello -- 2')
+                //     var ctx6 = document.getElementById("chart_6").getContext("2d");
+                //     var data6 = {
+                //         // labels: names,
+                //         labels: ['food', 'default', 'transport', 'salary', 'bouns', 'other', 'study', 'clothes', 'bike', 'collage food', 'chrg', 'medicine'],
+                //         datasets: [
+                //             {
+                //                 // data: values,
+                //                 data: [100, 300, 230, 400, 200, 150, 70, 90, 120, 210, 300, 99],
+                //                 backgroundColor: [
+                //                     "#26c6da",
+                //                     "#ffb22b",
+                //                     "#1e88e5",
+                //                     "#26c6da",
+                //                     "#ffb22b",
+                //                     "#1e88e5",
+                //                     "#26c6da",
+                //                     "#ffb22b",
+                //                     "#1e88e5",
+                //                     "#26c6da",
+                //                     "#ffb22b",
+                //                     "#1e88e5",
+                //                 ],
+                //                 hoverBackgroundColor: [
+                //                     "#26c6da",
+                //                     "#ffb22b",
+                //                     "#1e88e5",
+                //                     "#26c6da",
+                //                     "#ffb22b",
+                //                     "#1e88e5",
+                //                     "#26c6da",
+                //                     "#ffb22b",
+                //                     "#1e88e5",
+                //                     "#26c6da",
+                //                     "#ffb22b",
+                //                     "#1e88e5",
+                //                 ]
+                //             }]
+                //     };
+                //     var options = {
+                //         tooltips: {
+                //             enabled: false
+                //         },
+                //         plugins: {
+                //             datalabels: {
+                //                 formatter: (value, ctx6) => {
+                //                     let sum = 0;
+                //                     let dataArr = ctx6.chart.data.datasets[0].data;
+                //                     dataArr.map(data => {
+                //                         sum += data;
+                //                     });
+                //                     let percentage = (value*100 / sum).toFixed(2)+"%";
+                //                     console.log("percentage:: " + percentage )
+                //                     return percentage;
+                //                 },
+                //                 color: '#fff',
+                //             }
+                //         }
+                //     };
+                //     var pieChart = new Chart(ctx6, {
+                //         type: 'pie',
+                //         data: data6,
+                //         options: {
+                //             animation: {
+                //                 duration: 3000
+                //             },
+                //             responsive: true,
+                //             legend: {
+                //                 labels: {
+                //                     fontFamily: "Poppins",
+                //                     fontColor: "#878787"
+                //                 }
+                //             },
+                //             tooltip: {
+                //                 backgroundColor: 'rgba(33,33,33,1)',
+                //                 cornerRadius: 0,
+                //                 footerFontFamily: "'Poppins'"
+                //             },
+                //             elements: {
+                //                 arc: {
+                //                     borderWidth: 0
+                //                 }
+                //             },
+                //             plugins: {
+                //                 datalabels: {
+                //                       color: "#fff", // Label color
+                //                       formatter: (value, ctx) => {
+                //                             let sum = 0;
+                //                             let dataArr = ctx.chart.data.datasets[0].data;
+                //                             dataArr.map((data) => {
+                //                               sum += data;
+                //                             });
+                //                             let percentage = ((value * 100) / sum).toFixed(2) + "%";
+                //                             return percentage;
+                //                       },
+                //                 },
+                //             },
+                //         }
+                //     });
+                // }
+
+          //       if ($('#chart_6').length > 0) {
+          //       var ctx6 = document.getElementById("chart_6").getContext("2d");
+          //         var data6 = {
+          //           labels: ['food', 'default', 'transport', 'salary', 'bouns', 'other', 'study', 'clothes', 'bike', 'collage food', 'chrg', 'medicine'],
+          //           datasets: [
+          //             {
+          //               data: [100, 300, 230, 400, 200, 150, 70, 90, 120, 210, 300, 99],
+          //               backgroundColor: [
+          //                 "#26c6da",
+          //                 "#ffb22b",
+          //                 "#1e88e5",
+          //                 "#26c6da",
+          //                 "#ffb22b",
+          //                 "#1e88e5",
+          //                 "#26c6da",
+          //                 "#ffb22b",
+          //                 "#1e88e5",
+          //                 "#26c6da",
+          //                 "#ffb22b",
+          //                 "#1e88e5",
+          //               ],
+          //               hoverBackgroundColor: [
+          //                 "#26c6da",
+          //                 "#ffb22b",
+          //                 "#1e88e5",
+          //                 "#26c6da",
+          //                 "#ffb22b",
+          //                 "#1e88e5",
+          //                 "#26c6da",
+          //                 "#ffb22b",
+          //                 "#1e88e5",
+          //                 "#26c6da",
+          //                 "#ffb22b",
+          //                 "#1e88e5",
+          //               ],
+          //             },
+          //           ],
+          //         };
+          //
+          //         var options = {
+          //           animation: {
+          //             duration: 3000,
+          //           },
+          //           responsive: true,
+          //           legend: {
+          //             labels: {
+          //               fontFamily: "Poppins",
+          //               fontColor: "#878787",
+          //             },
+          //           },
+          //           // tooltips: {
+          //           //   enabled: false,
+          //           // },
+          //           plugins: {
+          //             datalabels: {
+          //   display: true,
+          //   color: "#fff",
+          //   anchor: "end",
+          //   align: "start",
+          //   offset: 8,
+          //   formatter: (value, ctx) => {
+          //     let sum = 0;
+          //     let dataArr = ctx.dataset.data;
+          //     dataArr.map((data) => {
+          //       sum += data;
+          //     });
+          //     let percentage = ((value * 100) / sum).toFixed(2) + "%";
+          //     return percentage;
+          //   },
+          // },
+          // tooltip: {
+          //   callbacks: {
+          //     label: function (context) {
+          //       const label = data6.labels[context.dataIndex];
+          //       const value = data6.datasets[0].data[context.dataIndex];
+          //       const dataset = data6.datasets[0];
+          //       const sum = dataset.data.reduce((acc, val) => acc + val, 0);
+          //       const percentage = ((value * 100) / sum).toFixed(2) + "%";
+          //       return `${label}: ${value} (${percentage})`;
+          //     },
+          //   },
+          // },
+          //           },
+          //           elements: {
+          //             arc: {
+          //               borderWidth: 0,
+          //             },
+          //           },
+          //         };
+          //
+          //         var pieChart = new Chart(ctx6, {
+          //           type: "pie",
+          //           data: data6,
+          //           options: options,
+          //         });
+          //       }
+
+                if( $('#chart_6').length > 0 ){
+                    var ctx6 = document.getElementById("chart_6").getContext("2d");
+                    var data6 = {
+                         labels: [
+                        "lab 1",
+                        "lab 2",
+                        "lab 3"
+                    ],
+                    datasets: [
+                        {
+                            data: [300, 50, 100],
+                            backgroundColor: [
+                                "#26c6da",
+                                "#ffb22b",
+                                "#1e88e5"
+                            ],
+                            hoverBackgroundColor: [
+                                "#26c6da",
+                                "#ffb22b",
+                                "#1e88e5"
+                            ]
+                        }]
+                    };
+
+                    var pieChart  = new Chart(ctx6,{
+                        type: 'pie',
+                        data: data6,
+                        options: {
+                            animation: {
+                                duration:	3000
+                            },
+                            responsive: true,
+                            legend: {
+                                labels: {
+                                fontFamily: "Poppins",
+                                fontColor:"#878787"
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor:'rgba(33,33,33,1)',
+                                cornerRadius:0,
+                                footerFontFamily:"'Poppins'"
+                            },
+                            elements: {
+                                arc: {
+                                    borderWidth: 0
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+        </script>
 
 	    <!-- popper -->
     	<script src="{% static 'admin/folder/assets/vendor_components/popper/dist/popper.min.js' %}"></script>
@@ -302,7 +712,8 @@
         {% if cat_master %}
             <script src="{% static 'admin/folder/js/wallet/master.js' %}"></script>
         {% else %}
-    	    <script src="{% static 'admin/folder/js/wallet/management.js' %}"></script>
+            <script src="{% static 'admin/folder/js/wallet/search.js' %}"></script>
+            <script src="{% static 'admin/folder/js/wallet/management.js' %}"></script>
         {% endif %}
 
         {% if messages %}
@@ -341,33 +752,52 @@
                  window.onload = function exampleFunction(){
                     var sum = 0;
                     var subtraction = 0;
+                    var final = 0;
+                    var final_1 = 0;
+                    var count_1 = 0;
                     {% for i in list %}
-                        {% if reletedcat %}
+                        count_1 += 1
+                        {% if i.type.type_name == 'Available' or i.type.type_name == 'Income'%}
+                            final_1 += 1
                             sum += {{ i.amount }};
                         {% else %}
-                            {% if i.type.type_name == 'Available' or i.type.type_name == 'Income'%}
-                                sum += {{ i.amount }};
+                            {% if i.type.type_name == 'Expense' %}
+                                final_1 += 1
+                                subtraction += {{ i.amount }};
                             {% else %}
-                                {% if i.type.type_name == 'Expense' %}
-                                    subtraction += {{ i.amount }};
+                                 final += 1
+                                {% if private_master %}
                                 {% else %}
-                                    {% if private_master %}
-
+                                    {% if i.from_account.account_name == main %}
+                                        subtraction += {{ i.amount }};
                                     {% else %}
-                                        {% if i.from_account.account_name == main %}
-                                            subtraction += {{ i.amount }};
-                                        {% else %}
-                                            sum += {{ i.amount }};
-                                        {% endif %}
+                                        sum += {{ i.amount }};
                                     {% endif %}
                                 {% endif %}
                             {% endif %}
                         {% endif %}
                     {% endfor %}
+                    console.log(final_1)
+                    console.log(final)
+                     if ( final_1 >= 1){
+                         $("#nodatass").css('display', 'none');
+                     }
+                     else{
+                        $("#nodatass").css('display', 'block');
+                        $("#nodatass").css('text-align', '-webkit-center');
+                     }
+                     if ( final >= 1){
+                        $("#nodatass_1").css('display', 'none');
+                     }
+                     else{
+                        $("#nodatass_1").css('display', 'block');
+                        $("#nodatass_1").css('text-align', '-webkit-center');
+                     }
                     var result = sum - subtraction;
                     $("#balance-1").val(sum);
                     $("#balance-2").val(subtraction);
                     $("#balance-3").val(result);
+                    $("#count_1").val(count_1);
                 }
             </script>
         {% else %}

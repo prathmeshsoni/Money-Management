@@ -11,12 +11,12 @@ from .forms import ManageForm
 from category.models import CategoryModel
 from account.models import AccountModel
 from Types.models import TypeModel
-from .serializer import ManageSerialize
+from .serializer import ManageSerialize, ManageSerialize_1
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from datetime import datetime, timedelta
 from django.http import JsonResponse
-import time
+from django.contrib.auth.views import PasswordChangeForm
 
 
 # 404 Page Not Found
@@ -24,10 +24,323 @@ def page_not_found_view(request, exception):
     return render(request, '404.html', status=404)
 
 
-def viewes(request):
+def custom_login_required(view_func):
+    def wrapper(request, *args, **kwargs):
+        if request.session.get('private_admin'):
+            return view_func(request, *args, **kwargs)
+        else:
+            messages.success(request, 'First You Need to Login')
+            return redirect('/')
+
+    return wrapper
+
+
+@custom_login_required
+def custom_change_password(request):
+    user_obj = get_user_obj(request)
     if request.method == 'POST':
-        user2 = request.session.get('private_admin')
-        user_obj = User.objects.get(username=user2)
+        form = PasswordChangeForm(user=user_obj, data=request.POST)
+        if form.is_valid():
+            form.save()
+            # Redirect to the desired URL after successful password change
+            return redirect('/change-password/')  # Replace with your desired URL
+    else:
+        form = PasswordChangeForm(user=request.user)
+    d, cat_obj, account_obj, type_obj = get_forms(user_obj)
+    return render(request, 'admin/change-password-1.html', {
+        'search': 'search',
+        'form': form,
+        'm': d,
+        'cat_obj': cat_obj,
+        'account_obj': account_obj,
+        'type_obj': type_obj,
+    })
+
+
+def get_user_obj(request):
+    user = request.session.get('private_admin')
+    user_obj = User.objects.get(username=user)
+    return user_obj
+
+
+def get_forms(user_obj):
+    d = ManageForm()
+    cat_obj = CategoryModel.objects.filter(user=user_obj)
+    account_obj = AccountModel.objects.filter(user=user_obj)
+    type_obj = TypeModel.objects.all()
+    return d, cat_obj, account_obj, type_obj
+
+
+# Private Login
+def admin_private(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user_obj2 = User.objects.filter(Q(username=username) | Q(email=username)).first()
+        user_obj = User.objects.filter(email=username).first()
+        if user_obj2:
+            pass
+        if user_obj:
+            user_obj2 = user_obj
+        if user_obj2 is None:
+            messages.success(request, 'Username/Email not found.')
+            return redirect(request.META.get('HTTP_REFERER'))
+
+        if not user_obj2.is_superuser:
+            messages.success(request, "User Can't login")
+            return redirect(request.META.get('HTTP_REFERER'))
+
+        if user_obj2.is_superuser and user_obj2.is_staff:
+            user = UserModel.objects.get(Q(username=username) | Q(email=username))
+            user11 = authenticate(username=user, password=password)
+            if user11 is None:
+                messages.success(request, 'Wrong Password.')
+                return redirect('/')
+
+            request.session['private_admin'] = user.username
+            request.session['private_id'] = user11.id
+            request.session['login_time'] = datetime.now().timestamp()
+            return redirect('/view/')
+
+    else:
+        if 'private_admin' in request.session:
+            return redirect('/view/')
+    return render(request, 'login.html', {"checkcon": 10, "Title": "Private "})
+
+
+# Private Logout
+def logout_private_admin(request):
+    if 'private_admin' in request.session:
+        del request.session['private_admin']
+    if 'login_time' in request.session:
+        del request.session['login_time']
+    if 'private_id' in request.session:
+        del request.session['private_id']
+    # logout(request)
+    return redirect('/')
+
+
+# View All Transaction
+@custom_login_required
+def admin_private_view(request):
+    user_obj = get_user_obj(request)
+    if request.method == 'POST':
+        try:
+            id_1 = request.POST.get('id')
+            jj = ManageModel.objects.get(id=id_1)
+            d = ManageForm(request.POST or None, instance=jj)
+            check_1 = 0
+        except:
+            d = ManageForm(request.POST)
+            check_1 = 1
+        if d.is_valid():
+            type_txt = d.cleaned_data['type']
+            date_str = str(d.cleaned_data['date_name'])
+            date_text = convert_date(date_str)
+            amount_txt = d.cleaned_data['amount']
+            note_txt = d.cleaned_data['category']
+            from_txt = d.cleaned_data['from_account']
+            to_txt = d.cleaned_data['to_account']
+            account_txt = d.cleaned_data['account']
+            if check_1 == 1:
+                if str(type_txt).lower() == 'income'.lower():
+                    account_list = account_value(user_obj, account_txt)
+                    final_amount_1 = int(account_list[0]['amount']) + int(amount_txt)
+                    msg = f'\n\nDear UPI User, ur A/c {account_txt} Credited by Rs.{amount_txt} on {date_text} for ' \
+                          f'{note_txt} Avl Bal Rs:{final_amount_1} -{account_txt} Bank'
+                elif str(type_txt).lower() == 'expense'.lower():
+                    account_list = account_value(user_obj, account_txt)
+                    final_amount_1 = int(account_list[0]['amount']) - int(amount_txt)
+                    msg = f'\n\nDear UPI User, ur A/c {account_txt} Debited for Rs.{amount_txt} by {date_text} for ' \
+                          f'{note_txt} Avl Bal Rs:{final_amount_1} -{account_txt} Bank'
+                elif str(type_txt).lower() == 'transfer'.lower():
+                    account_list = account_value(user_obj, from_txt)
+                    account_list_1 = account_value(user_obj, to_txt)
+                    final_amount_2 = int(account_list[0]['amount']) - int(amount_txt)
+                    final_amount_3 = int(account_list_1[0]['amount']) + int(amount_txt)
+                    msg = f'\n\nDear UPI User, ur A/c {from_txt} To ur A/c {to_txt} Transfer Rs.{amount_txt} on ' \
+                          f'{date_text} for {note_txt} Updated Bal of {from_txt} Rs:{final_amount_2} - {to_txt} ' \
+                          f'Rs:{final_amount_3}'
+                else:
+                    account_list = account_value(user_obj, account_txt)
+                    final_amount_1 = int(account_list[0]['amount']) + int(amount_txt)
+                    msg = f'\n\nDear UPI User, ur A/c {account_txt} Credited by Rs.{amount_txt} on {date_text} for ' \
+                          f'{note_txt} Avl Bal Rs:{final_amount_1} -{account_txt} Bank'
+
+                # sent_massage(msg)
+
+            private_data = d.save(commit=False)
+            private_data.user = user_obj
+            private_data.save()
+            link_check = request.META.get('HTTP_REFERER').split('/view/')
+            if len(link_check) >= 2:
+                items = calculate_amount(user_obj, link_check[1])
+            else:
+                items = []
+            p_id = private_data.id
+            if account_txt:
+                link = f'account/{account_txt}/'
+            else:
+                link = f'account/{from_txt}/'
+            if check_1 == 0:
+                link = '/' + "/".join("".join(request.META.get('HTTP_REFERER')).split('/')[3:])
+            else:
+                pass
+            a = {'status': True, 'id': p_id, 'link': link, 'prices': items}
+            return JsonResponse(a)
+        else:
+            a = {'status': False}
+            return JsonResponse(a)
+    else:
+        b = ManageModel.objects.filter(user=user_obj).order_by('-date_name')
+        d, cat_obj, account_obj, type_obj = get_forms(user_obj)
+        items = {
+            'm': d,
+            'list': b,
+            'cat_obj': cat_obj,
+            'account_obj': account_obj,
+            'type_obj': type_obj,
+            'private_master': 'master',
+            'private_active': 'private_master',
+            "private_1": 0,
+            "checkcon": 10,
+        }
+
+        return render(request, 'private_des.html', items)
+
+
+# Search Page
+@custom_login_required
+def search_page(request):
+    user_obj = get_user_obj(request)
+    if request.method == 'POST':
+        search_param = "".join(request.POST.get('search-param')).strip().lower()
+        filter_name = request.POST.get('filter')
+        if filter_name == 'type':
+            obj_manage = ManageModel.objects.filter(
+                Q(type__type_name__icontains=search_param),
+                user=user_obj
+            ).order_by('date_name')
+        elif filter_name == 'account':
+            obj_manage = ManageModel.objects.filter(
+                Q(account__account_name__icontains=search_param) |
+                Q(from_account__account_name__icontains=search_param) |
+                Q(to_account__account_name__icontains=search_param),
+                user=user_obj
+            ).order_by('date_name')
+        elif filter_name == 'category':
+            obj_manage = ManageModel.objects.filter(
+                Q(category__cat_name__icontains=search_param),
+                user=user_obj
+            ).order_by('date_name')
+        else:
+            obj_manage = ManageModel.objects.filter(
+                Q(type__type_name__icontains=search_param) |
+                Q(account__account_name__icontains=search_param) |
+                Q(from_account__account_name__icontains=search_param) |
+                Q(to_account__account_name__icontains=search_param) |
+                Q(category__cat_name__icontains=search_param) |
+                Q(amount__icontains=search_param) |
+                Q(note__icontains=search_param),
+                user=user_obj
+            ).order_by('date_name')
+        temp_list = []
+        total_amount = 0
+        temp_add = 0
+        temp_sub = 0
+        if obj_manage:
+            for i in obj_manage:
+                m_id = i.id
+                get_data = ManageModel.objects.get(id=m_id)
+                serializer = ManageSerialize_1(get_data)
+                temp_list.append(serializer.data)
+
+                tye = i.type.type_name
+                if str(tye).lower() == 'Expense'.lower():
+                    total_amount -= int(i.amount)
+                    temp_sub += int(i.amount)
+                elif str(tye).lower() == 'Available'.lower() or str(tye).lower() == 'Income'.lower():
+                    total_amount += int(i.amount)
+                    temp_add += int(i.amount)
+            a = {
+                'status': True,
+                'data_list': temp_list,
+                'params': "".join(search_param).strip().lower(),
+                'total_amount': total_amount,
+                'temp_add': temp_add,
+                'temp_sub': temp_sub,
+                'filter_name': filter_name
+            }
+            return JsonResponse(a, safe=False)
+            # a = {'status': True}
+            # return JsonResponse(a, safe=False)
+        else:
+            a = {'status': False}
+            return JsonResponse(a, safe=False)
+    else:
+        d, cat_obj, account_obj, type_obj = get_forms(user_obj)
+        item = {
+            'search': 'search',
+            'search_master': 'master',
+            'search_active': 'search_master',
+            'cat_obj': cat_obj,
+            'account_obj': account_obj,
+            'type_obj': type_obj,
+            'm': d,
+        }
+        return render(
+            request,
+            'search-page.html',
+            item
+        )
+
+
+@custom_login_required
+def chart_page(request):
+    user_obj = get_user_obj(request)
+    d, cat_obj, account_obj, type_obj = get_forms(user_obj)
+    cat_list = []
+    for i in cat_obj:
+        ll = "".join(i.cat_name).strip()
+        cat_list.append(ll)
+
+    values = [
+        100,
+        300,
+        230,
+        400,
+        200,
+        150,
+        70,
+        90,
+        120,
+        210,
+        300,
+        99
+    ]
+    item = {
+        'names': cat_list,
+        'values': values,
+        'search': 'search',
+        'chart_master': 'master',
+        'chart_active': 'chart_master',
+        'cat_obj': cat_obj,
+        'account_obj': account_obj,
+        'type_obj': type_obj,
+        'm': d,
+    }
+    return render(
+        request,
+        'chart-page.html',
+        item
+    )
+
+
+@custom_login_required
+def category_add(request):
+    user_obj = get_user_obj(request)
+    if request.method == 'POST':
         category_name = request.POST.get('category')
         category_list = request.POST.getlist("option_values")
         try:
@@ -39,7 +352,7 @@ def viewes(request):
         if category_nam:
             for value in category_nam:
                 try:
-                    id = value['id']
+                    id_1 = value['id']
                 except:
                     continue
                 cat_name = value['name']
@@ -63,75 +376,187 @@ def viewes(request):
         final_id = check.id
         final_name = check.cat_name
 
-        # a = {'status': True,  'cat_name': {'id': final_id, 'name': final_name}}
         a = {'status': True, 'cat_name': final_name, 'cat_id': final_id}
         return JsonResponse(a)
+    else:
+        return redirect('/view/')
 
 
-# Private LogIn Screen
-def admin_private(request):
+@custom_login_required
+def view_all(request, hid):
+    user_obj = get_user_obj(request)
+    if hid.lower() == 'account':
+        b = []
+        c = AccountModel.objects.filter(user=user_obj)
+        for i in c:
+            c = account_value(user_obj, i.account_name)
+            b.append(c[0])
+        private_master = 'account_master'
+    elif hid.lower() == 'category':
+        b = CategoryModel.objects.filter(user=user_obj)
+        private_master = 'cat_master'
+    elif hid.lower() == 'type':
+        b = TypeModel.objects.all()
+        private_master = 'type_master'
+    else:
+        b = ''
+        private_master = 'all_master'
+    if private_master == 'all_master':
+        pass
+    else:
+        if not b:
+            b = 1
+    d, cat_obj, account_obj, type_obj = get_forms(user_obj)
+    x = {
+        'm': d,
+        'filter_master': 'master',
+        'filter_active': private_master,
+        'main': hid,
+        'cat_obj': cat_obj,
+        'account_obj': account_obj,
+        'type_obj': type_obj,
+    }
+    if b == 1:
+        b = ''
+        x['list'] = b
+    else:
+        if b:
+            x['list'] = b
+        else:
+            x['list1'] = type_obj
+            x['list2'] = account_obj
+            x['list3'] = cat_obj
+    return render(request, 'all_data.html', x)
+
+
+@custom_login_required
+def check_balance(request):
+    user_obj = get_user_obj(request)
+    account_list = account_value(user_obj, '')
+
+    msg = '\n\nAvailable Balance : \n\n'
+    for item in account_list:
+        msg = msg + item['account_name'] + f' Rs: ' + str(item['amount']) + '\n'
+
+    # sent_massage(msg)
+    return redirect('/view/')
+
+
+# Private Detail Function
+@custom_login_required
+@api_view(['GET', 'POST'])
+def get_value(request):
+    if request.method == 'GET':
+        return redirect('/view/')
+    else:
+        id_1 = request.POST.get('id')
+        get_data = ManageModel.objects.get(id=id_1)
+        serializer = ManageSerialize(get_data)
+        return Response(serializer.data)
+
+
+# Delete Detail Function
+@custom_login_required
+def remove_pri(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-
-        userobj = User.objects.filter(username=username).first()
-        user_obj = User.objects.filter(email=username).first()
-        if userobj:
-            pass
-        if user_obj:
-            userobj = user_obj
-        if (userobj) is None:
-            messages.success(request, 'Username/Email not found.')
-            return redirect(request.META.get('HTTP_REFERER'))
-
-        if not (userobj).is_superuser:
-            messages.success(request, "User Can't login")
-            return redirect(request.META.get('HTTP_REFERER'))
-
-        if (userobj).is_superuser:
-            if userobj.is_staff:
-                try:
-                    user = UserModel.objects.get(email=username)
-                    user11 = authenticate(username=user, password=password)
-                    if (user11) is None:
-                        messages.success(request, 'Wrong Password.')
-                        return redirect('/')
-
-                    # login(request , user11)
-                    request.session['private_admin'] = user
-                    request.session['private_id'] = user11.id
-                    request.session['login_time'] = datetime.now().timestamp()
-                    return redirect('/view/')
-
-                except:
-                    usee = None
-
-                user1 = authenticate(username=username, password=password)
-
-                if (user1 or usee) is None:
-                    messages.success(request, 'Wrong Password.')
-                    return redirect('/')
-
-                # login(request , user1)
-                request.session['private_admin'] = username
-                request.session['private_id'] = user1.id
-                request.session['login_time'] = datetime.now().timestamp()
-                return redirect('/view/')
-
-    return render(request, 'login.html', {"checkcon": 10, "Title": "Private "})
-
-
-# Private LogOut
-def logout_private_admin(request):
-    if 'private_admin' in request.session:
-        del request.session['private_admin']
-        del request.session['login_time']
         try:
-            del request.session['private_id']
+            user_obj = get_user_obj(request)
+            hid = request.POST.get('id')
+            obj = ManageModel.objects.get(id=hid)
+            obj.delete()
+            link_check = request.META.get('HTTP_REFERER').split('/view/')
+            if len(link_check) >= 2:
+                items = calculate_amount(user_obj, link_check[1])
+            else:
+                items = []
+            a = {'status': True, 'exists': 'done', 'prices': items}
+            return JsonResponse(a)
         except:
-            pass
-    # logout(request)
-    return redirect('/')
+            a = {'status': True, 'exists': 'error'}
+            return JsonResponse(a)
+    else:
+        return redirect('/view/')
+
+
+@custom_login_required
+def view_type(request, hid):
+    user_obj = get_user_obj(request)
+    try:
+        type_ = TypeModel.objects.get(type_name__iexact=hid)
+    except:
+        return redirect('/view/type')
+    b = ManageModel.objects.filter(type=type_.id, user=user_obj).order_by('-date_name')
+    d, cat_obj, account_obj, type_obj = get_forms(user_obj)
+
+    x = {
+        'm': d,
+        'list': b,
+        'filter_master': 'master',
+        'filter_active': 'type_master',
+        'cat_obj': cat_obj,
+        'account_obj': account_obj,
+        'type_obj': type_obj,
+        "private_1": 0,
+        "checkcon": 0,
+        "reletedtype": type_.id,
+        "main": hid
+    }
+    return render(request, 'private_des.html', x)
+
+
+@custom_login_required
+def view_account(request, hid):
+    user_obj = get_user_obj(request)
+    try:
+        type_ = AccountModel.objects.get(account_name__iexact=hid, user=user_obj)
+    except:
+        return redirect('/view/account')
+    b = ManageModel.objects.filter(
+        Q(account=type_.id) |
+        Q(from_account=type_.id) |
+        Q(to_account=type_.id),
+        Q(user=user_obj)
+    ).order_by('-date_name')
+    d, cat_obj, account_obj, type_obj = get_forms(user_obj)
+    x = {
+        'm': d,
+        'list': b,
+        'filter_master': 'master',
+        'filter_active': 'account_master',
+        'cat_obj': cat_obj,
+        'account_obj': account_obj,
+        'type_obj': type_obj,
+        "private_1": 0,
+        "checkcon": 10,
+        "reletedaccount": type_.id,
+        "main": hid
+    }
+    return render(request, 'private_des.html', x)
+
+
+@custom_login_required
+def view_category(request, hid):
+    user_obj = get_user_obj(request)
+    try:
+        type_ = CategoryModel.objects.get(cat_name__iexact=hid.lower(), user=user_obj)
+    except:
+        return redirect('/view/category')
+    b = ManageModel.objects.filter(category=type_.id, user=user_obj).order_by('-date_name')
+    d, cat_obj, account_obj, type_obj = get_forms(user_obj)
+    x = {
+        'm': d,
+        'list': b,
+        'filter_master': 'master',
+        'filter_active': 'cat_master',
+        'cat_obj': cat_obj,
+        'account_obj': account_obj,
+        'type_obj': type_obj,
+        "private_1": 0,
+        "checkcon": 0,
+        "reletedcat": type_.id,
+        "main": hid
+    }
+    return render(request, 'private_des.html', x)
 
 
 # Logout Every 30 minutes
@@ -147,96 +572,6 @@ def some_view(request):
     else:
         check = 1
     return check
-
-
-# View All Transaction
-def admin_private_view(request):
-    check = 0
-    user2 = request.session.get('private_admin')
-    user_obj = User.objects.get(username=user2)
-    # check = some_view(request)
-    if int(check) == 1:
-        return redirect('/logout/')
-    else:
-        if request.method == 'POST':
-            try:
-                id = request.POST.get('id')
-                jj = ManageModel.objects.get(id=id)
-                d = ManageForm(request.POST or None, instance=jj)
-                check_1 = 0
-            except:
-                d = ManageForm(request.POST)
-                check_1 = 1
-            if d.is_valid():
-                type_txt = d.cleaned_data['type']
-                date_str = str(d.cleaned_data['date_name'])
-                date_text = convert_date(date_str)
-                amount_txt = d.cleaned_data['amount']
-                note_txt = d.cleaned_data['category']
-                from_txt = d.cleaned_data['from_account']
-                to_txt = d.cleaned_data['to_account']
-                account_txt = d.cleaned_data['account']
-                if check_1 == 1:
-                    if str(type_txt).lower() == 'income'.lower():
-                        account_list = check_avil(user_obj, account_txt)
-                        final_amount_1 = int(account_list[0]['amount']) + int(amount_txt)
-                        msg = f'\n\nDear UPI User, ur A/c {account_txt} Credited by Rs.{amount_txt} on {date_text} for {note_txt} Avl Bal Rs:{final_amount_1} -{account_txt} Bank'
-                    elif str(type_txt).lower() == 'expense'.lower():
-                        account_list = check_avil(user_obj, account_txt)
-                        final_amount_1 = int(account_list[0]['amount']) - int(amount_txt)
-                        msg = f'\n\nDear UPI User, ur A/c {account_txt} Debited for Rs.{amount_txt} by {date_text} for {note_txt} Avl Bal Rs:{final_amount_1} -{account_txt} Bank'
-                    elif str(type_txt).lower() == 'transfer'.lower():
-                        account_list = check_avil(user_obj, from_txt)
-                        account_list_1 = check_avil(user_obj, to_txt)
-                        final_amount_2 = int(account_list[0]['amount']) - int(amount_txt)
-                        final_amount_3 = int(account_list_1[0]['amount']) + int(amount_txt)
-                        msg = f'\n\nDear UPI User, ur A/c {from_txt} To ur A/c {to_txt} Transfer Rs.{amount_txt} on {date_text} for {note_txt} Updated Bal of {from_txt} Rs:{final_amount_2} - {to_txt} Rs:{final_amount_3}'
-                    else:
-                        account_list = check_avil(user_obj, account_txt)
-                        final_amount_1 = int(account_list[0]['amount']) + int(amount_txt)
-                        msg = f'\n\nDear UPI User, ur A/c {account_txt} Credited by Rs.{amount_txt} on {date_text} for {note_txt} Avl Bal Rs:{final_amount_1} -{account_txt} Bank'
-
-                    # sent_massage(msg)
-
-                private_data = d.save(commit=False)
-                private_data.user = user_obj
-                private_data.save()
-                p_id = private_data.id
-                if account_txt:
-                    link = f'account/{account_txt}/'
-                else:
-                    link = f'account/{from_txt}/'
-                if check_1 == 0:
-                    link = '/' + "/".join("".join(request.META.get('HTTP_REFERER')).split('/')[3:])
-                else:
-                    pass
-                a = {'status': True, 'id': p_id, 'link': link}
-                return JsonResponse(a)
-            else:
-                a = {'status': False}
-                return JsonResponse(a)
-        else:
-            if 'private_admin' in request.session:
-                d = ManageForm()
-                b = ManageModel.objects.filter(user=user_obj).order_by('-date_name')
-                cat_obj = CategoryModel.objects.filter(user=user_obj)
-                account_obj = AccountModel.objects.filter(user=user_obj)
-                type_obj = TypeModel.objects.all()
-                x = {
-                    'm': d,
-                    'list': b,
-                    'cat_obj': cat_obj,
-                    'account_obj': account_obj,
-                    'type_obj': type_obj,
-                    'private_master': 'master',
-                    'private_active': 'private_master',
-                    "private_1": 0,
-                    "checkcon": 10,
-                }
-            else:
-                return redirect('/')
-
-            return render(request, 'private_des.html', x)
 
 
 def convert_date(date_str):
@@ -257,271 +592,104 @@ def sent_massage(msg):
     )
 
 
-def check_balance(request):
-    # type_list = TypeModel.objects.all()
-    user2 = request.session.get('private_admin')
-    user_obj2 = User.objects.get(username=user2)
-    account_list = check_avil(user_obj2, '')
-
-    msg = '\n\nAvailable Balance : \n\n'
-    for l in account_list:
-        msg = msg + l['account_name'] + f' Rs: ' + str(l['amount']) + '\n'
-    # sent_massage(msg)
-    return redirect('/view/')
-
-
-def check_avil(user_obj2, a_name):
+def account_value(user_obj, a_name):
     if a_name:
-        account_list = AccountModel.objects.filter(account_name=a_name, user=user_obj2)
+        account_list = AccountModel.objects.filter(account_name=a_name, user=user_obj)
     else:
-        account_list = AccountModel.objects.filter(user=user_obj2)
+        account_list = AccountModel.objects.filter(user=user_obj)
     amount_list = []
     for k in account_list:
-        account_ = ManageModel.objects.filter(Q(account=k) | Q(to_account=k) | Q(from_account=k), Q(user=user_obj2))
+        account_ = ManageModel.objects.filter(
+            Q(account=k) |
+            Q(to_account=k) |
+            Q(from_account=k),
+            Q(user=user_obj)
+        )
         total_amount = 0
+        temp_add = 0
+        temp_sub = 0
         for j in account_:
             tye = j.type.type_name
             if str(tye).lower() == 'Expense'.lower():
                 total_amount -= int(j.amount)
+                temp_sub += int(j.amount)
             elif str(tye).lower() == 'Available'.lower() or str(tye).lower() == 'Income'.lower():
                 total_amount += int(j.amount)
+                temp_add += int(j.amount)
             elif str(tye).lower() == 'transfer'.lower():
-                print(j.from_account.account_name.lower())
                 if j.from_account.account_name.lower() == k.account_name.lower():
                     total_amount -= int(j.amount)
+                    temp_sub += int(j.amount)
                 else:
                     total_amount += int(j.amount)
-        amount_list.append({
+                    temp_add += int(j.amount)
+
+        items = {
             'id': k.id,
             'account_name': k.account_name,
             'amount': total_amount,
-
-        })
+            'temp_add': temp_add,
+            'temp_sub': temp_sub,
+        }
+        amount_list.append(items)
     return amount_list
-
-
-# Private Detail Function
-@api_view(['POST'])
-def updatepra(request):
-    id = request.POST.get('id')
-    get_data = ManageModel.objects.get(id=id)
-    serializer = ManageSerialize(get_data)
-    return Response(serializer.data)
-
-
-
-# def remove_pri(request, hid):
-#     if request.method == 'POST':
-#
-#         user2 = request.session.get('private_admin')
-#         obj = ManageModel.objects.get(id=hid)
-#         if obj.user.username == user2:
-#             obj.delete()
-#             return redirect(request.META.get('HTTP_REFERER'))
-#         else:
-#             return redirect(request.META.get('HTTP_REFERER'))
-#     else:
-#         return redirect('/')
-
-
-# Delete Detail Function
-def remove_pri(request):
-    if request.method == 'POST':
-        try:
-            hid = request.POST.get('id')
-            obj = ManageModel.objects.get(id=hid)
-            obj.delete()
-            a = {'status': True, 'exists': 'done'}
-            return JsonResponse(a)
-        except:
-            a = {'status': True,'exists': 'error'}
-            return JsonResponse(a)
-    else:
-        return redirect('/category/')
-
-
-def view_type(request, hid):
-    if 'private_admin' in request.session:
-        d = ManageForm()
-        user2 = request.session.get('private_admin')
-        user_obj2 = User.objects.get(username=user2)
-        try:
-            type_ = TypeModel.objects.get(type_name__iexact=hid)
-        except:
-            return redirect('/view/type/')
-        b = ManageModel.objects.filter(type=type_.id, user=user_obj2).order_by('-date_name')
-        cat_obj = CategoryModel.objects.filter(user=user_obj2)
-        account_obj = AccountModel.objects.filter(user=user_obj2)
-        type_obj = TypeModel.objects.all()
-
-        x = {
-            'm': d,
-            'list': b,
-            'filter_master': 'master',
-            'filter_active': 'type_master',
-            'cat_obj': cat_obj,
-            'account_obj': account_obj,
-            'type_obj': type_obj,
-            "private_1": 0,
-            "checkcon": 0,
-            "reletedtype": type_.id,
-            "main": hid
-        }
-    else:
-        return redirect('/')
-    return render(request, 'private_des.html', x)
-
-
-def view_account(request, hid):
-    if 'private_admin' in request.session:
-        d = ManageForm()
-        user2 = request.session.get('private_admin')
-        user_obj2 = User.objects.get(username=user2)
-        try:
-            type_ = AccountModel.objects.get(account_name__iexact=hid, user=user_obj2)
-        except:
-            return redirect('/view/account/')
-        b = ManageModel.objects.filter(
-            Q(account=type_.id) |
-            Q(from_account=type_.id) |
-            Q(to_account=type_.id),
-            Q(user=user_obj2)
-        ).order_by('-date_name')
-        cat_obj = CategoryModel.objects.filter(user=user_obj2)
-        account_obj = AccountModel.objects.filter(user=user_obj2)
-        type_obj = TypeModel.objects.all()
-        x = {
-            'm': d,
-            'list': b,
-            'filter_master': 'master',
-            'filter_active': 'account_master',
-            'cat_obj': cat_obj,
-            'account_obj': account_obj,
-            'type_obj': type_obj,
-            "private_1": 0,
-            "checkcon": 10,
-            "reletedaccount": type_.id,
-            "main": hid
-        }
-    else:
-        return redirect('/')
-    return render(request, 'private_des.html', x)
-
-
-def view_category(request, hid):
-    if 'private_admin' in request.session:
-        d = ManageForm()
-        user2 = request.session.get('private_admin')
-        user_obj2 = User.objects.get(username=user2)
-        try:
-            type_ = CategoryModel.objects.get(cat_name__iexact=hid.lower(), user=user_obj2)
-        except:
-            return redirect('/view/category/')
-        b = ManageModel.objects.filter(category=type_.id, user=user_obj2).order_by('-date_name')
-        cat_obj = CategoryModel.objects.filter(user=user_obj2)
-        account_obj = AccountModel.objects.filter(user=user_obj2)
-        type_obj = TypeModel.objects.all()
-        x = {
-            'm': d,
-            'list': b,
-            'filter_master': 'master',
-            'filter_active': 'cat_master',
-            'cat_obj': cat_obj,
-            'account_obj': account_obj,
-            'type_obj': type_obj,
-            "private_1": 0,
-            "checkcon": 0,
-            "reletedcat": type_.id,
-            "main": hid
-        }
-    else:
-        return redirect('/')
-    return render(request, 'private_des.html', x)
-
-
-def view_all(request, hid):
-    if 'private_admin' in request.session:
-        d = ManageForm()
-        user2 = request.session.get('private_admin')
-        user_obj2 = User.objects.get(username=user2)
-        if hid.lower() == 'account':
-            b = []
-            c = AccountModel.objects.filter(user=user_obj2)
-            for i in c:
-                c = check_avil(user_obj2, i.account_name)
-                b.append(c[0])
-            private_master = 'account_master'
-        elif hid.lower() == 'category':
-            b = CategoryModel.objects.filter(user=user_obj2)
-            private_master = 'cat_master'
-        elif hid.lower() == 'type':
-            b = TypeModel.objects.all()
-            private_master = 'type_master'
-        else:
-            b = ''
-            private_master = 'all_master'
-        print(b)
-        if private_master == 'all_master':
-            pass
-        else:
-            if not b:
-                b = 1
-        print(private_master)
-        cat_obj = CategoryModel.objects.filter(user=user_obj2)
-        account_obj = AccountModel.objects.filter(user=user_obj2)
-        type_obj = TypeModel.objects.all()
-        if b == 1:
-            b = ''
-            x = {
-                'm': d,
-                'list': b,
-                'filter_master': 'master',
-                'filter_active': private_master,
-                'main': hid,
-                'cat_obj': cat_obj,
-                'account_obj': account_obj,
-                'type_obj': type_obj,
-            }
-        else:
-            if b:
-                x = {
-                    'm': d,
-                    'list': b,
-                    'filter_master': 'master',
-                    'filter_active': private_master,
-                    'main': hid,
-                    'cat_obj': cat_obj,
-                    'account_obj': account_obj,
-                    'type_obj': type_obj,
-                }
-            else:
-                x = {
-                    'm': d,
-                    'list1': type_obj,
-                    'list2': account_obj,
-                    'list3': cat_obj,
-                    'filter_master': 'master',
-                    'filter_active': private_master,
-                    'main': 'all',
-                    'cat_obj': cat_obj,
-                    'account_obj': account_obj,
-                    'type_obj': type_obj,
-                }
-    else:
-        return redirect('/')
-    return render(request, 'all_data.html', x)
 
 
 def dd(request):
     return render(request, 'admin/account.html')
 
 
-def search_page(request):
-    item = {
-        'search': 'search'
+def calculate_amount(user_obj, url_list):
+    total_amount = 0
+    temp_add = 0
+    temp_sub = 0
+    if url_list:
+        check = 1
+        temp = url_list.split('/')
+        name = temp[0]
+        value = temp[1]
+        if name.lower() == 'type':
+            obj_list = ManageModel.objects.filter(
+                Q(type__type_name__iexact=value.lower()),
+                user=user_obj
+            )
+        elif name.lower() == 'account':
+            obj_list = ManageModel.objects.filter(
+                Q(account__account_name__iexact=value.lower()) |
+                Q(from_account__account_name__icontains=value.lower()) |
+                Q(to_account__account_name__icontains=value.lower()),
+                user=user_obj
+            )
+        else:
+            obj_list = ManageModel.objects.filter(
+                Q(category__cat_name__iexact=value.lower()),
+                user=user_obj
+            )
+    else:
+        obj_list = ManageModel.objects.filter(
+            user=user_obj
+        )
+        check = 0
+    for j in obj_list:
+        tye = j.type.type_name
+        if str(tye).lower() == 'Expense'.lower():
+            total_amount -= int(j.amount)
+            temp_sub += int(j.amount)
+        elif str(tye).lower() == 'Available'.lower() or str(tye).lower() == 'Income'.lower():
+            total_amount += int(j.amount)
+            temp_add += int(j.amount)
+        if check == 1:
+            if str(tye).lower() == 'transfer'.lower():
+                if j.from_account.account_name.lower() == value.lower():
+                    total_amount -= int(j.amount)
+                    temp_sub += int(j.amount)
+                else:
+                    total_amount += int(j.amount)
+                    temp_add += int(j.amount)
+
+    item_1 = {
+        'total_amount': total_amount,
+        'temp_add': temp_add,
+        'temp_sub': temp_sub,
     }
-    return render(
-        request,
-        'search-page.html',
-        item
-    )
+    return item_1

@@ -8,15 +8,16 @@ from .serializer import CategorySerialize
 from django.contrib import messages
 from django.http import JsonResponse
 from django.contrib.auth.models import User
+from management.views import custom_login_required, get_user_obj
 
 
+@custom_login_required
 def cat_page(request):
-    user = request.session.get('private_admin')
-    user_obj = User.objects.get(username=user)
+    user_obj = get_user_obj(request)
     if request.method == 'POST':
         try:
-            id = request.POST.get('id')
-            jj = CategoryModel.objects.get(id=id)
+            id_1 = request.POST.get('id')
+            jj = CategoryModel.objects.get(id=id_1)
             d = CategoryForm(request.POST or None, request.FILES or None, instance=jj)
             check = 1
         except:
@@ -27,7 +28,7 @@ def cat_page(request):
             unique_field_value = d.cleaned_data['cat_name'].lower()
             existing_records = CategoryModel.objects.filter(cat_name__iexact=unique_field_value, user=user_obj)
             if check == 1:
-                if existing_records.exists() and int(id) != int(existing_records[0].id):
+                if existing_records.exists() and int(id_1) != int(existing_records[0].id):
                     messages.error(request, 'Category Already Exists. ❌')
                     return redirect('/category/')
                 else:
@@ -59,19 +60,19 @@ def cat_page(request):
             'cat_active': 'cat_master',
             'category': 'Category',
             'type_nam': 'cat_name'
-
         }
-        return render(request, "admin/filter.html",x)
+        return render(request, "admin/filter.html", x)
 
 
 @api_view(['POST'])
 def updateCat(request):
-    id = request.POST.get('id')
-    get_data = CategoryModel.objects.get(id=id)
+    id_1 = request.POST.get('id')
+    get_data = CategoryModel.objects.get(id=id_1)
     serializer = CategorySerialize(get_data)
     return Response(serializer.data)
 
 
+@custom_login_required
 def remove_cat(request):
     if request.method == 'POST':
         try:
@@ -84,17 +85,17 @@ def remove_cat(request):
                 confirm_delete = request.POST.get('confirm_delete')
                 if int(confirm_delete) == 0:
                     obj.delete()
-                    a = {'status': True,'exists':'done', 'name':name}
+                    a = {'status': True, 'exists': 'done', 'name': name}
                     return JsonResponse(a)
                 # messages.success(request,"Delete successfully ✔")
-                a = {'status': True,'exists':'confirmdelete', 'name': name}
+                a = {'status': True, 'exists': 'confirmdelete', 'name': name}
                 return JsonResponse(a)
                 # return redirect('/user/address/')
             else:
-                a = {'status': True,'exists':'orderexist', 'name': name}
+                a = {'status': True, 'exists': 'orderexist', 'name': name}
                 return JsonResponse(a)
         except:
-            a = {'status': True,'exists':'error'}
+            a = {'status': True, 'exists': 'error'}
             return JsonResponse(a)
     else:
         return redirect('/category/')

@@ -6,18 +6,19 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from .serializer import AccountSerialize
 from django.http import JsonResponse
-from management.views import check_avil
+from management.views import account_value
 from django.contrib import messages
 from django.contrib.auth.models import User
+from management.views import custom_login_required, get_user_obj
 
 
+@custom_login_required
 def cat_page(request):
-    user2 = request.session.get('private_admin')
-    user_obj = User.objects.get(username=user2)
+    user_obj = get_user_obj(request)
     if request.method == 'POST':
         try:
-            id = request.POST.get('id')
-            jj = AccountModel.objects.get(id=id)
+            id_1 = request.POST.get('id')
+            jj = AccountModel.objects.get(id=id_1)
             d = AccountForm(request.POST or None, request.FILES or None, instance=jj)
             check = 1
         except:
@@ -28,7 +29,7 @@ def cat_page(request):
             existing_records = AccountModel.objects.filter(account_name__iexact=unique_field_value, user=user_obj)
 
             if check == 1:
-                if existing_records.exists() and int(id) != int(existing_records[0].id):
+                if existing_records.exists() and int(id_1) != int(existing_records[0].id):
                     messages.error(request, 'Account Already Exists. ❌')
                     return redirect('/account/')
                 else:
@@ -54,7 +55,7 @@ def cat_page(request):
         b = AccountModel.objects.filter(user=user_obj)
         data_list = []
         for i in b:
-            c = check_avil(user_obj, i.account_name)
+            c = account_value(user_obj, i.account_name)
             data_list.append(c[0])
         x = {
             'm': d,
@@ -69,12 +70,13 @@ def cat_page(request):
 
 @api_view(['POST'])
 def updateCat(request):
-    id = request.POST.get('id')
-    get_data = AccountModel.objects.get(id=id)
+    id_1 = request.POST.get('id')
+    get_data = AccountModel.objects.get(id=id_1)
     serializer = AccountSerialize(get_data)
     return Response(serializer.data)
 
 
+@custom_login_required
 def remove_cat(request):
     if request.method == 'POST':
         try:
