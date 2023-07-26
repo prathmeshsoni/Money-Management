@@ -36,6 +36,10 @@ function get_datas(chaek){
             dataType: 'JSON',
             success: function (data) {
                 $('[name="search-param"]').focus();
+                $('#search_page').css('display', 'block')
+                $('#search_page_1').css('display', 'block')
+                $('#searchdata').val(data.params)
+                $('#filter_name').val(data.filter_name)
                 if (data.status === true){
                     var count_1 = 0
                     var count_2 = 0
@@ -53,8 +57,6 @@ function get_datas(chaek){
                             count_2 += 1
                         }
                     }
-                    $('#search_page').css('display', 'block')
-                    $('#search_page_1').css('display', 'block')
 
                     if (count_1 >= 1){
                         $('#nodatass_1').css('display', 'none')
@@ -72,21 +74,16 @@ function get_datas(chaek){
                     }
                     $('#bal-1').val(data.temp_add)
                     $('#bal-2').val(data.temp_sub)
-                    $('#searchdata').val(data.params)
-                    $('#filter_name').val(data.filter_name)
+
                 }
                 else{
                     remove_all()
                     $('#bal-1').val(0)
                     $('#bal-2').val(0)
-                    $('#search_page').css('display', 'block')
                     $('#nodatass').css('display', 'block')
                     $('#nodatass').css('text-align', 'center')
-                    $('#search_page_1').css('display', 'block')
                     $('#nodatass_1').css('display', 'block')
                     $('#nodatass_1').css('text-align', 'center')
-                    $('#searchdata').val(data.params)
-                    $('#filter_name').val(data.filter_name)
                 }
             },
 
@@ -117,8 +114,27 @@ function renderTableRows_1(dataArray, id) {
 
 function createTableRow_1(i, formattedDate, id) {
     if (i.type.type_name.toLowerCase() === 'transfer'){
-        color_ = '#000'
-        che = '#a3a6a4';
+        var searchValue = document.querySelector('input[name="search-param"]').value;
+        var filter_name = $('#filter_name').val();
+        if (filter_name === 'all'){
+            color_ = '#000'
+            che = '#a3a6a4';
+        }
+        else{
+            console.log(i.from_account.account_name.toLowerCase() + "  " + i.to_account.account_name.toLowerCase())
+            if ( i.from_account.account_name.toLowerCase().includes(searchValue.toLowerCase()) ){
+                color_ = '#ff0000'
+                che = '#f8cbcb';
+            }
+            else if ( i.to_account.account_name.toLowerCase().includes(searchValue.toLowerCase()) ){
+                color_ = '#000fff'
+                che = '#cbf8cb';
+            }
+            else{
+                color_ = '#000'
+                che = '#a3a6a4';
+            }
+        }
         return [(
             '<td id="' + id + '" >' + id + '</td>' +
             '<td>' + formattedDate + '</td>' +

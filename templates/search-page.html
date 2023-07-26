@@ -63,58 +63,37 @@
 <!-- Main content -->
 <div class="content-wrapper">
 
-    <section class="content">
+    <section class="content-header">
         <div class="row">
-            <div class="col-md-12" style="padding: 0;border-bottom: 2px solid rgba(120,130,140,.13);margin-bottom: 25px; display:flex;" >
-                <div class="col-12 col-lg-6 col-xl-3">
-                    <div class="box">
-                        <div class="box-body">
-                            <div class="text-center">
-                                <h3 class="text-muted db">
-                                    Search Page
-                                </h3>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-lg-6 col-xl-6">
-                    <div class="box">
-                        <div class="box-body">
-                            <div class="text-center">
-                                <a href="javascript:void(0)">
-                                    <h3 class=" db mr-2" style="width: auto; float: left;">
-                                        <span>
-                                            <i style="margin-right: 20px;" class="fa fa-info-circle" aria-hidden="true"></i>
-                                        </span>
-                                            Income :
-                                    </h3>
-                                    <div style="padding-top: 8px;" >
-                                        <input type="text" style="width: 120px !important; font-weight: bold; font-size: 15px; font-family: cursive; float: left;" id="bal-1" value="0" class="form-control mr-1" readonly />
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="box-body">
-                            <div class="text-center">
-                                <a href="javascript:void(0)">
-                                    <h3 class=" db mr-2" style="width: auto; float: left;">
-                                        <span>
-                                            <i style="margin-right: 20px;" class="fa fa-info-circle" aria-hidden="true"></i>
-                                        </span>
-                                            Expense :
-                                    </h3>
-                                    <div style="padding-top: 8px;" >
-                                        <input type="text" style="width: 120px !important; font-weight: bold; font-size: 15px; font-family: cursive; float: left;" id="bal-2" value="0" class="form-control mr-1" readonly />
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="col-md-3">
+                <h5 class="card-title">
+                    Search Master
+                </h5>
             </div>
-            <div class="container">
-                <div class="row d-flex justify-content-center align-items-center">
-                    <div class="col-md-8">
+            <div class="col-md-3">
+            </div>
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-4" style=" padding-top:12px; " >
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/view/"><i class="fa fa-dashboard"></i> Home</a></li>
+                    <li class="breadcrumb-item">
+                        <a href="javascript:void(0)">
+                            <i class="fa fa-search"></i>
+                            Search Master
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active text-capitalize">
+                        Search Page
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </section>
+    <section class="content">
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col-md-12" style="padding: 0;border-bottom: 2px solid rgba(120,130,140,.13);margin-bottom: 25px; display:flex;" >
+                <div class="col-12 col-lg-6 col-xl-8">
                         <div class="search">
                             <i class="fa fa-search"></i>
                             <form method="POST" id="search_form">
@@ -133,10 +112,10 @@
                                                 <i class="fa fa-angle-right pull-right"></i>
                                             </span>
                                         </a>
-                                    <ul class="treeview-menu  mt-2">
+                                    <ul class="treeview-menu  mt-2" style="background: none !important;" >
                                         <li>
-                                            <div class="box-body">
-                                                <div class="media" data-provide="selectable">
+                                            <div>
+                                                <div class="media" data-provide="selectable" style="padding: 10px !important;" >
                                                     <div class="media-left" >
                                                         <label class="custom-control custom-checkbox">
                                                             <input type="radio" id="md_checkbox_1" class="filled-in chk-col-blue" name="filter" value="type" />
@@ -169,6 +148,39 @@
                                 </ul>
                                 {% csrf_token %}
                             </form>
+                        </div>
+                    </div>
+                <div class="col-12 col-lg-6 col-xl-4">
+                    <div class="box">
+                        <div class="box-body">
+                            <div class="text-center">
+                                <a href="javascript:void(0)">
+                                    <h3 class=" db mr-2" style="width: auto; float: left;">
+                                        <span>
+                                            <i style="margin-right: 20px;" class="fa fa-info-circle" aria-hidden="true"></i>
+                                        </span>
+                                            Income :
+                                    </h3>
+                                    <div style="padding-top: 8px;" >
+                                        <input type="text" style="width: 120px !important; font-weight: bold; font-size: 15px; font-family: cursive; float: left;" id="bal-1" value="0" class="form-control mr-1" readonly />
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="box-body">
+                            <div class="text-center">
+                                <a href="javascript:void(0)">
+                                    <h3 class=" db mr-2" style="width: auto; float: left;">
+                                        <span>
+                                            <i style="margin-right: 20px;" class="fa fa-info-circle" aria-hidden="true"></i>
+                                        </span>
+                                            Expense :
+                                    </h3>
+                                    <div style="padding-top: 8px;" >
+                                        <input type="text" style="width: 120px !important; font-weight: bold; font-size: 15px; font-family: cursive; float: left;" id="bal-2" value="0" class="form-control mr-1" readonly />
+                                    </div>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>

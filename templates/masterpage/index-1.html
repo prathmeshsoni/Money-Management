@@ -79,18 +79,12 @@
                         <ul class="dropdown-menu scale-up" style="width: 240px; background: rgba(0, 0, 0, 0.4);" >
                           <li class="user-body">
                             <div class="row no-gutters">
-                            {% if private_1 == 0 %}
-                                <div class="col-12 text-left">
-                                    <a style="color: #FFF !important; background: none !important; " href="/logout/"><i class="fa fa-power-off"></i> Logout</a>
-                                </div>
-                            {% else %}
-                                <div class="col-12 text-left">
-                                    <a style="color: #FFF !important; background: none !important;" href="/change-password/"><i class="fa fa fa-vcard-o"></i> Change Password</a>
-                                </div>
-                				<div class="col-12 text-left">
-                                    <a style="color: #FFF !important; background: none !important; " href="/logout/"><i class="fa fa-power-off"></i> Logout</a>
-                                </div>
-                            {% endif %}
+                            <div class="col-12 text-left">
+                                <a style="color: #FFF !important; background: none !important;" href="/change-password/"><i class="fa fa fa-vcard-o"></i> Change Password</a>
+                            </div>
+                            <div class="col-12 text-left">
+                                <a style="color: #FFF !important; background: none !important; " href="/logout/"><i class="fa fa-power-off"></i> Logout</a>
+                            </div>
                             </div>
                             <!-- /.row -->
                           </li>
@@ -118,7 +112,7 @@
                       </a>
                     </li>
                     <li class="active" >
-                      <a href="/admin/">
+                      <a href="/view/">
                         <i class="fa fa-dashboard"></i> <span>Dashboard</span>
                         <span class="pull-right-container">
                           <!--<i class="fa fa-angle-right pull-right"></i>-->
@@ -144,25 +138,9 @@
                     </li>
                 </ul>
                 <ul class="sidebar-menu" data-widget="tree">
-                    <li class="treeview {% if cat_master == 'master' %} {{'menu-open'}} {% endif %} ">
-                      <a href="#">
-                        <i class="fa fa-file"></i>
-                        <span>Master</span>
-                        <span class="pull-right-container">
-                          <i class="fa fa-angle-right pull-right"></i>
-                        </span>
-                      </a>
-                      <ul class="treeview-menu {% if cat_master == 'master' %} {{'res-tb-block mt-2'}} {% else %} {{'mt-2'}} {% endif %}" >
-                            <li {% if cat_active == 'type_master' %} class="active mb-1" style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}  style="background: rgb(6 0 255 / 11%);" ><a href="/type/"><i class="{% if cat_active == 'type_master' %} {{'fa fa-circle'}} {% else %} {{'fa fa-circle-thin'}} {% endif %}"></i>Types</a></li>
-                            <li {% if cat_active == 'account_master' %} class="active mb-1" style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}  style="background: rgb(6 0 255 / 11%);" ><a href="/account/"><i class="{% if cat_active == 'account_master' %} {{'fa fa-circle'}} {% else %} {{'fa fa-circle-thin'}} {% endif %}"></i>Account</a></li>
-                            <li {% if cat_active == 'cat_master' %} class="active mb-1" style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}  style="background: rgb(6 0 255 / 11%);" ><a href="/category/"><i class="{% if cat_active == 'cat_master' %} {{'fa fa-circle'}} {% else %} {{'fa fa-circle-thin'}} {% endif %}"></i>Category</a></li>
-                      </ul>
-                    </li>
-                </ul>
-                <ul class="sidebar-menu" data-widget="tree">
                     <li class="treeview {% if filter_master == 'master' %} {{'menu-open'}} {% endif %} ">
                       <a href="#">
-                        <i class="fa fa-file"></i>
+                        <i class="fa fa-filter"></i>
                         <span>Filter Master</span>
                         <span class="pull-right-container">
                           <i class="fa fa-angle-right pull-right"></i>
@@ -177,9 +155,25 @@
                     </li>
                 </ul>
                 <ul class="sidebar-menu" data-widget="tree">
+                    <li class="treeview {% if cat_master == 'master' %} {{'menu-open'}} {% endif %} ">
+                      <a href="#">
+                        <i class="fa fa-plus"></i>
+                        <span>Master</span>
+                        <span class="pull-right-container">
+                          <i class="fa fa-angle-right pull-right"></i>
+                        </span>
+                      </a>
+                      <ul class="treeview-menu {% if cat_master == 'master' %} {{'res-tb-block mt-2'}} {% else %} {{'mt-2'}} {% endif %}" >
+                            <li {% if cat_active == 'type_master' %} class="active mb-1" style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}  style="background: rgb(6 0 255 / 11%);" ><a href="/type/"><i class="{% if cat_active == 'type_master' %} {{'fa fa-circle'}} {% else %} {{'fa fa-circle-thin'}} {% endif %}"></i>Types</a></li>
+                            <li {% if cat_active == 'account_master' %} class="active mb-1" style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}  style="background: rgb(6 0 255 / 11%);" ><a href="/account/"><i class="{% if cat_active == 'account_master' %} {{'fa fa-circle'}} {% else %} {{'fa fa-circle-thin'}} {% endif %}"></i>Account</a></li>
+                            <li {% if cat_active == 'cat_master' %} class="active mb-1" style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}  style="background: rgb(6 0 255 / 11%);" ><a href="/category/"><i class="{% if cat_active == 'cat_master' %} {{'fa fa-circle'}} {% else %} {{'fa fa-circle-thin'}} {% endif %}"></i>Category</a></li>
+                      </ul>
+                    </li>
+                </ul>
+                <ul class="sidebar-menu" data-widget="tree">
                     <li class="treeview {% if search_master == 'master' %} {{'menu-open'}} {% endif %} ">
                       <a href="#">
-                        <i class="fa fa-filter"></i>
+                        <i class="fa fa-search"></i>
                         <span>Search Master</span>
                         <span class="pull-right-container">
                           <i class="fa fa-angle-right pull-right"></i>
@@ -187,6 +181,20 @@
                       </a>
                       <ul class="treeview-menu {% if search_master == 'master' %} {{'res-tb-block mt-2'}} {% else %} {{'mt-2'}} {% endif %}" >
                         <li {% if search_active == 'search_master' %} class="active mb-1" style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}  style="background: rgb(6 0 255 / 11%);" ><a href="/search/"><i class="{% if search_active == 'search_master' %} {{'fa fa-circle'}} {% else %} {{'fa fa-circle-thin'}} {% endif %}"></i>Search Page</a></li>
+                      </ul>
+                    </li>
+                </ul>
+                <ul class="sidebar-menu" data-widget="tree">
+                    <li class="treeview {% if password_master == 'master' %} {{'menu-open'}} {% endif %} ">
+                      <a href="#">
+                        <i class="fa fa-lock"></i>
+                        <span>Password</span>
+                        <span class="pull-right-container">
+                          <i class="fa fa-angle-right pull-right"></i>
+                        </span>
+                      </a>
+                      <ul class="treeview-menu {% if password_master == 'master' %} {{'res-tb-block mt-2'}} {% else %} {{'mt-2'}} {% endif %}" >
+                        <li {% if password_active == 'password_master' %} class="active mb-1" style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}  style="background: rgb(6 0 255 / 11%);" ><a href="/change-password/"><i class="{% if password_active == 'password_master' %} {{'fa fa-circle'}} {% else %} {{'fa fa-circle-thin'}} {% endif %}"></i>Change Password</a></li>
                       </ul>
                     </li>
                 </ul>
@@ -228,16 +236,18 @@
                             </div>
                             <div class="col-md-4" style=" padding-top:12px; " >
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="/admin/"><i class="fa fa-dashboard"></i> Home</a></li>
+                                    <li class="breadcrumb-item"><a href="/view/"><i class="fa fa-dashboard"></i> Home</a></li>
                                     <li class="breadcrumb-item">
-<!--                                        <a href="/balance/">-->
-                                        <a href="javascript:void(0)" onclick="buttonclick('Income')">
+                                        <a href="javascript:void(0)">
                                             {% if cat_master %}
+                                                <i class="fa fa-plus"></i>
                                                 Master
                                             {% else %}
                                                 {% if private_master %}
+                                                    <i class="fa fa-file"></i>
                                                     Management
                                                 {% else %}
+                                                    <i class="fa fa-filter"></i>
                                                     Filter Master
                                                 {% endif %}
                                             {% endif %}
@@ -726,13 +736,13 @@
                                 position: 'top-right',
                                 loaderBg: '#fc4b6c !important',
                                 icon: 'error',
-                                hideAfter: 5500
+                                hideAfter: 8000
 
                         });
                     {% else %}
                         $.toast({
                                 {% if message.tags == 'success' %}
-                                    heading: 'Added',
+                                    heading: 'Success',
                                 {% else %}
                                     heading: 'Updated',
                                 {% endif %}
@@ -740,7 +750,7 @@
                                 position: 'top-right',
                                 loaderBg: '#fc4b6c !important',
                                 icon: 'success',
-                                hideAfter: 6000
+                                hideAfter: 8000
 
                         });
                     {% endif %}
@@ -796,7 +806,12 @@
                     var result = sum - subtraction;
                     $("#balance-1").val(sum);
                     $("#balance-2").val(subtraction);
-                    $("#balance-3").val(result);
+                    if ( sum === 0){
+                    }
+                    else{
+                        $("#balance-3").val(result);
+                    }
+
                     $("#count_1").val(count_1);
                 }
             </script>

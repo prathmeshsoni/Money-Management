@@ -58,7 +58,7 @@ function Delete(id){
                             position: 'top-right',
                             loaderBg: '#fc4b6c !important',
                             icon: 'error',
-                            hideAfter: 5500
+                            hideAfter: 8000
 
                         });
 
@@ -66,12 +66,12 @@ function Delete(id){
                     else if (data.exists === "done") {
                         $('#filter_' + id + '').remove();
                         $.toast({
-                            heading: 'Success ',
+                            heading: 'Success',
                             text: '(' + data.name + ') Delete Successfully ✔',
                             position: 'top-right',
                             loaderBg: '#fc4b6c !important',
                             icon: 'success',
-                            hideAfter: 5500
+                            hideAfter: 8000
 
                         });
                         $('#confirm_delete').val(1);

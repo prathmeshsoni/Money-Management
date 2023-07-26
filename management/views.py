@@ -42,6 +42,7 @@ def custom_change_password(request):
         form = PasswordChangeForm(user=user_obj, data=request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Password Changed Successfully ✔')
             # Redirect to the desired URL after successful password change
             return redirect('/change-password/')  # Replace with your desired URL
     else:
@@ -54,6 +55,8 @@ def custom_change_password(request):
         'cat_obj': cat_obj,
         'account_obj': account_obj,
         'type_obj': type_obj,
+        'password_master': 'master',
+        'password_active': 'password_master',
     })
 
 
@@ -203,7 +206,7 @@ def admin_private_view(request):
             'type_obj': type_obj,
             'private_master': 'master',
             'private_active': 'private_master',
-            "private_1": 0,
+                "private_1": 0,
             "checkcon": 10,
         }
 
@@ -263,6 +266,13 @@ def search_page(request):
                 elif str(tye).lower() == 'Available'.lower() or str(tye).lower() == 'Income'.lower():
                     total_amount += int(i.amount)
                     temp_add += int(i.amount)
+                if str(tye).lower() == 'transfer'.lower():
+                    if search_param in i.from_account.account_name.lower():
+                        total_amount -= int(i.amount)
+                        temp_sub += int(i.amount)
+                    elif search_param in i.to_account.account_name.lower():
+                        total_amount += int(i.amount)
+                        temp_add += int(i.amount)
             a = {
                 'status': True,
                 'data_list': temp_list,

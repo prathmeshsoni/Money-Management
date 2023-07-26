@@ -185,7 +185,7 @@
                   </div>
                 </div>
             </div>
-            <div class="col-12" style="{% if filter_active == 'type_master' %} {% if main == 'Transfer' %} {% else %} display:none; {% endif %}  {% endif %} " >
+            <div class="col-12" style="{% if filter_active == 'type_master' %} {% if main == 'Transfer' %} {% else %} display:none; {% endif %} {% else %} {% if filter_active == 'cat_master' %} display:none; {% endif %} {% endif %} " >
                 <div class="box">
                   <div class="box-body">
                     <div class="table-responsive">
@@ -250,14 +250,6 @@
                                 {% else %}
                                 {% endif %}
                             </tbody>
-
-<!--                            <tr id="nodatass_1" style="display:none; border-top: 0px solid white !important;" >-->
-<!--                                <td>-->
-<!--                                    <h1>-->
-<!--                                        NO DATA-->
-<!--                                    </h1>-->
-<!--                                </td>-->
-<!--                            </tr>-->
                         </table>
                         <h1 id="nodatass_1" style="display:none;" >
                             NO DATA

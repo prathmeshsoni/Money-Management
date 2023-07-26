@@ -20,46 +20,46 @@ function buttonclick(datas){
                 return [0, '/view/']
             }
             else{
-                if (final_url === 'type'){
-                    if (final_1 === datas.type.toLowerCase() ){
+                if (final_url === 'type') {
+                    if (final_1 === datas.type.toLowerCase()) {
                         return [1, '/view/type/' + datas.type + '/']
-                    }
-                    else{
+                    } else {
                         return [0, '/view/type/' + datas.type + '/']
                     }
 
-                }
-                else if(final_url === 'account'){
-                    if (datas.type.toLowerCase() === 'transfer'){
-                         if(final_1 === datas.from_account.toLowerCase() ){
+                } else if (final_url === 'account') {
+                    if (datas.type.toLowerCase() === 'transfer') {
+                        if (final_1 === datas.from_account.toLowerCase()) {
                             return [1, '/view/account/' + datas.from_account + '/']
-                        }
-                        else if(final_1 === datas.to_account.toLowerCase() ){
+                        } else if (final_1 === datas.to_account.toLowerCase()) {
                             return [1, '/view/account/' + datas.to_account + '/']
-                        }
-                        else {
+                        } else {
                             return [0, '/view/account/' + datas.to_account + '/']
-                         }
-                    }
-                    else{
-                        if (final_1 === datas.account.toLowerCase() ) {
-                            return [1, '/view/account/' + datas.account + '/']
                         }
-                        else{
+                    } else {
+                        if (final_1 === datas.account.toLowerCase()) {
+                            return [1, '/view/account/' + datas.account + '/']
+                        } else {
                             return [0, '/view/account/' + datas.account + '/']
                         }
                     }
 
-                }
-                else if(final_url === 'category'){
-                    if (final_1 === datas.category.toLowerCase() ) {
-                        return [1, '/view/category/' + datas.category + '/']
+                } else if (final_url === 'category') {
+                    if (datas.category) {
+                        if (datas.type.toLowerCase() === 'transfer') {
+                            return [0, '/view/']
+                        }
+                        else{
+                            if (final_1.replace('%20', ' ') === datas.category.toLowerCase()) {
+                                return [1, '/view/category/' + datas.category + '/']
+                            } else {
+                                return [0, '/view/category/' + datas.category + '/']
+                            }
+                        }
+                    } else {
+                        return [0, '/view/']
                     }
-                    else{
-                        return [0, '/view/category/' + datas.category + '/']
-                    }
-                }
-                else{
+                } else {
                     return [0, '/view/']
                 }
             }
@@ -71,8 +71,6 @@ function buttonclick(datas){
     else{
         return [1, '/view/']
     }
-
-
 }
 
 
@@ -176,7 +174,7 @@ function Delete(id, h_id, s_id){
                                 position: 'top-right',
                                 loaderBg: '#fc4b6c !important',
                                 icon: 'success',
-                                hideAfter: 5500
+                                hideAfter: 8000
                             });
                             data_is()
                         }
@@ -205,115 +203,23 @@ function openForm_test() {
     var value_name = $('[name="id"]').val();
     $('#final-tra').prop('disabled', true);
     $('#final-tra').css('cursor', 'wait');
+    var serializedData = form_se("#Addcategory");
+    let refresh_check = buttonclick(serializedData)
     var searchValue = document.querySelector('input[name="search-param"]');
-    var check_account = $('#check_account').val()
     urrll = window.location.href
     uurl = subStr(urrll)
     var typ = parseInt($('#id_typename_id').val(), 10);
     if (typ === 3){
-        $('#account').val('')
         $.ajax({
               url: '/view/',
               method: 'POST',
               data: $('#Addcategory').serialize(),
               dataType: 'JSON',
               success: function (data) {
-                    var serializedData = form_se("#Addcategory");
                     if (data.status === true) {
-                        $('#balance-1').val(data.prices['temp_add'])
-                        $('#balance-2').val(data.prices['temp_sub'])
-                        $('#balance-3').val(data.prices['total_amount'])
-                        if (value_name){
-                            $.toast({
-                                heading: 'Changed',
-                                text: 'Data Updated Successfully ✔',
-                                position: 'top-right',
-                                loaderBg: '#fc4b6c !important',
-                                icon: 'success',
-                                hideAfter: 2000
-                            });
-                            if (searchValue){
-                                get_datas(0);
-                            }
-                            renderTableRows(serializedData, data.id)
-                            $('#final-tra').prop('disabled', false);
-                            $('#final-tra').css('cursor', 'pointer');
-                            $('#m_close').click()
-                        }
-                        else {
-                            refresh_check = buttonclick(serializedData)
-                            if (refresh_check[0] === 0){
-                                $.toast({
-                                    heading: 'Added',
-                                    text: 'Data Saved Successfully ✔',
-                                    position: 'top-right',
-                                    loaderBg: '#fc4b6c !important',
-                                    icon: 'success',
-                                    hideAfter: 2000
-                                });
-                                $('#m_close').click()
-                                setTimeout(() => {
-                                    window.location.href = refresh_check[1];
-                                }, 2000);
-                            }
-                            else{
-                                var nodata = $('#nodata').val();
-                                if (nodata === "0"){
-                                    $.toast({
-                                        heading: 'Added',
-                                        text: 'Data Saved Successfully ✔',
-                                        position: 'top-right',
-                                        loaderBg: '#fc4b6c !important',
-                                        icon: 'success',
-                                        hideAfter: 2000
-                                    });
-                                    $('#m_close').click()
-                                    setTimeout(() => {
-                                        window.location.href = urrll;
-                                    }, 2000);
-                                }
-                                else{
-                                    renderTableRows(serializedData, data.id)
-                                    $('#final-tra').prop('disabled', false);
-                                    $('#final-tra').css('cursor', 'pointer');
-
-                                    $('#m_close').click()
-                                    $.toast({
-                                            heading: 'Added',
-                                            text: 'Data Saved Successfully ✔',
-                                            position: 'top-right',
-                                            loaderBg: '#fc4b6c !important',
-                                            icon: 'success',
-                                            hideAfter: 6000
-                                    });
-                                }
-
-                                // if
-                                // (
-                                //     uurl === '' ||
-                                //     serializedData.from_account.toLowerCase() === check_account.toLowerCase() ||
-                                //     serializedData.to_account.toLowerCase() === check_account.toLowerCase()
-                                // ){
-                                //     get_amount(serializedData, 0)
-                                //     renderTableRows(serializedData, data.id)
-                                //     $('#final-tra').prop('disabled', false);
-                                //     $('#final-tra').css('cursor', 'pointer');
-                                //     $('#m_close').click()
-                                //     $.toast({
-                                //             heading: 'Added',
-                                //             text: 'Data Saved Successfully ✔',
-                                //             position: 'top-right',
-                                //             loaderBg: '#fc4b6c !important',
-                                //             icon: 'success',
-                                //             hideAfter: 6000
-                                //     });
-                                // }
-                                // else{
-                                //     window.location.href = "/view/" + data.link;
-                                // }
-                            }
-                        }
-                    } else {
+                        final_function(value_name, searchValue, data, refresh_check)
+                    }
+                    else {
                         alert('Something is Wrong')
                     }
               }
@@ -357,144 +263,129 @@ function openForm_test() {
                 data: formData,
                 dataType: 'JSON',
                 success: function (data) {
-
                     if (data.status === true) {
                         var selectElement = document.getElementById('id_catname_id');
+
                         var deleteOption = selectElement.querySelector('option[name="' + data.cat_name.toLowerCase() + '"]');
                         deleteOption.remove();
+
                         var newOption = document.createElement('option');
                         newOption.value = data.cat_id;
                         newOption.textContent = data.cat_name.toLowerCase();
                         newOption.selected = true;
                         newOption.setAttribute('name', data.cat_name.toLowerCase());
-                        selectElement.appendChild(newOption);
+
+                        const firstOption_1 = selectElement.getElementsByTagName('option')[0];
+                        selectElement.insertBefore(newOption, firstOption_1.nextSibling);
+
                         $.ajax({
                               url: '/view/',
                               method: 'POST',
                               data: $('#Addcategory').serialize(),
                               dataType: 'JSON',
                               success: function (data) {
-                                    if (data.status === true) {
-                                        $('#balance-1').val(data.prices['temp_add'])
-                                        $('#balance-2').val(data.prices['temp_sub'])
-                                        $('#balance-3').val(data.prices['total_amount'])
-                                        var serializedData = form_se("#Addcategory");
-                                        if( value_name) {
-                                            $.toast({
-                                                heading: 'Changed',
-                                                text: 'Data Updated Successfully ✔',
-                                                position: 'top-right',
-                                                loaderBg: '#fc4b6c !important',
-                                                icon: 'success',
-                                                hideAfter: 2000
-                                            });
-
-                                            if (searchValue){
-                                                get_datas(0);
-                                            }
-                                            renderTableRows(serializedData, data.id)
-                                            $('#final-tra').prop('disabled', false);
-                                            $('#final-tra').css('cursor', 'pointer');
-                                            $('#m_close').click()
-
-                                            // setTimeout(() => {
-                                            //     window.location.href = "" + data.link + "";
-                                            // }, 2000);
-                                        }
-                                        else{
-                                            refresh_check = buttonclick(serializedData)
-                                            if (refresh_check[0] === 0){
-                                                $.toast({
-                                                    heading: 'Added',
-                                                    text: 'Data Saved Successfully ✔',
-                                                    position: 'top-right',
-                                                    loaderBg: '#fc4b6c !important',
-                                                    icon: 'success',
-                                                    hideAfter: 2000
-                                                });
-                                                $('#m_close').click()
-                                                setTimeout(() => {
-                                                    window.location.href = refresh_check[1];
-                                                }, 2000);
-                                            }
-                                            else{
-                                                var nodata = $('#nodata').val();
-                                                if (nodata === '0'){
-                                                    $.toast({
-                                                        heading: 'Added',
-                                                        text: 'Data Saved Successfully ✔',
-                                                        position: 'top-right',
-                                                        loaderBg: '#fc4b6c !important',
-                                                        icon: 'success',
-                                                        hideAfter: 2000
-                                                    });
-                                                    $('#m_close').click()
-                                                    setTimeout(() => {
-                                                        window.location.href = urrll;
-                                                    }, 2000);
-                                                }
-                                                else{
-                                                    renderTableRows(serializedData, data.id)
-                                                    $('#final-tra').prop('disabled', false);
-                                                    $('#final-tra').css('cursor', 'pointer');
-                                                    $('#m_close').click()
-                                                    $.toast({
-                                                        heading: 'Added',
-                                                        text: 'Data Saved Successfully ✔',
-                                                        position: 'top-right',
-                                                        loaderBg: '#fc4b6c !important',
-                                                        icon: 'success',
-                                                        hideAfter: 6000
-                                                    });
-                                                }
-
-                                                // if
-                                                // (
-                                                //     uurl === '' ||
-                                                //     serializedData.account.toLowerCase() === check_account.toLowerCase()
-                                                //
-                                                // ) {
-                                                //     get_amount(serializedData, 1)
-                                                //     renderTableRows(serializedData, data.id)
-                                                //     $('#final-tra').prop('disabled', false);
-                                                //     $('#final-tra').css('cursor', 'pointer');
-                                                //     $('#m_close').click()
-                                                //     $.toast({
-                                                //         heading: 'Added',
-                                                //         text: 'Data Saved Successfully ✔',
-                                                //         position: 'top-right',
-                                                //         loaderBg: '#fc4b6c !important',
-                                                //         icon: 'success',
-                                                //         hideAfter: 6000
-                                                //     });
-                                                // }
-                                                // else{
-                                                //     window.location.href = "/view/" + data.link;
-                                                // }
-                                            }
-
-                                        }
-                                    }
-                                    else if(data.name === 'insufficient'){
-                                        $('#dd').text('Insufficient Balance. ❌');
-                                        $('#dd_2').css('display', 'none');
-                                        $('#dd_1').css('display', 'none');
-                                        $('#dd').css('display', 'block');
-                                        $('#m_close').click()
-                                    }
-                                    else{
-                                        $('#final-tra').prop('disabled', false);
-                                    }
-                                    console.log('hello')
+                                    final_function(value_name, searchValue, data, refresh_check)
                               }
                         })
-                    } else {
+                    }
+                    else {
                           alert('Something is Wrong.!')
                     }
                 }
             });
         }
     }
+}
+
+
+function final_function(value_name, searchValue, data, refresh_check){
+    if (data.status === true) {
+        $('#balance-1').val(data.prices['temp_add'])
+        $('#balance-2').val(data.prices['temp_sub'])
+        $('#balance-3').val(data.prices['total_amount'])
+        let serializedData = form_se("#Addcategory");
+        if (value_name){
+            if (refresh_check[0] === 0) {
+                $.toast({
+                    heading: 'Changed',
+                    text: 'Data Updated Successfully ✔',
+                    position: 'top-right',
+                    loaderBg: '#fc4b6c !important',
+                    icon: 'success',
+                    hideAfter: 2000
+                });
+                $('#m_close').click()
+                setTimeout(() => {
+                    window.location.href = refresh_check[1];
+                }, 2000);
+            }
+            else{
+                if (searchValue){
+                    get_datas(0);
+                }
+                renderTableRows(serializedData, data.id)
+                $('#final-tra').prop('disabled', false);
+                $('#final-tra').css('cursor', 'pointer');
+                $('#m_close').click()
+                $.toast({
+                    heading: 'Changed',
+                    text: 'Data Updated Successfully ✔',
+                    position: 'top-right',
+                    loaderBg: '#fc4b6c !important',
+                    icon: 'success',
+                    hideAfter: 8000
+                });
+            }
+        }
+        else {
+            if (refresh_check[0] === 0){
+                $.toast({
+                    heading: 'Added',
+                    text: 'Data Saved Successfully ✔',
+                    position: 'top-right',
+                    loaderBg: '#fc4b6c !important',
+                    icon: 'success',
+                    hideAfter: 2000
+                });
+                $('#m_close').click()
+                setTimeout(() => {
+                    window.location.href = refresh_check[1];
+                }, 2000);
+            }
+            else{
+                renderTableRows(serializedData, data.id)
+                $('#final-tra').prop('disabled', false);
+                $('#final-tra').css('cursor', 'pointer');
+                $('#m_close').click()
+                $.toast({
+                        heading: 'Added',
+                        text: 'Data Saved Successfully ✔',
+                        position: 'top-right',
+                        loaderBg: '#fc4b6c !important',
+                        icon: 'success',
+                        hideAfter: 8000
+                });
+            }
+        }
+    }
+    else if(data.name === 'insufficient'){
+        $('#final-tra').prop('disabled', false);
+        $('#final-tra').css('cursor', 'pointer');
+        $('#m_close').click()
+        $.toast({
+            heading: 'Failed !',
+            text: 'Insufficient Balance. ❌',
+            position: 'top-right',
+            loaderBg: '#fc4b6c !important',
+            icon: 'error',
+            hideAfter: 8000
+        });
+    }
+    else{
+        $('#final-tra').prop('disabled', false);
+        $('#final-tra').css('cursor', 'pointer');
+    }
+
 }
 
 
@@ -541,8 +432,7 @@ function renderTableRows(dataArray, id) {
 }
 
 
-
-function createTableRow(i, formattedDate, id, condi) {
+function createTableRow(i, formattedDate, id) {
     var searchValue = document.querySelector('input[name="search-param"]');
     var valueOfFirstInput = '';
     var value_name = $('[name="id"]').val();
@@ -569,18 +459,35 @@ function createTableRow(i, formattedDate, id, condi) {
         var check_account = $('#check_account').val();
         var color_ = ''
         var che = 0;
-        if ( i.from_account.toLowerCase() === check_account.toLowerCase() ){
-            color_ = '#ff0000'
-            che = '#f8cbcb';
-        }
-        else if ( i.to_account.toLowerCase() === check_account.toLowerCase() ){
-            color_ = '#000fff'
-            che = '#cbf8cb';
+        if(searchValue){
+            if ( i.from_account.toLowerCase().includes(searchValue) ){
+                color_ = '#ff0000'
+                che = '#f8cbcb';
+            }
+            else if ( i.to_account.toLowerCase().includes(searchValue) ){
+                color_ = '#000fff'
+                che = '#cbf8cb';
+            }
+            else{
+                color_ = '#000'
+                che = '#a3a6a4';
+            }
         }
         else{
-            color_ = '#000'
-            che = '#a3a6a4';
+             if ( i.from_account.toLowerCase() === check_account.toLowerCase() ){
+                color_ = '#ff0000'
+                che = '#f8cbcb';
+            }
+            else if ( i.to_account.toLowerCase().includes(searchValue) === check_account.toLowerCase() ){
+                color_ = '#000fff'
+                che = '#cbf8cb';
+            }
+            else{
+                color_ = '#000'
+                che = '#a3a6a4';
+            }
         }
+
         return [(
             '<td id="' + valueOfFirstInput + '" >' + valueOfFirstInput + '</td>' +
             '<td>' + formattedDate + '</td>' +
