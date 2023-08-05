@@ -10,8 +10,8 @@
     <section class="content">
 
             <div class="row">
-                <div class="col-md-12" style="padding: 0;border-bottom: 2px solid rgba(120,130,140,.13);margin-bottom: 25px; display:flex;" >
-                    <div class="col-12 col-lg-6 col-xl-4">
+                <div class="col-md-12" style="padding: 0;border-bottom: 2px solid rgba(120,130,140,.13);margin-bottom: 25px; display:block;" >
+                    <div class="col-12 col-lg-6 col-xl-4 float-left">
                         <div class="box">
                             <div class="box-body">
                                 <div class="text-center"  >
@@ -22,7 +22,7 @@
                         </div>
                     </div>
                     {% if category == 'Account' %}
-                        <div class="col-12 col-lg-6 col-xl-6">
+                        <div class="col-12 col-lg-6 col-xl-6 float-left">
                             <div class="box">
                                 <div class="box-body">
                                     <div class="text-center">
@@ -61,12 +61,15 @@
                                                 {% get_attribute i type_nam %}
                                             {% endif %}
                                         </h3>
-                                        <div class="pro-img-overlayy pro-img-overlay" style="top: -10px !important;" >
-                                            <a href="javascript:void(0)" onclick="updateModel({{i.id}})" class="bg-info" style="width: auto !important;height: auto !important;padding: 10px 25px !important;margin: 0 !important;" >Edit</a>
-                                            <a href="javascript:void(0)" onclick="Delete({{i.id}})" class="bg-danger" style="width: auto !important;height: auto !important;padding: 10px 25px !important;margin: 0 !important;" >
-                                                Delete
-                                            </a>
-                                        </div>
+                                        {% if category == 'Type' %}
+                                        {% else %}
+                                            <div class="pro-img-overlayy pro-img-overlay" style="top: -10px !important;" >
+                                                <a href="javascript:void(0)" onclick="updateModel({{i.id}})" class="bg-info" style="width: auto !important;height: auto !important;padding: 10px 25px !important;margin: 0 !important;" >Edit</a>
+                                                <a href="javascript:void(0)" onclick="Delete({{i.id}})" class="bg-danger" style="width: auto !important;height: auto !important;padding: 10px 25px !important;margin: 0 !important;" >
+                                                    Delete
+                                                </a>
+                                            </div>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>

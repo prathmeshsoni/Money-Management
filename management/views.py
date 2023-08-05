@@ -206,7 +206,7 @@ def admin_private_view(request):
             'type_obj': type_obj,
             'private_master': 'master',
             'private_active': 'private_master',
-                "private_1": 0,
+            "private_1": 0,
             "checkcon": 10,
         }
 

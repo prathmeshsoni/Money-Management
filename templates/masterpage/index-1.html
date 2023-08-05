@@ -8,7 +8,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="">
         <meta name="author" content="">
-       	<link rel="shortcut icon" href="{% static 'admin/folder/images/music_clu.png' %}" type="image/x-icon">
+        <link rel="shortcut icon" href="{% static 'admin/folder/images/music_clu.png' %}">
+       	<link rel="icon" href="{% static 'admin/folder/images/demo.png' %}" type="image/x-icon">
+       	
 
             <title>Admin | {% block title3 %} DashBoard {% endblock %}</title>
 
@@ -222,18 +224,21 @@
                             </div>
                             <div class="col-md-3">
                             </div>
-                            <div class="col-md-2">
-                                <div style="text-align-last: center; padding-top:12px; " >
-                                    <button type="button" onclick="openModel()" class="btn btn-sm btn-light" style="
-                                    color: blue; border: blue solid 1.7px; padding: 6px 17px;" ><i class="fa fa-plus" style="font-weight: bolder;" ></i>
-                                        {% if cat_master %}
-                                            ADD {{category}}
-                                        {% else %}
-                                            ADD Transaction
-                                        {% endif %}
-                                    </button>
+                            {% if category == 'Type' %}
+                            {% else %}
+                                <div class="col-md-2">
+                                    <div style="text-align-last: center; padding-top:12px; " >
+                                        <button type="button" onclick="openModel()" class="btn btn-sm btn-light" style="
+                                        color: blue; border: blue solid 1.7px; padding: 6px 17px;" ><i class="fa fa-plus" style="font-weight: bolder;" ></i>
+                                            {% if cat_master %}
+                                                ADD {{category}}
+                                            {% else %}
+                                                ADD Transaction
+                                            {% endif %}
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
+                             {% endif %}
                             <div class="col-md-4" style=" padding-top:12px; " >
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="/view/"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -265,6 +270,11 @@
                                                 {{main}}
                                             {% endif %}
                                         {% endif %}
+                                    </li>
+                                    <li>
+                                        <button  onclick="return closeChromeWindo();">
+                                            Close Window
+                                        </button>
                                     </li>
                                 </ol>
                             </div>
@@ -758,7 +768,18 @@
             </script>
         {% endif %}
         {% if request.session.private_admin %}
-            <script>
+            <script type="text/javascript" >
+                function closeChromeWindo() {
+                  // Open a new window
+                  window.open("", "_self");
+                    window.close();
+
+                //     newWindow.close();
+                //   // Close the new window after a delay (e.g., 3 seconds)
+                //   setTimeout(function() {
+                //     newWindow.close();
+                //   }, 3000);
+                }
                  window.onload = function exampleFunction(){
                     var sum = 0;
                     var subtraction = 0;

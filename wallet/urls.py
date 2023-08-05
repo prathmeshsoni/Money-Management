@@ -25,7 +25,7 @@ urlpatterns = [
     path('type/', include('Types.urls')),
     path('account/', include('account.urls')),
     path('category/', include('category.urls')),
-    path('user/', include('User.urls')),
+    path('', include('User.urls')),
     re_path(r'^hit/uploads/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
 ]
 
