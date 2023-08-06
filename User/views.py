@@ -8,20 +8,11 @@ from django.conf import settings
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.http import JsonResponse
-
-
-def custom_login_required(view_func):
-    def wrapper(request, *args, **kwargs):
-        if request.session.get('private_admin'):
-            return redirect('/')
-        else:
-            return view_func(request, *args, **kwargs)
-
-    return wrapper
+from management.views import custom_login_required_not
 
 
 # Registration Page for User
-@custom_login_required
+@custom_login_required_not
 def register_attempt(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -76,7 +67,7 @@ def send_mail_after_registration(email, username, token):
 
 
 # After Mail Send Page
-@custom_login_required
+@custom_login_required_not
 def token_send(request):
     return render(request, 'user/token_send.html')
 

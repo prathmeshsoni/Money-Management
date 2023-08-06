@@ -81,6 +81,17 @@
 
     <script src="{% static 'user/folder/assets/js/bootstrap-notify.min.js' %}"></script>
 
+    {% if request.session.private_admin %}
+    {% else %}
+        <script>
+            window.onload = function closes(){
+				var height_div = $("#temp").height()
+				$("#set-height-auto").css('height',+ height_div +"px");
+				$('#login_loader').css('display', 'none');
+            }
+        </script>
+    {% endif %}
+
     <script>
         function registerr(){
             var pass = $('#exampleInputPassword1').val().length;

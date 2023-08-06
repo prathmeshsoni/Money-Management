@@ -35,6 +35,16 @@ def custom_login_required(view_func):
     return wrapper
 
 
+def custom_login_required_not(view_func):
+    def wrapper(request, *args, **kwargs):
+        if not request.session.get('private_admin'):
+            return view_func(request, *args, **kwargs)
+        else:
+            return redirect('/view/')
+
+    return wrapper
+
+
 @custom_login_required
 def custom_change_password(request):
     user_obj = get_user_obj(request)
@@ -101,6 +111,7 @@ def get_date_data(b):
 
 
 # Private Login
+@custom_login_required_not
 def admin_private(request):
     if request.method == 'POST':
         username = request.POST.get('username')
