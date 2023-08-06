@@ -121,7 +121,6 @@ function createTableRow_1(i, formattedDate, id) {
             che = '#a3a6a4';
         }
         else{
-            console.log(i.from_account.account_name.toLowerCase() + "  " + i.to_account.account_name.toLowerCase())
             if ( i.from_account.account_name.toLowerCase().includes(searchValue.toLowerCase()) ){
                 color_ = '#ff0000'
                 che = '#f8cbcb';
@@ -240,11 +239,9 @@ function data_is(){
         var value_ = f_[i_].textContent;
         let d_ = document.querySelectorAll("#myTable tbody tr [name='" + value_ + "']").length
         if ( d_ === 0 ){
-            console.log('not avail ' + value_)
             document.querySelector('#myTable tbody tr[id="date-' + value_ + '"]').remove();
         }
         else {
-            console.log('avail ' + value_)
 
         }
 

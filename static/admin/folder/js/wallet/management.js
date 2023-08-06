@@ -569,8 +569,6 @@ function formatDate(inputDate) {
     const ampm = hours >= 12 ? 'PM' : 'AM';
     const formattedDate = `${hours % 12 === 0 ? 12 : hours % 12}:${minutes.toString().padStart(2, '0')}${ampm}`;
     const formattedDate1 = day + " " + month;
-    console.log(formattedDate)
-    console.log(formattedDate1)
     return [formattedDate, formattedDate1];
 }
 

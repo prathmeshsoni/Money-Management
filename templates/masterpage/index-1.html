@@ -271,11 +271,6 @@
                                             {% endif %}
                                         {% endif %}
                                     </li>
-                                    <li>
-                                        <button  onclick="return closeChromeWindo();">
-                                            Close Window
-                                        </button>
-                                    </li>
                                 </ol>
                             </div>
                         </div>
@@ -769,17 +764,7 @@
         {% endif %}
         {% if request.session.private_admin %}
             <script type="text/javascript" >
-                function closeChromeWindo() {
-                  // Open a new window
-                  window.open("", "_self");
-                    window.close();
 
-                //     newWindow.close();
-                //   // Close the new window after a delay (e.g., 3 seconds)
-                //   setTimeout(function() {
-                //     newWindow.close();
-                //   }, 3000);
-                }
 
                  window.onload = function exampleFunction(){
                     var sum = 0;
@@ -809,8 +794,6 @@
                             {% endif %}
                         {% endif %}
                     {% endfor %}
-                    console.log(final_1)
-                    console.log(final)
                      if ( final_1 >= 1){
                          $("#nodatass").css('display', 'none');
                      }
