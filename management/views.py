@@ -1,5 +1,5 @@
 import json
-from twilio.rest import Client
+# from twilio.rest import Client
 from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
@@ -72,6 +72,32 @@ def get_forms(user_obj):
     account_obj = AccountModel.objects.filter(user=user_obj)
     type_obj = TypeModel.objects.all()
     return d, cat_obj, account_obj, type_obj
+
+
+def get_date_data(b):
+    categorized_data = {}
+    for entry in b:
+        date = entry.date_name.strftime("%d %B")  # Format the date as 'dd-mm-yyyy'
+        if date in categorized_data:
+            if entry.type.type_name == 'Transfer':
+                categorized_data[date].append(entry)
+        else:
+            if entry.type.type_name == 'Transfer':
+                categorized_data[date] = [entry]
+    categorized_data_1 = {}
+    for entry in b:
+        date = entry.date_name.strftime("%d %B")  # Format the date as 'dd-mm-yyyy'
+        if date in categorized_data_1:
+            if entry.type.type_name == 'Transfer':
+                pass
+            else:
+                categorized_data_1[date].append(entry)
+        else:
+            if entry.type.type_name == 'Transfer':
+                pass
+            else:
+                categorized_data_1[date] = [entry]
+    return categorized_data, categorized_data_1
 
 
 # Private Login
@@ -201,28 +227,7 @@ def admin_private_view(request):
         # b = ManageModel.objects.filter(user=user_obj).order_by('-date_name')
         b = ManageModel.objects.filter(user=user_obj, date_name__month=datetime.datetime.now().month).order_by('-date_name')
         d, cat_obj, account_obj, type_obj = get_forms(user_obj)
-        categorized_data = {}
-        for entry in b:
-            date = entry.date_name.strftime("%d %B")  # Format the date as 'dd-mm-yyyy'
-            if date in categorized_data:
-                if entry.type.type_name == 'Transfer':
-                    categorized_data[date].append(entry)
-            else:
-                if entry.type.type_name == 'Transfer':
-                    categorized_data[date] = [entry]
-        categorized_data_1 = {}
-        for entry in b:
-            date = entry.date_name.strftime("%d %B")  # Format the date as 'dd-mm-yyyy'
-            if date in categorized_data_1:
-                if entry.type.type_name == 'Transfer':
-                    pass
-                else:
-                    categorized_data_1[date].append(entry)
-            else:
-                if entry.type.type_name == 'Transfer':
-                    pass
-                else:
-                    categorized_data_1[date] = [entry]
+        categorized_data, categorized_data_1 = get_date_data(b)
         items = {
             'm': d,
             'list': b,
@@ -336,30 +341,42 @@ def search_page(request):
 
 @custom_login_required
 def chart_page(request):
+    import datetime
+
     user_obj = get_user_obj(request)
     d, cat_obj, account_obj, type_obj = get_forms(user_obj)
+    total_ = 0
+    total_1 = 0
+    total_income = []
+    total_expense = []
     cat_list = []
     for i in cat_obj:
         ll = "".join(i.cat_name).strip()
-        cat_list.append(ll)
 
-    values = [
-        100,
-        300,
-        230,
-        400,
-        200,
-        150,
-        70,
-        90,
-        120,
-        210,
-        300,
-        99
-    ]
+        cat = CategoryModel.objects.get(id=i.id)
+        val = ManageModel.objects.filter(user=user_obj, category=cat, date_name__month=datetime.datetime.now().month)
+        temp_income = 0
+        temp_expense = 0
+        for k in val:
+            types = k.type.type_name
+            if str(types).lower() == 'Available'.lower() or str(types).lower() == 'Income'.lower():
+                temp_income += k.amount
+            elif str(types).lower() == 'Expense'.lower():
+                temp_expense += k.amount
+        total_ += temp_income
+        total_1 += temp_expense
+        total_income.append(str(temp_income))
+        total_expense.append(str(temp_expense))
+        cat_list.append(f'{ll}')
+        print(len(val))
+    print(total_income)
+    print(total_expense)
     item = {
-        'names': cat_list,
-        'values': values,
+        'names': "'" + "', '".join(cat_list).strip() + "' ",
+        'total_income': ", ".join(total_income),
+        'total_expense': ", ".join(total_expense),
+        'income': total_,
+        'expense': total_1,
         'search': 'search',
         'chart_master': 'master',
         'chart_active': 'chart_master',
@@ -367,6 +384,7 @@ def chart_page(request):
         'account_obj': account_obj,
         'type_obj': type_obj,
         'm': d,
+        'month': datetime.datetime.now().strftime("%B %Y")
     }
     return render(
         request,
@@ -525,6 +543,7 @@ def view_type(request, hid):
         return redirect('/view/type')
     b = ManageModel.objects.filter(type=type_.id, user=user_obj).order_by('-date_name')
     d, cat_obj, account_obj, type_obj = get_forms(user_obj)
+    categorized_data, categorized_data_1 = get_date_data(b)
 
     x = {
         'm': d,
@@ -537,7 +556,9 @@ def view_type(request, hid):
         "private_1": 0,
         "checkcon": 0,
         "reletedtype": type_.id,
-        "main": hid
+        "main": hid,
+        'untransfer_data': categorized_data_1,
+        'transfer_data': categorized_data,
     }
     return render(request, 'private_des.html', x)
 
@@ -556,6 +577,8 @@ def view_account(request, hid):
         Q(user=user_obj)
     ).order_by('-date_name')
     d, cat_obj, account_obj, type_obj = get_forms(user_obj)
+    categorized_data, categorized_data_1 = get_date_data(b)
+
     x = {
         'm': d,
         'list': b,
@@ -567,7 +590,9 @@ def view_account(request, hid):
         "private_1": 0,
         "checkcon": 10,
         "reletedaccount": type_.id,
-        "main": hid
+        "main": hid,
+        'untransfer_data': categorized_data_1,
+        'transfer_data': categorized_data,
     }
     return render(request, 'private_des.html', x)
 
@@ -581,6 +606,8 @@ def view_category(request, hid):
         return redirect('/view/category')
     b = ManageModel.objects.filter(category=type_.id, user=user_obj).order_by('-date_name')
     d, cat_obj, account_obj, type_obj = get_forms(user_obj)
+    categorized_data, categorized_data_1 = get_date_data(b)
+
     x = {
         'm': d,
         'list': b,
@@ -592,7 +619,9 @@ def view_category(request, hid):
         "private_1": 0,
         "checkcon": 0,
         "reletedcat": type_.id,
-        "main": hid
+        "main": hid,
+        'untransfer_data': categorized_data_1,
+        'transfer_data': categorized_data,
     }
     return render(request, 'private_des.html', x)
 
@@ -620,14 +649,15 @@ def convert_date(date_str):
 
 
 def sent_massage(msg):
-    account_sid = 'AC3906f0671f92d822f886ebd6fdf66271'
-    auth_token = '721b9dc48d0809160c16d438db5f1bf9'
-    client = Client(account_sid, auth_token)
-    message = client.messages.create(
-        body=msg,
-        from_='+15734982530',
-        to='+919157379996'
-    )
+    pass
+    # account_sid = 'AC3906f0671f92d822f886ebd6fdf66271'
+    # auth_token = '721b9dc48d0809160c16d438db5f1bf9'
+    # client = Client(account_sid, auth_token)
+    # message = client.messages.create(
+    #     body=msg,
+    #     from_='+15734982530',
+    #     to='+919157379996'
+    # )
 
 
 def account_value(user_obj, a_name):

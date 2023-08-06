@@ -102,7 +102,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12">
+
+            <div class="col-12" style="{% if reletedtype %}{% if main == 'Transfer' %}display:none;{% endif %}{% endif %}" >
                 <div class="box">
                   <div class="box-body">
                     <div class="table-responsive">
@@ -170,14 +171,15 @@
                             </tbody>
 
                         </table>
-                        <h1 id="nodatass" style="display:none;" >
-                            NO DATA
-                        </h1>
+<!--                        <h1 id="nodatass" style="display:none;" >-->
+<!--                            NO DATA-->
+<!--                        </h1>-->
                       </div>
                   </div>
                 </div>
             </div>
-            <div class="col-12">
+
+            <div class="col-12" style="{% if reletedcat %} display:none;{% else %} {% if reletedtype %}{% if not main == 'Transfer' %}display:none;{% endif %}{% endif %}{% endif %}"   >
                 <div class="box">
                   <div class="box-body">
                     <div class="table-responsive">
@@ -245,14 +247,16 @@
                             </tbody>
 
                         </table>
-                        <h1 id="nodatass" style="display:none;" >
-                            NO DATA
-                        </h1>
+<!--                        <h1 id="nodatass" style="display:none;" >-->
+<!--                            NO DATA-->
+<!--                        </h1>-->
                       </div>
                   </div>
                 </div>
             </div>
-
+<!--            {% if not main == 'Transfer' %}-->
+<!--            {% else %}-->
+<!--            {% endif %}-->
         </div>
 
         <div class="row">

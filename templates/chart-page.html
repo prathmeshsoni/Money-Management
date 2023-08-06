@@ -9,42 +9,85 @@
 <!-- Main content -->
 <div class="content-wrapper">
 
+    <section class="content-header">
+        <div class="row">
+            <div class="col-md-3">
+                <h5 class="card-title">
+                    Chart Master
+                </h5>
+            </div>
+            <div class="col-md-3">
+            </div>
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-4" style=" padding-top:12px; " >
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/view/"><i class="fa fa-dashboard"></i> Home</a></li>
+                    <li class="breadcrumb-item">
+                        <a href="javascript:void(0)">
+                            <i class="fa fa-pie-chart"></i>
+                            Chart Master
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active text-capitalize">
+                        Chart Page
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </section>
     <section class="content">
         <div class="row">
             <div class="col-md-12" style="padding: 0;border-bottom: 2px solid rgba(120,130,140,.13);margin-bottom: 25px; display:flex;" >
-                <div class="col-12 col-lg-6 col-xl-3">
+                <div class="col-12 col-lg-6 col-xl-6">
                     <div class="box">
                         <div class="box-body">
                             <div class="text-center">
                                 <h3 class="text-muted db">
-                                    <button onclick="chart_shows(['food', 'default', 'transport', 'salary', 'bouns', 'other', 'study', 'clothes', 'bike', 'collage food', 'chrg', 'medicine'], [100, 300, 230, 400, 200, 150, 70, 90, 120, 210, 300, 99]);" >
-                                        Chart Page
-                                    </button>
+                                    Chart Page Of {{month}}
                                 </h3>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="container">
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">Pie Chart</h3>
+            <div class="col-xl-6 col-12" >
+                <div class="container">
+               <div class="box">
+            <div class="box-header with-border">
+              <h3 class="box-title"> Income Chart :: {{income}}</h3>
 
-                        <ul class="box-controls pull-right">
-                            <li><a class="box-btn-close" href="#"></a></li>
-                            <li><a class="box-btn-slide" href="#"></a></li>
-                            <li><a class="box-btn-fullscreen" href="#"></a></li>
-                        </ul>
-                    </div>
-                    <div class="box-body">
-                        <div class="chart">
-                            <canvas id="chart_6"
-                            style="width:400px !important; height: 400px !important;"></canvas>
-                        </div>
-                    </div>
-                <!-- /.box-body -->
-                </div>
+              <ul class="box-controls pull-right">
+			  	<li><a class="box-btn-slide" href="#"></a></li>
+			  </ul>
+            </div>
+            <div class="box-body">
+              <div class="chart">
+                <canvas id="chart_6" height="200"></canvas>
+              </div>
+            </div>
+            <!-- /.box-body -->
+          </div>
+            </div>
+            </div>
+            <div class="col-xl-6 col-12" >
+                <div class="container">
+               <div class="box">
+            <div class="box-header with-border">
+              <h3 class="box-title"> Expense Chart :: {{expense}}</h3>
+
+              <ul class="box-controls pull-right">
+			  	<li><a class="box-btn-slide" href="#"></a></li>
+			  </ul>
+            </div>
+            <div class="box-body">
+              <div class="chart">
+                <canvas id="chart_7" height="200"></canvas>
+              </div>
+            </div>
+            <!-- /.box-body -->
+          </div>
+            </div>
             </div>
 
         </div>

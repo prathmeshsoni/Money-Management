@@ -83,8 +83,8 @@
           tooltip: {
             callbacks: {
               label: function (context) {
-                const label = data6.labels[context.index];
-                const value = data6.datasets[0].data[context.index];
+                const label = data6.labels[context.dataIndex];
+                const value = data6.datasets[0].data[context.dataIndex];
                 const dataset = data6.datasets[0];
                 const sum = dataset.data.reduce((acc, val) => acc + val, 0);
                 const percentage = ((value * 100) / sum).toFixed(2) + "%";
@@ -110,7 +110,7 @@
     // Function call with example data
     chart_shows(
       ['food', 'default', 'transport', 'salary', 'bouns', 'other', 'study', 'clothes', 'bike', 'collage food', 'chrg', 'medicine'],
-      [100, 300, 230, 400, 200, 150, 70, 90, 120, 210, 300, 99]
+      [0, 300, 230, 400, 200, 150, 70, 90, 120, 210, 300, 99]
     );
   </script>
 </body>

@@ -51,7 +51,7 @@
 
             <header class="main-header">
                 <!-- Logo -->
-                <a href="/" class="logo">
+                <a href="/" class="logo" style="position: fixed" >
                   <!-- mini logo -->
             	<b class="logo-mini" style="display: none;" >
             		  <span class="light-logo"><img src="{% static 'admin/folder/images/music_clu.png' %}" style="height: 60px;width: 50px;" alt="logo"></span>
@@ -97,7 +97,7 @@
         </nav>
             </header>
 
-            <aside class="main-sidebar">
+            <aside class="main-sidebar" style="position: fixed" >
                 <!-- sidebar-->
                 <section class="sidebar">
 
@@ -187,6 +187,20 @@
                     </li>
                 </ul>
                 <ul class="sidebar-menu" data-widget="tree">
+                    <li class="treeview {% if chart_master == 'master' %} {{'menu-open'}} {% endif %} ">
+                      <a href="#">
+                        <i class="fa fa-pie-chart"></i>
+                        <span>Chart Master</span>
+                        <span class="pull-right-container">
+                          <i class="fa fa-angle-right pull-right"></i>
+                        </span>
+                      </a>
+                      <ul class="treeview-menu {% if chart_master == 'master' %} {{'res-tb-block mt-2'}} {% else %} {{'mt-2'}} {% endif %}" >
+                        <li {% if chart_active == 'chart_master' %} class="active mb-1" style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}  style="background: rgb(6 0 255 / 11%);" ><a href="/chart/"><i class="{% if chart_active == 'chart_master' %} {{'fa fa-circle'}} {% else %} {{'fa fa-circle-thin'}} {% endif %}"></i>Chart Page</a></li>
+                      </ul>
+                    </li>
+                </ul>
+                <ul class="sidebar-menu" data-widget="tree">
                     <li class="treeview {% if password_master == 'master' %} {{'menu-open'}} {% endif %} ">
                       <a href="#">
                         <i class="fa fa-lock"></i>
@@ -200,6 +214,8 @@
                       </ul>
                     </li>
                 </ul>
+
+
 
     </section>
             </aside>
@@ -413,6 +429,9 @@
                     </div>
                 </div>
             </div>
+            <div>
+                {{names}}
+            </div>
             {% endif %}
 
             <footer class="main-footer">
@@ -446,259 +465,568 @@
 
         <script src="{% static 'admin/folder/assets/vendor_components/jquery-3.3.1/jquery-3.3.1.js' %}"></script>
         <script>
-            $( document ).ready(function() {
-                // function chart_shows(names, values){
-                // if( $('#chart_6').length > 0 ){
-                //     console.log('hello -- 2')
-                //     var ctx6 = document.getElementById("chart_6").getContext("2d");
-                //     var data6 = {
-                //         // labels: names,
-                //         labels: ['food', 'default', 'transport', 'salary', 'bouns', 'other', 'study', 'clothes', 'bike', 'collage food', 'chrg', 'medicine'],
-                //         datasets: [
-                //             {
-                //                 // data: values,
-                //                 data: [100, 300, 230, 400, 200, 150, 70, 90, 120, 210, 300, 99],
-                //                 backgroundColor: [
-                //                     "#26c6da",
-                //                     "#ffb22b",
-                //                     "#1e88e5",
-                //                     "#26c6da",
-                //                     "#ffb22b",
-                //                     "#1e88e5",
-                //                     "#26c6da",
-                //                     "#ffb22b",
-                //                     "#1e88e5",
-                //                     "#26c6da",
-                //                     "#ffb22b",
-                //                     "#1e88e5",
-                //                 ],
-                //                 hoverBackgroundColor: [
-                //                     "#26c6da",
-                //                     "#ffb22b",
-                //                     "#1e88e5",
-                //                     "#26c6da",
-                //                     "#ffb22b",
-                //                     "#1e88e5",
-                //                     "#26c6da",
-                //                     "#ffb22b",
-                //                     "#1e88e5",
-                //                     "#26c6da",
-                //                     "#ffb22b",
-                //                     "#1e88e5",
-                //                 ]
-                //             }]
-                //     };
-                //     var options = {
-                //         tooltips: {
-                //             enabled: false
-                //         },
-                //         plugins: {
-                //             datalabels: {
-                //                 formatter: (value, ctx6) => {
-                //                     let sum = 0;
-                //                     let dataArr = ctx6.chart.data.datasets[0].data;
-                //                     dataArr.map(data => {
-                //                         sum += data;
-                //                     });
-                //                     let percentage = (value*100 / sum).toFixed(2)+"%";
-                //                     console.log("percentage:: " + percentage )
-                //                     return percentage;
-                //                 },
-                //                 color: '#fff',
-                //             }
-                //         }
-                //     };
-                //     var pieChart = new Chart(ctx6, {
-                //         type: 'pie',
-                //         data: data6,
-                //         options: {
-                //             animation: {
-                //                 duration: 3000
-                //             },
-                //             responsive: true,
-                //             legend: {
-                //                 labels: {
-                //                     fontFamily: "Poppins",
-                //                     fontColor: "#878787"
-                //                 }
-                //             },
-                //             tooltip: {
-                //                 backgroundColor: 'rgba(33,33,33,1)',
-                //                 cornerRadius: 0,
-                //                 footerFontFamily: "'Poppins'"
-                //             },
-                //             elements: {
-                //                 arc: {
-                //                     borderWidth: 0
-                //                 }
-                //             },
-                //             plugins: {
-                //                 datalabels: {
-                //                       color: "#fff", // Label color
-                //                       formatter: (value, ctx) => {
-                //                             let sum = 0;
-                //                             let dataArr = ctx.chart.data.datasets[0].data;
-                //                             dataArr.map((data) => {
-                //                               sum += data;
-                //                             });
-                //                             let percentage = ((value * 100) / sum).toFixed(2) + "%";
-                //                             return percentage;
-                //                       },
-                //                 },
-                //             },
-                //         }
-                //     });
-                // }
-
-          //       if ($('#chart_6').length > 0) {
-          //       var ctx6 = document.getElementById("chart_6").getContext("2d");
-          //         var data6 = {
-          //           labels: ['food', 'default', 'transport', 'salary', 'bouns', 'other', 'study', 'clothes', 'bike', 'collage food', 'chrg', 'medicine'],
-          //           datasets: [
-          //             {
-          //               data: [100, 300, 230, 400, 200, 150, 70, 90, 120, 210, 300, 99],
-          //               backgroundColor: [
-          //                 "#26c6da",
-          //                 "#ffb22b",
-          //                 "#1e88e5",
-          //                 "#26c6da",
-          //                 "#ffb22b",
-          //                 "#1e88e5",
-          //                 "#26c6da",
-          //                 "#ffb22b",
-          //                 "#1e88e5",
-          //                 "#26c6da",
-          //                 "#ffb22b",
-          //                 "#1e88e5",
-          //               ],
-          //               hoverBackgroundColor: [
-          //                 "#26c6da",
-          //                 "#ffb22b",
-          //                 "#1e88e5",
-          //                 "#26c6da",
-          //                 "#ffb22b",
-          //                 "#1e88e5",
-          //                 "#26c6da",
-          //                 "#ffb22b",
-          //                 "#1e88e5",
-          //                 "#26c6da",
-          //                 "#ffb22b",
-          //                 "#1e88e5",
-          //               ],
-          //             },
+          //   $( document ).ready(function() {
+          //       // function chart_shows(names, values){
+          //       // if( $('#chart_6').length > 0 ){
+          //       //     console.log('hello -- 2')
+          //       //     var ctx6 = document.getElementById("chart_6").getContext("2d");
+          //       //     var data6 = {
+          //       //         // labels: names,
+          //       //         labels: ['food', 'default', 'transport', 'salary', 'bouns', 'other', 'study', 'clothes', 'bike', 'collage food', 'chrg', 'medicine'],
+          //       //         datasets: [
+          //       //             {
+          //       //                 // data: values,
+          //       //                 data: [100, 300, 230, 400, 200, 150, 70, 90, 120, 210, 300, 99],
+          //       //                 backgroundColor: [
+          //       //                     "#26c6da",
+          //       //                     "#ffb22b",
+          //       //                     "#1e88e5",
+          //       //                     "#26c6da",
+          //       //                     "#ffb22b",
+          //       //                     "#1e88e5",
+          //       //                     "#26c6da",
+          //       //                     "#ffb22b",
+          //       //                     "#1e88e5",
+          //       //                     "#26c6da",
+          //       //                     "#ffb22b",
+          //       //                     "#1e88e5",
+          //       //                 ],
+          //       //                 hoverBackgroundColor: [
+          //       //                     "#26c6da",
+          //       //                     "#ffb22b",
+          //       //                     "#1e88e5",
+          //       //                     "#26c6da",
+          //       //                     "#ffb22b",
+          //       //                     "#1e88e5",
+          //       //                     "#26c6da",
+          //       //                     "#ffb22b",
+          //       //                     "#1e88e5",
+          //       //                     "#26c6da",
+          //       //                     "#ffb22b",
+          //       //                     "#1e88e5",
+          //       //                 ]
+          //       //             }]
+          //       //     };
+          //       //     var options = {
+          //       //         tooltips: {
+          //       //             enabled: false
+          //       //         },
+          //       //         plugins: {
+          //       //             datalabels: {
+          //       //                 formatter: (value, ctx6) => {
+          //       //                     let sum = 0;
+          //       //                     let dataArr = ctx6.chart.data.datasets[0].data;
+          //       //                     dataArr.map(data => {
+          //       //                         sum += data;
+          //       //                     });
+          //       //                     let percentage = (value*100 / sum).toFixed(2)+"%";
+          //       //                     console.log("percentage:: " + percentage )
+          //       //                     return percentage;
+          //       //                 },
+          //       //                 color: '#fff',
+          //       //             }
+          //       //         }
+          //       //     };
+          //       //     var pieChart = new Chart(ctx6, {
+          //       //         type: 'pie',
+          //       //         data: data6,
+          //       //         options: {
+          //       //             animation: {
+          //       //                 duration: 3000
+          //       //             },
+          //       //             responsive: true,
+          //       //             legend: {
+          //       //                 labels: {
+          //       //                     fontFamily: "Poppins",
+          //       //                     fontColor: "#878787"
+          //       //                 }
+          //       //             },
+          //       //             tooltip: {
+          //       //                 backgroundColor: 'rgba(33,33,33,1)',
+          //       //                 cornerRadius: 0,
+          //       //                 footerFontFamily: "'Poppins'"
+          //       //             },
+          //       //             elements: {
+          //       //                 arc: {
+          //       //                     borderWidth: 0
+          //       //                 }
+          //       //             },
+          //       //             plugins: {
+          //       //                 datalabels: {
+          //       //                       color: "#fff", // Label color
+          //       //                       formatter: (value, ctx) => {
+          //       //                             let sum = 0;
+          //       //                             let dataArr = ctx.chart.data.datasets[0].data;
+          //       //                             dataArr.map((data) => {
+          //       //                               sum += data;
+          //       //                             });
+          //       //                             let percentage = ((value * 100) / sum).toFixed(2) + "%";
+          //       //                             return percentage;
+          //       //                       },
+          //       //                 },
+          //       //             },
+          //       //         }
+          //       //     });
+          //       // }
+          //
+          //       //       if ($('#chart_6').length > 0) {
+          // //       var ctx6 = document.getElementById("chart_6").getContext("2d");
+          // //         var data6 = {
+          // //           labels: ['food', 'default', 'transport', 'salary', 'bouns', 'other', 'study', 'clothes', 'bike', 'collage food', 'chrg', 'medicine'],
+          // //           datasets: [
+          // //             {
+          // //               data: [100, 300, 230, 400, 200, 150, 70, 90, 120, 210, 300, 99],
+          // //               backgroundColor: [
+          // //                 "#26c6da",
+          // //                 "#ffb22b",
+          // //                 "#1e88e5",
+          // //                 "#26c6da",
+          // //                 "#ffb22b",
+          // //                 "#1e88e5",
+          // //                 "#26c6da",
+          // //                 "#ffb22b",
+          // //                 "#1e88e5",
+          // //                 "#26c6da",
+          // //                 "#ffb22b",
+          // //                 "#1e88e5",
+          // //               ],
+          // //               hoverBackgroundColor: [
+          // //                 "#26c6da",
+          // //                 "#ffb22b",
+          // //                 "#1e88e5",
+          // //                 "#26c6da",
+          // //                 "#ffb22b",
+          // //                 "#1e88e5",
+          // //                 "#26c6da",
+          // //                 "#ffb22b",
+          // //                 "#1e88e5",
+          // //                 "#26c6da",
+          // //                 "#ffb22b",
+          // //                 "#1e88e5",
+          // //               ],
+          // //             },
+          // //           ],
+          // //         };
+          // //
+          // //         var options = {
+          // //           animation: {
+          // //             duration: 3000,
+          // //           },
+          // //           responsive: true,
+          // //           legend: {
+          // //             labels: {
+          // //               fontFamily: "Poppins",
+          // //               fontColor: "#878787",
+          // //             },
+          // //           },
+          // //           // tooltips: {
+          // //           //   enabled: false,
+          // //           // },
+          // //           plugins: {
+          // //             datalabels: {
+          // //   display: true,
+          // //   color: "#fff",
+          // //   anchor: "end",
+          // //   align: "start",
+          // //   offset: 8,
+          // //   formatter: (value, ctx) => {
+          // //     let sum = 0;
+          // //     let dataArr = ctx.dataset.data;
+          // //     dataArr.map((data) => {
+          // //       sum += data;
+          // //     });
+          // //     let percentage = ((value * 100) / sum).toFixed(2) + "%";
+          // //     return percentage;
+          // //   },
+          // // },
+          // // tooltip: {
+          // //   callbacks: {
+          // //     label: function (context) {
+          // //       const label = data6.labels[context.dataIndex];
+          // //       const value = data6.datasets[0].data[context.dataIndex];
+          // //       const dataset = data6.datasets[0];
+          // //       const sum = dataset.data.reduce((acc, val) => acc + val, 0);
+          // //       const percentage = ((value * 100) / sum).toFixed(2) + "%";
+          // //       return `${label}: ${value} (${percentage})`;
+          // //     },
+          // //   },
+          // // },
+          // //           },
+          // //           elements: {
+          // //             arc: {
+          // //               borderWidth: 0,
+          // //             },
+          // //           },
+          // //         };
+          // //
+          // //         var pieChart = new Chart(ctx6, {
+          // //           type: "pie",
+          // //           data: data6,
+          // //           options: options,
+          // //         });
+          // //       }
+          //
+          //       // if( $('#chart_6').length > 0 ){
+          //       //     var ctx6 = document.getElementById("chart_6").getContext("2d");
+          //       //     var data6 = {
+          //       //          labels: [
+          //       //         "lab 1",
+          //       //         "lab 2",
+          //       //         "lab 3"
+          //       //     ],
+          //       //     datasets: [
+          //       //         {
+          //       //             data: [300, 50, 100],
+          //       //             backgroundColor: [
+          //       //                 "#26c6da",
+          //       //                 "#ffb22b",
+          //       //                 "#1e88e5"
+          //       //             ],
+          //       //             hoverBackgroundColor: [
+          //       //                 "#26c6da",
+          //       //                 "#ffb22b",
+          //       //                 "#1e88e5"
+          //       //             ]
+          //       //         }]
+          //       //     };
+          //       //
+          //       //     var pieChart  = new Chart(ctx6,{
+          //       //         type: 'pie',
+          //       //         data: data6,
+          //       //         options: {
+          //       //             animation: {
+          //       //                 duration:	3000
+          //       //             },
+          //       //             responsive: true,
+          //       //             legend: {
+          //       //                 labels: {
+          //       //                 fontFamily: "Poppins",
+          //       //                 fontColor:"#878787"
+          //       //                 }
+          //       //             },
+          //       //             tooltip: {
+          //       //                 backgroundColor:'rgba(33,33,33,1)',
+          //       //                 cornerRadius:0,
+          //       //                 footerFontFamily:"'Poppins'"
+          //       //             },
+          //       //             elements: {
+          //       //                 arc: {
+          //       //                     borderWidth: 0
+          //       //                 }
+          //       //             }
+          //       //         }
+          //       //     });
+          //       // }
+          //       if( $('#chart_6').length > 0 ){
+          //           var ctx6 = document.getElementById("chart_6").getContext("2d");
+          //           var data6 = {
+          //                labels: [
+          //               "lab 1",
+          //               "lab 2",
+          //               "lab 3"
           //           ],
-          //         };
+          //           datasets: [
+          //               {
+          //                   data: [300, 50, 100],
+          //                   backgroundColor: [
+          //                       "#26c6da",
+          //                       "#ffb22b",
+          //                       "#1e88e5"
+          //                   ],
+          //                   hoverBackgroundColor: [
+          //                       "#26c6da",
+          //                       "#ffb22b",
+          //                       "#1e88e5"
+          //                   ]
+          //               }]
+          //           };
           //
-          //         var options = {
-          //           animation: {
-          //             duration: 3000,
-          //           },
-          //           responsive: true,
-          //           legend: {
-          //             labels: {
-          //               fontFamily: "Poppins",
-          //               fontColor: "#878787",
-          //             },
-          //           },
-          //           // tooltips: {
-          //           //   enabled: false,
-          //           // },
-          //           plugins: {
-          //             datalabels: {
-          //   display: true,
-          //   color: "#fff",
-          //   anchor: "end",
-          //   align: "start",
-          //   offset: 8,
-          //   formatter: (value, ctx) => {
-          //     let sum = 0;
-          //     let dataArr = ctx.dataset.data;
-          //     dataArr.map((data) => {
-          //       sum += data;
-          //     });
-          //     let percentage = ((value * 100) / sum).toFixed(2) + "%";
-          //     return percentage;
-          //   },
-          // },
-          // tooltip: {
-          //   callbacks: {
-          //     label: function (context) {
-          //       const label = data6.labels[context.dataIndex];
-          //       const value = data6.datasets[0].data[context.dataIndex];
-          //       const dataset = data6.datasets[0];
-          //       const sum = dataset.data.reduce((acc, val) => acc + val, 0);
-          //       const percentage = ((value * 100) / sum).toFixed(2) + "%";
-          //       return `${label}: ${value} (${percentage})`;
-          //     },
-          //   },
-          // },
-          //           },
-          //           elements: {
-          //             arc: {
-          //               borderWidth: 0,
-          //             },
-          //           },
-          //         };
-          //
-          //         var pieChart = new Chart(ctx6, {
-          //           type: "pie",
-          //           data: data6,
-          //           options: options,
-          //         });
+          //           var pieChart  = new Chart(ctx6,{
+          //               type: 'pie',
+          //               data: data6,
+          //               options: {
+          //                   animation: {
+          //                       duration:	3000
+          //                   },
+          //                   responsive: true,
+          //                   legend: {
+          //                       labels: {
+          //                       fontFamily: "Poppins",
+          //                       fontColor:"#878787"
+          //                       }
+          //                   },
+          //                   tooltip: {
+          //                       backgroundColor:'rgba(33,33,33,1)',
+          //                       cornerRadius:0,
+          //                       footerFontFamily:"'Poppins'"
+          //                   },
+          //                   elements: {
+          //                       arc: {
+          //                           borderWidth: 0
+          //                       }
+          //                   }
+          //               }
+          //           });
           //       }
-
-                if( $('#chart_6').length > 0 ){
-                    var ctx6 = document.getElementById("chart_6").getContext("2d");
-                    var data6 = {
-                         labels: [
-                        "lab 1",
-                        "lab 2",
-                        "lab 3"
+          //       if( $('#chart_7').length > 0 ){
+          //           var ctx6 = document.getElementById("chart_7").getContext("2d");
+          //           var data6 = {
+          //                labels: [
+          //               "lab 1",
+          //               "lab 2",
+          //               "lab 3"
+          //           ],
+          //           datasets: [
+          //               {
+          //                   data: [300, 50, 100],
+          //                   backgroundColor: [
+          //                       "#26c6da",
+          //                       "#ffb22b",
+          //                       "#1e88e5"
+          //                   ],
+          //                   hoverBackgroundColor: [
+          //                       "#26c6da",
+          //                       "#ffb22b",
+          //                       "#1e88e5"
+          //                   ]
+          //               }]
+          //           };
+          //
+          //           var pieChart  = new Chart(ctx6,{
+          //               type: 'pie',
+          //               data: data6,
+          //               options: {
+          //                   animation: {
+          //                       duration:	3000
+          //                   },
+          //                   responsive: true,
+          //                   legend: {
+          //                       labels: {
+          //                       fontFamily: "Poppins",
+          //                       fontColor:"#878787"
+          //                       }
+          //                   },
+          //                   tooltip: {
+          //                       backgroundColor:'rgba(33,33,33,1)',
+          //                       cornerRadius:0,
+          //                       footerFontFamily:"'Poppins'"
+          //                   },
+          //                   elements: {
+          //                       arc: {
+          //                           borderWidth: 0
+          //                       }
+          //                   }
+          //               }
+          //           });
+          //       }
+          //   });
+            {% if chart_master %}
+            function chart_shows(names, values) {
+              var ctx6 = document.getElementById("chart_6").getContext("2d");
+              var data6 = {
+                labels: names,
+                datasets: [
+                  {
+                    data: values,
+                    backgroundColor: [
+                      "#FF0000",
+                      "#FFA500",
+                      "#FFFF00",
+                      "#00FF00",
+                      "#0000FF",
+                      "#800080",
+                      "#FFC0CB",
+                      "#A52A2A",
+                      "#808080",
+                      "#000000",
+                      "#008080",
+                      "#FF00FF",
+                      "#808000",
+                      "#800000",
                     ],
-                    datasets: [
-                        {
-                            data: [300, 50, 100],
-                            backgroundColor: [
-                                "#26c6da",
-                                "#ffb22b",
-                                "#1e88e5"
-                            ],
-                            hoverBackgroundColor: [
-                                "#26c6da",
-                                "#ffb22b",
-                                "#1e88e5"
-                            ]
-                        }]
-                    };
+                    hoverBackgroundColor: [
+                      "#FF0000",
+                      "#FFA500",
+                      "#FFFF00",
+                      "#00FF00",
+                      "#0000FF",
+                      "#800080",
+                      "#FFC0CB",
+                      "#A52A2A",
+                      "#808080",
+                      "#000000",
+                      "#008080",
+                      "#FF00FF",
+                      "#808000",
+                      "#800000",
+                    ],
+                  },
+                ],
+              };
 
-                    var pieChart  = new Chart(ctx6,{
-                        type: 'pie',
-                        data: data6,
-                        options: {
-                            animation: {
-                                duration:	3000
-                            },
-                            responsive: true,
-                            legend: {
-                                labels: {
-                                fontFamily: "Poppins",
-                                fontColor:"#878787"
-                                }
-                            },
-                            tooltip: {
-                                backgroundColor:'rgba(33,33,33,1)',
-                                cornerRadius:0,
-                                footerFontFamily:"'Poppins'"
-                            },
-                            elements: {
-                                arc: {
-                                    borderWidth: 0
-                                }
-                            }
-                        }
-                    });
-                }
-            });
+              var options = {
+                animation: {
+                  duration: 3000,
+                },
+                responsive: true,
+                legend: {
+                  labels: {
+                    fontFamily: "Poppins",
+                    fontColor: "#878787",
+                  },
+                },
+                plugins: {
+                  datalabels: {
+                    display: true,
+                    color: "#fff",
+                    anchor: "end",
+                    align: "start",
+                    offset: 8,
+                    formatter: (value, ctx) => {
+                      let sum = 0;
+                      let dataArr = ctx.dataset.data;
+                      dataArr.map((data) => {
+                        sum += data;
+                      });
+                      let percentage = ((value * 100) / sum).toFixed(2) + "%";
+                      return percentage;
+                    },
+                  },
+                  tooltip: {
+                    callbacks: {
+                      label: function (context) {
+                        const label = data6.labels[context.dataIndex];
+                        const value = data6.datasets[0].data[context.dataIndex];
+                        const dataset = data6.datasets[0];
+                        const sum = dataset.data.reduce((acc, val) => acc + val, 0);
+                        const percentage = ((value * 100) / sum).toFixed(2) + "%";
+                        return `${label}: ${value} (${percentage})`;
+                      },
+                    },
+                  },
+                },
+                elements: {
+                  arc: {
+                    borderWidth: 0,
+                  },
+                },
+              };
+
+              var pieChart = new Chart(ctx6, {
+                type: "pie",
+                data: data6,
+                options: options,
+              });
+            }
+            function chart_shows_1(names, values) {
+              var ctx6 = document.getElementById("chart_7").getContext("2d");
+              var data6 = {
+                labels: names,
+                datasets: [
+                  {
+                    data: values,
+                    backgroundColor: [
+                      "#FF0000",
+                      "#FFA500",
+                      "#FFFF00",
+                      "#00FF00",
+                      "#0000FF",
+                      "#800080",
+                      "#FFC0CB",
+                      "#A52A2A",
+                      "#808080",
+                      "#000000",
+                      "#008080",
+                      "#FF00FF",
+                      "#808000",
+                      "#800000",
+                    ],
+                    hoverBackgroundColor: [
+                      "#FF0000",
+                      "#FFA500",
+                      "#FFFF00",
+                      "#00FF00",
+                      "#0000FF",
+                      "#800080",
+                      "#FFC0CB",
+                      "#A52A2A",
+                      "#808080",
+                      "#000000",
+                      "#008080",
+                      "#FF00FF",
+                      "#808000",
+                      "#800000",
+                    ],
+                  },
+                ],
+              };
+
+              var options = {
+                animation: {
+                  duration: 3000,
+                },
+                responsive: true,
+                legend: {
+                  labels: {
+                    fontFamily: "Poppins",
+                    fontColor: "#878787",
+                  },
+                },
+                plugins: {
+                  datalabels: {
+                    display: true,
+                    color: "#fff",
+                    anchor: "end",
+                    align: "start",
+                    offset: 8,
+                    formatter: (value, ctx) => {
+                      let sum = 0;
+                      let dataArr = ctx.dataset.data;
+                      dataArr.map((data) => {
+                        sum += data;
+                      });
+                      let percentage = ((value * 100) / sum).toFixed(2) + "%";
+                      return percentage;
+                    },
+                  },
+                  tooltip: {
+                    callbacks: {
+                      label: function (context) {
+                        const label = data6.labels[context.dataIndex];
+                        const value = data6.datasets[0].data[context.dataIndex];
+                        const dataset = data6.datasets[0];
+                        const sum = dataset.data.reduce((acc, val) => acc + val, 0);
+                        const percentage = ((value * 100) / sum).toFixed(2) + "%";
+                        return `${label}: ${value} (${percentage})`;
+                      },
+                    },
+                  },
+                },
+                elements: {
+                  arc: {
+                    borderWidth: 0,
+                  },
+                },
+              };
+
+              var pieChart = new Chart(ctx6, {
+                type: "pie",
+                data: data6,
+                options: options,
+              });
+            }
+
+
+            chart_shows_1(
+              [{% autoescape off %}{{names}}{% endautoescape %}],
+              [{{total_expense}}]
+            );
+            chart_shows(
+                [{% autoescape off %}{{names}}{% endautoescape %}],
+              [{{total_income}}]
+            );
+            {% endif %}
+
         </script>
 
 	    <!-- popper -->
