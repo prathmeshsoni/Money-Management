@@ -780,6 +780,7 @@
                 //     newWindow.close();
                 //   }, 3000);
                 }
+
                  window.onload = function exampleFunction(){
                     var sum = 0;
                     var subtraction = 0;
@@ -796,7 +797,7 @@
                                 final_1 += 1
                                 subtraction += {{ i.amount }};
                             {% else %}
-                                 final += 1
+                                final += 1
                                 {% if private_master %}
                                 {% else %}
                                     {% if i.from_account.account_name == main %}

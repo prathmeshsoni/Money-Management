@@ -413,28 +413,41 @@ function renderTableRows(dataArray, id) {
     const formattedDate = formatDate(dataArray.date_name);
     let tableBody = ''
     var demo = 0;
+
     if (dataArray.type.toLowerCase() === 'transfer'){
         tableBody = document.querySelector("#myTable_1 tbody");
         demo = 1;
+
     }
     else{
         tableBody = document.querySelector("#myTable tbody");
         demo = 2;
     }
-    const rowHTML = createTableRow(dataArray, formattedDate, id, demo)
+
+    const rowHTML = createTableRow(dataArray, formattedDate, id)
     const newRow = document.createElement("tr");
     newRow.style.background = rowHTML[1];
     newRow.id = 'tra_'+ id;
     newRow.innerHTML = rowHTML[0];
 
-    tableBody.insertBefore(newRow, tableBody.firstChild);
+    var rows = tableBody.querySelector('[id="date-' + formattedDate[1] + '"]')
+    if ( rows ) {
+
+    }
+    else{
+        const newRow_ = document.createElement("tr");
+        newRow_.id = 'date-'+ formattedDate[1];
+        newRow_.innerHTML = '<td>' + formattedDate[1] + '</td>';
+        tableBody.insertBefore(newRow_, tableBody.firstChild);
+        rows = tableBody.querySelector('[id="date-' + formattedDate[1] + '"]')
+    }
+    tableBody.insertBefore(newRow, rows.nextSibling);
     data_is()
 }
 
 
 function createTableRow(i, formattedDate, id) {
     var searchValue = document.querySelector('input[name="search-param"]');
-    var valueOfFirstInput = '';
     var value_name = $('[name="id"]').val();
     if (searchValue || value_name ){
         if(searchValue){
@@ -443,15 +456,10 @@ function createTableRow(i, formattedDate, id) {
         try{
             const firstTableRowWithId_ = document.querySelector('#myTable_1 tbody tr#tra_' + id);
             const firstTd_ = firstTableRowWithId_.querySelector('td');
-            valueOfFirstInput = parseInt(firstTd_.id, 10);
         }catch (error){
             const firstTableRowWithId_ = document.querySelector('#myTable tbody tr#tra_' + id);
             const firstTd_ = firstTableRowWithId_.querySelector('td');
-            valueOfFirstInput = parseInt(firstTd_.id, 10);
         }
-    }
-    else{
-        valueOfFirstInput = parseInt($('#count_1').val(), 10) + 1;
     }
     $('#tra_' + id + '').remove();
     if (i.type.toLowerCase() === 'transfer'){
@@ -489,8 +497,8 @@ function createTableRow(i, formattedDate, id) {
         }
 
         return [(
-            '<td id="' + valueOfFirstInput + '" >' + valueOfFirstInput + '</td>' +
-            '<td>' + formattedDate + '</td>' +
+            '<td><i style="margin-right: 20px;" class="fa fa-info-circle" aria-hidden="true"></i></td>' +
+            '<td>' + formattedDate[0] + '</td>' +
             '<td>' + i.from_account + '</td>' +
             '<td>' + i.to_account + '</td>' +
             '<td style="color: '+ color_ +' !important;">' + i.amount + ' ₹</td>' +
@@ -501,12 +509,13 @@ function createTableRow(i, formattedDate, id) {
             '            Edit\n' +
             '    </span>' +
             '    </a>' +
-            '    <a href="javascript:void(0)" onclick="Delete(' + id + ',' + valueOfFirstInput + ',' + 1 + ')" class="bg-info ml-2">' +
+            '    <a href="javascript:void(0)" onclick="Delete(' + id + ',' + 1 + ')" class="bg-info ml-2">' +
             '        <span class="label label-danger">' +
             '            Delete' +
             '        </span>' +
             '    </a>' +
-            '</td>'
+            '</td>' +
+            '<td name="' + formattedDate[1] + '" style="display:none;" >' + formattedDate[1] + '</td>'
         ), che]
     }
     else{
@@ -526,8 +535,8 @@ function createTableRow(i, formattedDate, id) {
         }
 
         return [(
-            '<td id="' + valueOfFirstInput + '">' + valueOfFirstInput + '</td>' +
-            '<td>' + formattedDate + '</td>' +
+            '<td><i style="margin-right: 20px;" class="fa fa-info-circle" aria-hidden="true"></i></td>' +
+            '<td>' + formattedDate[0] + '</td>' +
             '<td>' + i.category + '</td>' +
             '<td>' + i.account + '</td>' +
             '<td style="color: '+ color_ +' !important;">' + i.amount + ' ₹</td>' +
@@ -538,27 +547,31 @@ function createTableRow(i, formattedDate, id) {
             '            Edit\n' +
             '    </span>' +
             '    </a>' +
-            '    <a href="javascript:void(0)" onclick="Delete(' + id + ',' + valueOfFirstInput + ',' + 1 + ')" class="bg-info ml-2">' +
+            '    <a href="javascript:void(0)" onclick="Delete(' + id + ',' + 1 + ')" class="bg-info ml-2">' +
             '        <span class="label label-danger">' +
             '            Delete' +
             '        </span>' +
             '    </a>' +
-            '</td>'
+            '</td>' +
+            '<td name="' + formattedDate[1] + '" style="display:none;" >' + formattedDate[1] + '</td>'
         ), che]
     }
 }
 
 
 function formatDate(inputDate) {
-  const date = new Date(inputDate);
-  const day = date.getDate();
-  const month = date.toLocaleString('default', { month: 'short' });
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
-  const ampm = hours >= 12 ? 'PM' : 'AM';
-
-  const formattedDate = `${day} ${month} ${hours % 12 === 0 ? 12 : hours % 12}:${minutes.toString().padStart(2, '0')}${ampm}`;
-  return formattedDate;
+    const date = new Date(inputDate);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = date.toLocaleString('default', { month: 'long' });
+    const year = date.getFullYear();
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const formattedDate = `${hours % 12 === 0 ? 12 : hours % 12}:${minutes.toString().padStart(2, '0')}${ampm}`;
+    const formattedDate1 = day + " " + month;
+    console.log(formattedDate)
+    console.log(formattedDate1)
+    return [formattedDate, formattedDate1];
 }
 
 

@@ -215,25 +215,63 @@ function remove_all(){
 }
 
 function data_is(){
-    const tableBody = document.querySelector("#myTable tbody tr");
+    var f= document.querySelectorAll('#myTable_1 tbody tr[id*="date"] td');
 
 
-    if (tableBody) {
-        $('#nodatass').css('display', 'none')
-    }
-    else{
-         $('#nodatass').css('display', 'block')
-         $('#nodatass').css('text-align', 'center')
-    }
-    const tableBody_1 = document.querySelector("#myTable_1 tbody tr");
-    console.log(tableBody)
-    console.log(tableBody_1)
+    for (var i = 0; i < f.length; i++) {
+        var chekk = 0;
+        var value = f[i].textContent;
+        let d = document.querySelectorAll("#myTable_1 tbody tr [name='" + value + "']").length
+        if ( d === 0 ){
+            console.log('not avail ' + value)
+            document.querySelector('#myTable_1 tbody tr[id="date-' + value + '"]').remove();
+        }
+        else {
+            console.log('avail ' + value)
 
-    if (tableBody_1) {
-        $('#nodatass_1').css('display', 'none')
+        }
+
     }
-    else{
-         $('#nodatass_1').css('display', 'block')
-         $('#nodatass_1').css('text-align', 'center')
+    var f_= document.querySelectorAll('#myTable tbody tr[id*="date"] td');
+
+
+    for (var i_ = 0; i_ < f_.length; i_++) {
+        var chekk_ = 0;
+        var value_ = f_[i_].textContent;
+        let d_ = document.querySelectorAll("#myTable tbody tr [name='" + value_ + "']").length
+        if ( d_ === 0 ){
+            console.log('not avail ' + value_)
+            document.querySelector('#myTable tbody tr[id="date-' + value_ + '"]').remove();
+        }
+        else {
+            console.log('avail ' + value_)
+
+        }
+
     }
+
+
+    // const tableBody = document.querySelector("#myTable tbody tr");
+    //
+    // // var row = document.getElementById("tra_" + id);
+    // // var lastTdValue = row.querySelector('td[name="hello"]').textContent;
+    //
+    // if (tableBody) {
+    //     $('#nodatass').css('display', 'none')
+    // }
+    // else{
+    //      $('#nodatass').css('display', 'block')
+    //      $('#nodatass').css('text-align', 'center')
+    // }
+    // const tableBody_1 = document.querySelector("#myTable_1 tbody tr");
+    // console.log(tableBody)
+    // console.log(tableBody_1)
+    //
+    // if (tableBody_1) {
+    //     $('#nodatass_1').css('display', 'none')
+    // }
+    // else{
+    //      $('#nodatass_1').css('display', 'block')
+    //      $('#nodatass_1').css('text-align', 'center')
+    // }
 }

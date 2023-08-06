@@ -102,16 +102,15 @@
                     </div>
                 </div>
             </div>
-
-            <div class="col-12" style="{% if filter_active == 'type_master' %} {% if main == 'Transfer' %} display:none; {% endif %}  {% endif %} " >
+            <div class="col-12">
                 <div class="box">
                   <div class="box-body">
                     <div class="table-responsive">
                         <table class="table text-center" style="color: black !important;"  id="myTable">
                             <thead>
                                 <tr>
-                                    <th>Transaction No.</th>
                                     <th>Date</th>
+                                    <th>Time</th>
                                     <th>Category</th>
                                     <th>Account</th>
                                     <th>Amount</th>
@@ -120,63 +119,56 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% if list %}
-                                    {% for i in list %}
-                                        {% if i.type.type_name == 'Transfer' %}
 
-                                        {% else %}
-                                            <tr id="tra_{{ i.id }}" >
-                                                <td id="{{ forloop.revcounter }}" >{{ forloop.revcounter }}</td>
-                                                <td>{{i.date_name|date:"j M" }} {{ i.date_name|time:"g:iA" }}</td>
-                                                <td>{{i.category}}</td>
-                                                <td>{{i.account}}</td>
-                                                <td style="
-                                                    {% if i.type.type_name == 'Available' or i.type.type_name == 'Income' %}
-                                                        color: #000fff !important;
+                            {% for date, entries in untransfer_data.items %}
+                                <tr id="date-{{date}}"  >
+                                    <td>{{ date }}</td>
+                                </tr>
+                                {% for i in entries %}
+                                    <tr id="tra_{{ i.id }}" >
+                                        <td><i style="margin-right: 20px;" class="fa fa-info-circle" aria-hidden="true"></i></td>
+                                        <td>{{ i.date_name|time:"g:iA" }}</td>
+                                        <td>{{i.category}}</td>
+                                        <td>{{i.account}}</td>
+                                        <td style="
+                                            {% if i.type.type_name == 'Available' or i.type.type_name == 'Income' %}
+                                                color: #000fff !important;
+                                            {% else %}
+                                                {% if i.type.type_name == 'Expense' %}
+                                                    color: #ff0000 !important;
+                                                {% else %}
+                                                    {% if private_master %}
+
                                                     {% else %}
-                                                        {% if i.type.type_name == 'Expense' %}
+                                                        {% if i.from_account.account_name == main %}
                                                             color: #ff0000 !important;
                                                         {% else %}
-                                                            {% if private_master %}
-
-                                                            {% else %}
-                                                                {% if i.from_account.account_name == main %}
-                                                                    color: #ff0000 !important;
-                                                                {% else %}
-                                                                    color: #000fff !important;
-                                                                {% endif %}
-                                                            {% endif %}
+                                                            color: #000fff !important;
                                                         {% endif %}
                                                     {% endif %}
-                                                ">{{i.amount}} ₹</td>
-                                                <td>{{i.note}}</td>
-                                                <td>
-                                                    <a href="javascript:void(0)" onclick="updateModel({{i.id}}, 0)" class="bg-info mr-2">
-                                                        <span class="label label-success">
-                                                            Edit
-                                                        </span>
-                                                    </a>
-                                                    <a href="javascript:void(0)" onclick="Delete({{i.id}}, {{ forloop.revcounter }}, 1)" class="bg-info ml-2">
-                                                        <span class="label label-danger">
-                                                            Delete
-                                                        </span>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        {% endif %}
-                                    {% endfor %}
-                                {% else %}
-                                    <input type="hidden" id="nodata" value="0">
-                                {% endif %}
+                                                {% endif %}
+                                            {% endif %}
+                                        ">{{i.amount}} ₹</td>
+                                        <td>{{i.note}}</td>
+                                        <td>
+                                            <a href="javascript:void(0)" onclick="updateModel({{i.id}}, 0)" class="bg-info mr-2">
+                                                <span class="label label-success">
+                                                    Edit
+                                                </span>
+                                            </a>
+                                            <a href="javascript:void(0)" onclick="Delete({{i.id}}, 1)" class="bg-info ml-2">
+                                                <span class="label label-danger">
+                                                    Delete
+                                                </span>
+                                            </a>
+                                        </td>
+                                        <td name="{{date}}" style="display:none;" >{{date}}</td>
+                                    </tr>
+                                {% endfor %}
+                            {% endfor %}
+
                             </tbody>
 
-<!--                            <tr id="nodatass" style="display:none; border-top: 0px solid white !important;" >-->
-<!--                                <td>-->
-<!--                                    <h1>-->
-<!--                                        NO DATA-->
-<!--                                    </h1>-->
-<!--                                </td>-->
-<!--                            </tr>-->
                         </table>
                         <h1 id="nodatass" style="display:none;" >
                             NO DATA
@@ -185,15 +177,15 @@
                   </div>
                 </div>
             </div>
-            <div class="col-12" style="{% if filter_active == 'type_master' %} {% if main == 'Transfer' %} {% else %} display:none; {% endif %} {% else %} {% if filter_active == 'cat_master' %} display:none; {% endif %} {% endif %} " >
+            <div class="col-12">
                 <div class="box">
                   <div class="box-body">
                     <div class="table-responsive">
                         <table class="table text-center" style="color: black !important;"  id="myTable_1">
                             <thead>
                                 <tr>
-                                    <th>Transaction No.</th>
                                     <th>Date</th>
+                                    <th>Time</th>
                                     <th>From Account</th>
                                     <th>To Account</th>
                                     <th>Amount</th>
@@ -202,56 +194,58 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% if list %}
-                                    {% for i in list %}
-                                        {% if i.type.type_name == 'Transfer' %}
-                                            <tr id="tra_{{ i.id }}" >
-                                                <td id="{{ forloop.revcounter }}" >{{ forloop.revcounter }}</td>
-                                                <td>{{i.date_name|date:"j M" }} {{ i.date_name|time:"g:iA" }}</td>
-                                                <td>{{i.from_account}}</td>
-                                                <td>{{i.to_account}}</td>
-                                                <td style="
-                                                    {% if i.type.type_name == 'Available' or i.type.type_name == 'Income' %}
-                                                        color: #000fff !important;
+
+                            {% for dates, entrie in transfer_data.items %}
+                                <tr id="date-{{dates}}" >
+                                    <td>{{ dates }}</td>
+                                </tr>
+                                {% for i in entrie %}
+                                    <tr id="tra_{{ i.id }}" >
+                                        <td><i style="margin-right: 20px;" class="fa fa-info-circle" aria-hidden="true"></i></td>
+                                        <td>{{ i.date_name|time:"g:iA" }}</td>
+                                        <td>{{i.from_account}}</td>
+                                        <td>{{i.to_account}}</td>
+                                        <td style="
+                                            {% if i.type.type_name == 'Available' or i.type.type_name == 'Income' %}
+                                                color: #000fff !important;
+                                            {% else %}
+                                                {% if i.type.type_name == 'Expense' %}
+                                                    color: #ff0000 !important;
+                                                {% else %}
+                                                    {% if private_master %}
+
                                                     {% else %}
-                                                        {% if i.type.type_name == 'Expense' %}
+                                                        {% if i.from_account.account_name == main %}
                                                             color: #ff0000 !important;
                                                         {% else %}
-                                                            {% if private_master %}
-
-                                                            {% else %}
-                                                                {% if i.from_account.account_name == main %}
-                                                                    color: #ff0000 !important;
-                                                                {% else %}
-                                                                    color: #000fff !important;
-                                                                {% endif %}
-                                                            {% endif %}
+                                                            color: #000fff !important;
                                                         {% endif %}
                                                     {% endif %}
-                                                ">{{i.amount}} ₹</td>
-                                                <td>{{i.note}}</td>
-                                                <td>
-                                                    <a href="javascript:void(0)" onclick="updateModel({{i.id}}, 0)" class="bg-info mr-2">
-                                                        <span class="label label-success">
-                                                            Edit
-                                                        </span>
-                                                    </a>
-                                                    <a href="javascript:void(0)" onclick="Delete({{i.id}}, {{ forloop.revcounter }}, 1)" class="bg-info ml-2">
-                                                        <span class="label label-danger">
-                                                            Delete
-                                                        </span>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        {% else %}
+                                                {% endif %}
+                                            {% endif %}
+                                        ">{{i.amount}} ₹</td>
+                                        <td>{{i.note}}</td>
+                                        <td>
+                                            <a href="javascript:void(0)" onclick="updateModel({{i.id}}, 0)" class="bg-info mr-2">
+                                                <span class="label label-success">
+                                                    Edit
+                                                </span>
+                                            </a>
+                                            <a href="javascript:void(0)" onclick="Delete({{i.id}}, 1)" class="bg-info ml-2">
+                                                <span class="label label-danger">
+                                                    Delete
+                                                </span>
+                                            </a>
+                                        </td>
+                                        <td name="{{dates}}" style="display:none;" >{{dates}}</td>
+                                    </tr>
+                                {% endfor %}
+                            {% endfor %}
 
-                                        {% endif %}
-                                    {% endfor %}
-                                {% else %}
-                                {% endif %}
                             </tbody>
+
                         </table>
-                        <h1 id="nodatass_1" style="display:none;" >
+                        <h1 id="nodatass" style="display:none;" >
                             NO DATA
                         </h1>
                       </div>

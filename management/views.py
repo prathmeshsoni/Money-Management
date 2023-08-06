@@ -196,8 +196,31 @@ def admin_private_view(request):
             a = {'status': False}
             return JsonResponse(a)
     else:
+        revcounts = 1
         b = ManageModel.objects.filter(user=user_obj).order_by('-date_name')
         d, cat_obj, account_obj, type_obj = get_forms(user_obj)
+        categorized_data = {}
+        for entry in b:
+            date = entry.date_name.strftime("%d %B")  # Format the date as 'dd-mm-yyyy'
+            if date in categorized_data:
+                if entry.type.type_name == 'Transfer':
+                    categorized_data[date].append(entry)
+            else:
+                if entry.type.type_name == 'Transfer':
+                    categorized_data[date] = [entry]
+        categorized_data_1 = {}
+        for entry in b:
+            date = entry.date_name.strftime("%d %B")  # Format the date as 'dd-mm-yyyy'
+            if date in categorized_data_1:
+                if entry.type.type_name == 'Transfer':
+                    pass
+                else:
+                    categorized_data_1[date].append(entry)
+            else:
+                if entry.type.type_name == 'Transfer':
+                    pass
+                else:
+                    categorized_data_1[date] = [entry]
         items = {
             'm': d,
             'list': b,
@@ -208,6 +231,8 @@ def admin_private_view(request):
             'private_active': 'private_master',
             "private_1": 0,
             "checkcon": 10,
+            'untransfer_data': categorized_data_1,
+            'transfer_data': categorized_data,
         }
 
         return render(request, 'private_des.html', items)
