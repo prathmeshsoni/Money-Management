@@ -196,8 +196,10 @@ def admin_private_view(request):
             a = {'status': False}
             return JsonResponse(a)
     else:
+        import datetime
         revcounts = 1
-        b = ManageModel.objects.filter(user=user_obj).order_by('-date_name')
+        # b = ManageModel.objects.filter(user=user_obj).order_by('-date_name')
+        b = ManageModel.objects.filter(user=user_obj, date_name__month=datetime.datetime.now().month).order_by('-date_name')
         d, cat_obj, account_obj, type_obj = get_forms(user_obj)
         categorized_data = {}
         for entry in b:
@@ -233,6 +235,7 @@ def admin_private_view(request):
             "checkcon": 10,
             'untransfer_data': categorized_data_1,
             'transfer_data': categorized_data,
+            'month': datetime.datetime.now().strftime("%B %Y")
         }
 
         return render(request, 'private_des.html', items)
