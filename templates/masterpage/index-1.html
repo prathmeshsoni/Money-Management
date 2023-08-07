@@ -429,9 +429,6 @@
                     </div>
                 </div>
             </div>
-            <div>
-                {{names}}
-            </div>
             {% endif %}
 
             <footer class="main-footer">
@@ -821,210 +818,239 @@
           //       }
           //   });
             {% if chart_master %}
-            function chart_shows(names, values) {
-              var ctx6 = document.getElementById("chart_6").getContext("2d");
-              var data6 = {
-                labels: names,
-                datasets: [
-                  {
-                    data: values,
-                    backgroundColor: [
-                      "#FF0000",
-                      "#FFA500",
-                      "#FFFF00",
-                      "#00FF00",
-                      "#0000FF",
-                      "#800080",
-                      "#FFC0CB",
-                      "#A52A2A",
-                      "#808080",
-                      "#000000",
-                      "#008080",
-                      "#FF00FF",
-                      "#808000",
-                      "#800000",
-                    ],
-                    hoverBackgroundColor: [
-                      "#FF0000",
-                      "#FFA500",
-                      "#FFFF00",
-                      "#00FF00",
-                      "#0000FF",
-                      "#800080",
-                      "#FFC0CB",
-                      "#A52A2A",
-                      "#808080",
-                      "#000000",
-                      "#008080",
-                      "#FF00FF",
-                      "#808000",
-                      "#800000",
-                    ],
-                  },
-                ],
-              };
 
-              var options = {
-                animation: {
-                  duration: 3000,
-                },
-                responsive: true,
-                legend: {
-                  labels: {
-                    fontFamily: "Poppins",
-                    fontColor: "#878787",
-                  },
-                },
-                plugins: {
-                  datalabels: {
-                    display: true,
-                    color: "#fff",
-                    anchor: "end",
-                    align: "start",
-                    offset: 8,
-                    formatter: (value, ctx) => {
-                      let sum = 0;
-                      let dataArr = ctx.dataset.data;
-                      dataArr.map((data) => {
-                        sum += data;
+                {% if income %}
+
+                    function chart_shows(names, values) {
+                        let tem = []
+                        for (var i = 0; i < names.length; i++) {
+                            tem.push(names[i]);
+                        }
+                      var ctx6 = document.getElementById("chart_6").getContext("2d");
+                      if (window.chart6) {
+                          window.chart6.destroy();
+                      }
+                      var data6 = {
+                        labels: tem,
+                        datasets: [
+                          {
+                            data: values,
+                            backgroundColor: [
+                              "#FF0000",
+                              "#FFA500",
+                              "#FFFF00",
+                              "#00FF00",
+                              "#0000FF",
+                              "#800080",
+                              "#FFC0CB",
+                              "#A52A2A",
+                              "#808080",
+                              "#000000",
+                              "#008080",
+                              "#FF00FF",
+                              "#808000",
+                              "#800000",
+                            ],
+                            hoverBackgroundColor: [
+                              "#FF0000",
+                              "#FFA500",
+                              "#FFFF00",
+                              "#00FF00",
+                              "#0000FF",
+                              "#800080",
+                              "#FFC0CB",
+                              "#A52A2A",
+                              "#808080",
+                              "#000000",
+                              "#008080",
+                              "#FF00FF",
+                              "#808000",
+                              "#800000",
+                            ],
+                          },
+                        ],
+                      };
+
+                      var options = {
+                        animation: {
+                          duration: 3000,
+                        },
+                        responsive: true,
+                        legend: {
+                          labels: {
+                            fontFamily: "Poppins",
+                            fontColor: "#878787",
+                          },
+                        },
+                        plugins: {
+                          datalabels: {
+                            display: true,
+                            color: "#fff",
+                            anchor: "end",
+                            align: "start",
+                            offset: 8,
+                            formatter: (value, ctx) => {
+                              let sum = 0;
+                              let dataArr = ctx.dataset.data;
+                              dataArr.map((data) => {
+                                sum += data;
+                              });
+                              let percentage = ((value * 100) / sum).toFixed(2) + "%";
+                              return percentage;
+                            },
+                          },
+                          tooltip: {
+                            callbacks: {
+                              label: function (context) {
+                                const label = data6.labels[context.dataIndex];
+                                const value = data6.datasets[0].data[context.dataIndex];
+                                const dataset = data6.datasets[0];
+                                const sum = dataset.data.reduce((acc, val) => acc + val, 0);
+                                const percentage = ((value * 100) / sum).toFixed(2) + "%";
+                                return `${label}: ₹ ${value} (${percentage})`;
+                              },
+                            },
+                          },
+                        },
+                        elements: {
+                          arc: {
+                            borderWidth: 0,
+                          },
+                        },
+                      };
+
+                      var pieChart = new Chart(ctx6, {
+                        type: "pie",
+                        data: data6,
+                        options: options,
                       });
-                      let percentage = ((value * 100) / sum).toFixed(2) + "%";
-                      return percentage;
-                    },
-                  },
-                  tooltip: {
-                    callbacks: {
-                      label: function (context) {
-                        const label = data6.labels[context.dataIndex];
-                        const value = data6.datasets[0].data[context.dataIndex];
-                        const dataset = data6.datasets[0];
-                        const sum = dataset.data.reduce((acc, val) => acc + val, 0);
-                        const percentage = ((value * 100) / sum).toFixed(2) + "%";
-                        return `${label}: ${value} (${percentage})`;
-                      },
-                    },
-                  },
-                },
-                elements: {
-                  arc: {
-                    borderWidth: 0,
-                  },
-                },
-              };
+                    }
+                    chart_shows(
+                        {% autoescape off %}{{names}}{% endautoescape %},
+                      [{{total_income}}]
+                    );
 
-              var pieChart = new Chart(ctx6, {
-                type: "pie",
-                data: data6,
-                options: options,
-              });
-            }
-            function chart_shows_1(names, values) {
-              var ctx6 = document.getElementById("chart_7").getContext("2d");
-              var data6 = {
-                labels: names,
-                datasets: [
-                  {
-                    data: values,
-                    backgroundColor: [
-                      "#FF0000",
-                      "#FFA500",
-                      "#FFFF00",
-                      "#00FF00",
-                      "#0000FF",
-                      "#800080",
-                      "#FFC0CB",
-                      "#A52A2A",
-                      "#808080",
-                      "#000000",
-                      "#008080",
-                      "#FF00FF",
-                      "#808000",
-                      "#800000",
-                    ],
-                    hoverBackgroundColor: [
-                      "#FF0000",
-                      "#FFA500",
-                      "#FFFF00",
-                      "#00FF00",
-                      "#0000FF",
-                      "#800080",
-                      "#FFC0CB",
-                      "#A52A2A",
-                      "#808080",
-                      "#000000",
-                      "#008080",
-                      "#FF00FF",
-                      "#808000",
-                      "#800000",
-                    ],
-                  },
-                ],
-              };
+                {% endif %}
 
-              var options = {
-                animation: {
-                  duration: 3000,
-                },
-                responsive: true,
-                legend: {
-                  labels: {
-                    fontFamily: "Poppins",
-                    fontColor: "#878787",
-                  },
-                },
-                plugins: {
-                  datalabels: {
-                    display: true,
-                    color: "#fff",
-                    anchor: "end",
-                    align: "start",
-                    offset: 8,
-                    formatter: (value, ctx) => {
-                      let sum = 0;
-                      let dataArr = ctx.dataset.data;
-                      dataArr.map((data) => {
-                        sum += data;
+                {% if expense %}
+                    function chart_shows_1(names, values) {
+                      var ctx6 = document.getElementById("chart_7").getContext("2d");
+                      let tem = []
+                      for (var i = 0; i < names.length; i++) {
+                            tem.push(names[i]);
+                        }
+
+                      var data6 = {
+                        labels: tem,
+                        datasets: [
+                          {
+                            data: values,
+                            backgroundColor: [
+                                "#000000",
+                                "#008080",
+                                "#FF00FF",
+                                "#808000",
+                                "#808000",
+                                "#808000",
+                                "#800000",
+                                "#FF0000",
+                                "#FFA500",
+                                "#FFFF00",
+                                "#00FF00",
+                                "#0000FF",
+                                "#800080",
+                                "#FFC0CB",
+                                "#A52A2A",
+                                "#808080",
+                            ],
+                            hoverBackgroundColor: [
+                                "#000000",
+                                "#008080",
+                                "#FF00FF",
+                                "#808000",
+                                "#808000",
+                                "#808000",
+                                "#800000",
+                                "#FF0000",
+                                "#FFA500",
+                                "#FFFF00",
+                                "#00FF00",
+                                "#0000FF",
+                                "#800080",
+                                "#FFC0CB",
+                                "#A52A2A",
+                                "#808080",
+
+
+
+
+
+                            ],
+                          },
+                        ],
+                      };
+
+                      var options = {
+                        animation: {
+                          duration: 3000,
+                        },
+                        responsive: true,
+                        legend: {
+                          labels: {
+                            fontFamily: "Poppins",
+                            fontColor: "#878787",
+                          },
+                        },
+                        plugins: {
+                          datalabels: {
+                            display: true,
+                            color: "#fff",
+                            anchor: "end",
+                            align: "start",
+                            offset: 8,
+                            formatter: (value, ctx) => {
+                              let sum = 0;
+                              let dataArr = ctx.dataset.data;
+                              dataArr.map((data) => {
+                                sum += data;
+                              });
+                              let percentage = ((value * 100) / sum).toFixed(2) + "%";
+                              return percentage;
+                            },
+                          },
+                          tooltip: {
+                            callbacks: {
+                              label: function (context) {
+                                const label = data6.labels[context.dataIndex];
+                                const value = data6.datasets[0].data[context.dataIndex];
+                                const dataset = data6.datasets[0];
+                                const sum = dataset.data.reduce((acc, val) => acc + val, 0);
+                                const percentage = ((value * 100) / sum).toFixed(2) + "%";
+                                return `${label}: ₹ ${value} (${percentage})`;
+                              },
+                            },
+                          },
+                        },
+                        elements: {
+                          arc: {
+                            borderWidth: 0,
+                          },
+                        },
+                      };
+
+                      var pieChart = new Chart(ctx6, {
+                        type: "pie",
+                        data: data6,
+                        options: options,
                       });
-                      let percentage = ((value * 100) / sum).toFixed(2) + "%";
-                      return percentage;
-                    },
-                  },
-                  tooltip: {
-                    callbacks: {
-                      label: function (context) {
-                        const label = data6.labels[context.dataIndex];
-                        const value = data6.datasets[0].data[context.dataIndex];
-                        const dataset = data6.datasets[0];
-                        const sum = dataset.data.reduce((acc, val) => acc + val, 0);
-                        const percentage = ((value * 100) / sum).toFixed(2) + "%";
-                        return `${label}: ${value} (${percentage})`;
-                      },
-                    },
-                  },
-                },
-                elements: {
-                  arc: {
-                    borderWidth: 0,
-                  },
-                },
-              };
+                    }
+                    chart_shows_1(
+                      {% autoescape off %}{{names_}}{% endautoescape %},
+                      [{{total_expense}}]
+                    );
 
-              var pieChart = new Chart(ctx6, {
-                type: "pie",
-                data: data6,
-                options: options,
-              });
-            }
+                {% endif %}
 
-
-            chart_shows_1(
-              [{% autoescape off %}{{names}}{% endautoescape %}],
-              [{{total_expense}}]
-            );
-            chart_shows(
-                [{% autoescape off %}{{names}}{% endautoescape %}],
-              [{{total_income}}]
-            );
             {% endif %}
 
         </script>

@@ -164,6 +164,10 @@ def logout_private_admin(request):
 # View All Transaction
 @custom_login_required
 def admin_private_view(request):
+    import datetime
+    parsed_date = datetime.datetime.now()
+    month_ = parsed_date.month
+    year_ = parsed_date.year
     user_obj = get_user_obj(request)
     if request.method == 'POST':
         try:
@@ -214,6 +218,7 @@ def admin_private_view(request):
             private_data.user = user_obj
             private_data.save()
             link_check = request.META.get('HTTP_REFERER').split('/view/')
+            print(link_check)
             if len(link_check) >= 2:
                 items = calculate_amount(user_obj, link_check[1])
             else:
@@ -234,9 +239,8 @@ def admin_private_view(request):
             return JsonResponse(a)
     else:
         import datetime
-        revcounts = 1
         # b = ManageModel.objects.filter(user=user_obj).order_by('-date_name')
-        b = ManageModel.objects.filter(user=user_obj, date_name__month=datetime.datetime.now().month).order_by('-date_name')
+        b = ManageModel.objects.filter(user=user_obj, date_name__month=month_, date_name__year=year_).order_by('-date_name')
         d, cat_obj, account_obj, type_obj = get_forms(user_obj)
         categorized_data, categorized_data_1 = get_date_data(b)
         items = {
@@ -251,7 +255,7 @@ def admin_private_view(request):
             "checkcon": 10,
             'untransfer_data': categorized_data_1,
             'transfer_data': categorized_data,
-            'month': datetime.datetime.now().strftime("%B %Y")
+            'month': parsed_date
         }
 
         return render(request, 'private_des.html', items)
@@ -351,8 +355,12 @@ def search_page(request):
 
 
 @custom_login_required
-def chart_page(request):
-    import datetime
+def chart_page(request, hid):
+    # import datetime
+    date_ = "".join(hid).split('-')
+    parsed_date = datetime.strptime(hid, "%Y-%m")
+    month_ = date_[1]
+    year_ = date_[0]
 
     user_obj = get_user_obj(request)
     d, cat_obj, account_obj, type_obj = get_forms(user_obj)
@@ -361,11 +369,12 @@ def chart_page(request):
     total_income = []
     total_expense = []
     cat_list = []
+    cat_list_ = []
     for i in cat_obj:
         ll = "".join(i.cat_name).strip()
 
         cat = CategoryModel.objects.get(id=i.id)
-        val = ManageModel.objects.filter(user=user_obj, category=cat, date_name__month=datetime.datetime.now().month)
+        val = ManageModel.objects.filter(user=user_obj, category=cat, date_name__month=month_, date_name__year=year_)
         temp_income = 0
         temp_expense = 0
         for k in val:
@@ -376,17 +385,24 @@ def chart_page(request):
                 temp_expense += k.amount
         total_ += temp_income
         total_1 += temp_expense
-        total_income.append(str(temp_income))
-        total_expense.append(str(temp_expense))
-        cat_list.append(f'{ll}')
-        print(len(val))
-    print(total_income)
-    print(total_expense)
+        if temp_income == 0:
+            pass
+        else:
+            cat_list_.append(f'{ll}')
+            total_income.append(str(temp_income))
+            
+        if temp_expense == 0:
+            pass
+        else:
+            cat_list.append(f'{ll}')
+            total_expense.append(str(temp_expense))
+
     item = {
-        'names': "'" + "', '".join(cat_list).strip() + "' ",
+        'names_': cat_list,
         'total_income': ", ".join(total_income),
-        'total_expense': ", ".join(total_expense),
         'income': total_,
+        'names': cat_list_,
+        'total_expense': ", ".join(total_expense),
         'expense': total_1,
         'search': 'search',
         'chart_master': 'master',
@@ -395,13 +411,22 @@ def chart_page(request):
         'account_obj': account_obj,
         'type_obj': type_obj,
         'm': d,
-        'month': datetime.datetime.now().strftime("%B %Y")
+        'month': parsed_date
     }
     return render(
         request,
         'chart-page.html',
         item
     )
+
+
+@custom_login_required
+def chart_page_1(request):
+    import datetime
+    datee = datetime.datetime.now().strftime("%Y-%m")
+    return redirect(f'/chart/{datee}/')
+    # e = chart_page(request, datetime.datetime.now().strftime("%Y-%m"))
+    # print(e)
 
 
 @custom_login_required
@@ -449,26 +474,27 @@ def category_add(request):
         return redirect('/view/')
 
 
-@custom_login_required
-def view_all(request, hid):
+# @custom_login_required
+def view_all(request, other):
     user_obj = get_user_obj(request)
-    if hid.lower() == 'account':
+    if other.lower() == 'account':
         b = []
         c = AccountModel.objects.filter(user=user_obj)
         for i in c:
             c = account_value(user_obj, i.account_name)
             b.append(c[0])
         private_master = 'account_master'
-    elif hid.lower() == 'category':
+    elif other.lower() == 'category':
         b = CategoryModel.objects.filter(user=user_obj)
         private_master = 'cat_master'
-    elif hid.lower() == 'type':
+    elif other.lower() == 'type':
         b = TypeModel.objects.all()
         private_master = 'type_master'
     else:
         b = ''
         private_master = 'all_master'
     if private_master == 'all_master':
+        other = 'all'
         pass
     else:
         if not b:
@@ -478,7 +504,7 @@ def view_all(request, hid):
         'm': d,
         'filter_master': 'master',
         'filter_active': private_master,
-        'main': hid,
+        'main': other,
         'cat_obj': cat_obj,
         'account_obj': account_obj,
         'type_obj': type_obj,
@@ -745,8 +771,14 @@ def calculate_amount(user_obj, url_list):
                 user=user_obj
             )
     else:
+        import datetime
+        parsed_date = datetime.datetime.now()
+        month_ = parsed_date.month
+        year_ = parsed_date.year
         obj_list = ManageModel.objects.filter(
-            user=user_obj
+            user=user_obj,
+            date_name__month=month_,
+            date_name__year=year_
         )
         check = 0
     for j in obj_list:

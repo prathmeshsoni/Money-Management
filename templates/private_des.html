@@ -18,7 +18,7 @@
                                     {%if main %}
                                         Type: {{main}}
                                     {% else %}
-                                        All Transaction  of {{month}}
+                                        All Transaction  of {{month|date:"F Y"}}
                                     {% endif %}
                                 </h3>
                             </div>
@@ -171,9 +171,9 @@
                             </tbody>
 
                         </table>
-<!--                        <h1 id="nodatass" style="display:none;" >-->
-<!--                            NO DATA-->
-<!--                        </h1>-->
+                        <h1 id="nodatass" style="display:none;" >
+                            NO DATA
+                        </h1>
                       </div>
                   </div>
                 </div>
@@ -247,9 +247,9 @@
                             </tbody>
 
                         </table>
-<!--                        <h1 id="nodatass" style="display:none;" >-->
-<!--                            NO DATA-->
-<!--                        </h1>-->
+                        <h1 id="nodatass_1" style="display:none;" >
+                            NO DATA
+                        </h1>
                       </div>
                   </div>
                 </div>

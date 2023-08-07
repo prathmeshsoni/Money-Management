@@ -247,6 +247,23 @@ function data_is(){
 
     }
 
+    let nodaa = document.querySelectorAll("#myTable tbody tr").length
+    if ( nodaa === 0 ){
+        $('#nodatass').css('text-align', 'center')
+        $('#nodatass').css('display', 'block')
+    }
+    else{
+        $('#nodatass').css('display', 'none')
+    }
+    var nodaa_ = document.querySelectorAll("#myTable_1 tbody tr").length
+    if ( nodaa_ === 0 ){
+        $('#nodatass_1').css('text-align', 'center')
+        $('#nodatass_1').css('display', 'block')
+    }
+    else{
+        $('#nodatass_1').css('display', 'none')
+    }
+
 
     // const tableBody = document.querySelector("#myTable tbody tr");
     //
