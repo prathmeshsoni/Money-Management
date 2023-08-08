@@ -106,7 +106,7 @@
 
                     <li class="user-profile treeview">
                       <a href="javascript:void(0)" style="padding: 15px 10px 15px 8px !important; " >
-                        <img src="" style="width: 40px !important;height: 41px !important;" class="rounded-circle" alt="">
+                        <img src="{% static 'user/folder/assets/images/avtar/user.jpg' %}" style="width: 40px !important;height: 41px !important;" class="rounded-circle" alt="">
                         <span style="color: black;" >
                             {% if request.session.private_admin %} {{request.session.private_admin}}{% endif %}
                             <input type="hidden" name="count_1" id="count_1" value="" />
