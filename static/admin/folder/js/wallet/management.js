@@ -9,17 +9,173 @@ function openModel() {
 }
 
 
+function gettransaction(){
+    $('#login_loader').css('display', 'flex');
+    $.ajax({
+          url: '/get_data/',
+          method: 'POST',
+          data: $('#transaction_form').serialize(),
+          dataType: 'JSON',
+          success: function (data) {
+                remove_all()
+                $('#date-iss').val(data.hid);
+                if (data.status === true) {
+
+                    $('#date_value').html('');
+                    $('#date_value').html(data.date);
+                    $('#date_value').css('background', 'rgb(0 0 0 / 72%)');
+                    $('#date_value').css('color', 'beige');
+                    $('#nodatass').css('display', 'none');
+                    if (data.not_transfer.length > 0) {
+                        for (var i = 0; i < data.not_transfer.length; i++) {
+                            let date_name = data.not_transfer[i]['date']
+                            transfer_table('', date_name, 0, 0)
+
+                            for (var j = 0; j < data.not_transfer[i]['data_list'].length; j++) {
+                                transfer_table(data.not_transfer[i]['data_list'][j], date_name, 0, 1)
+                            }
+                        }
+                    }
+                    else {
+                        $('#nodatass').css('text-align', 'center')
+                        $('#nodatass').css('display', 'block')
+                    }
+                    if (data.transfer.length > 0){
+                        $('#nodatass_1').css('display', 'none')
+                        for (var i = 0; i < data.transfer.length; i++) {
+                            let date_name = data.transfer[i]['date']
+                            transfer_table('', date_name, 1, 0)
+
+                            for (var j = 0; j < data.transfer[i]['data_list'].length; j++) {
+                                transfer_table(data.transfer[i]['data_list'][j], date_name, 1,  1)
+                            }
+                        }
+                    }
+                    else {
+                        $('#nodatass_1').css('text-align', 'center')
+                        $('#nodatass_1').css('display', 'block')
+                    }
+
+
+                }
+                else {
+                    $('#nodatass').css('text-align', 'center')
+                    $('#nodatass').css('display', 'block')
+                    $('#nodatass_1').css('text-align', 'center')
+                    $('#nodatass_1').css('display', 'block')
+                }
+                $("#balance-1").val(data.price['temp_add']);
+                $("#balance-2").val(data.price['temp_sub']);
+                $("#balance-3").val(data.price['total_amount']);
+                $('#login_loader').css('display', 'none');
+          }
+    });
+}
+
+function transfer_table(dataArray, date_id, id, check){
+    let tableBody;
+
+    // not_transfer_table
+    if (id === 0) {
+        tableBody = document.querySelector("#myTable tbody");
+    }
+    // transfer_table
+    else {
+        tableBody = document.querySelector("#myTable_1 tbody");
+    }
+    if (check === 1){
+        const formattedDate = formatDate(dataArray.date_name);
+
+        const rowHTML = createTable(dataArray, formattedDate, date_id, id)
+        const newRow = document.createElement("tr");
+        newRow.id = 'tra_'+ dataArray.id;
+        newRow.innerHTML = rowHTML[0];
+
+        var rows = tableBody.querySelector('[id="date-' + date_id + '"]')
+        tableBody.insertBefore(newRow, rows.nextSibling);
+    }
+    else {
+        const newRow_ = document.createElement("tr");
+        newRow_.id = 'date-'+ date_id;
+        newRow_.innerHTML = '<td>' + date_id + '</td>';
+        tableBody.insertBefore(newRow_, tableBody.firstChild);
+    }
+}
+
+
+function createTable(i, formattedDate, date_id, id) {
+    let color_ = '#000'
+    let che = '#a3a6a4';
+    if (id === 1){
+        return [(
+            '<td><i style="margin-right: 20px;" class="fa fa-info-circle" aria-hidden="true"></i></td>' +
+            '<td>' + formattedDate[0] + '</td>' +
+            '<td>' + i.from_account.account_name + '</td>' +
+            '<td>' + i.to_account.account_name + '</td>' +
+            '<td style="color: '+ color_ +' !important;">' + i.amount + ' ₹</td>' +
+            '<td>' + i.note + '</td>' +
+            '<td>' +
+            '    <a href="javascript:void(0)" onclick="updateModel(' + i.id + ',' + 0 + ')" class="bg-info mr-2">' +
+            '        <span class="label label-success">\n' +
+            '            Edit\n' +
+            '    </span>' +
+            '    </a>' +
+            '    <a href="javascript:void(0)" onclick="Delete(' + i.id + ',' + 1 + ')" class="bg-info ml-2">' +
+            '        <span class="label label-danger">' +
+            '            Delete' +
+            '        </span>' +
+            '    </a>' +
+            '</td>' +
+            '<td name="' + date_id + '" style="display:none;" >' + date_id + '</td>'
+        ), che]
+    }
+    else{
+        if (i.type.type_name.toLowerCase() === 'available' || i.type.type_name.toLowerCase() === 'income' ){
+            color_ = '#000fff'
+            che = '#cbf8cb';
+        }
+        else if ( i.type.type_name.toLowerCase() === 'expense' ){
+            color_ = '#ff0000'
+            che = '#f8cbcb';
+        }
+
+        return [(
+            '<td><i style="margin-right: 20px;" class="fa fa-info-circle" aria-hidden="true"></i></td>' +
+            '<td>' + formattedDate[0] + '</td>' +
+            '<td>' + i.category.cat_name + '</td>' +
+            '<td>' + i.account.account_name + '</td>' +
+            '<td style="color: '+ color_ +' !important;">' + i.amount + ' ₹</td>' +
+            '<td>' + i.note + '</td>' +
+            '<td>' +
+            '    <a href="javascript:void(0)" onclick="updateModel(' + i.id + ',' + 0 + ')" class="bg-info mr-2">' +
+            '        <span class="label label-success">\n' +
+            '            Edit\n' +
+            '    </span>' +
+            '    </a>' +
+            '    <a href="javascript:void(0)" onclick="Delete(' + i.id + ',' + 1 + ')" class="bg-info ml-2">' +
+            '        <span class="label label-danger">' +
+            '            Delete' +
+            '        </span>' +
+            '    </a>' +
+            '</td>' +
+            '<td name="' + date_id + '" style="display:none;" >' + date_id + '</td>'
+        ), che]
+    }
+}
+
+
 function buttonclick(datas){
-    tempurl = window.location.href;
-    demo_url = subStr(tempurl)
-    if (demo_url){
+    let tempurl = window.location.href;
+    let demo_url = subStr(tempurl)
+    let final_url;
+    let final_1;
+    if (demo_url) {
         final_url = splitstr(demo_url, 0)
-        if(final_url){
+        if (final_url) {
             final_1 = splitstr(demo_url, 1)
-            if (final_1 === 'not'){
+            if (final_1 === 'not') {
                 return [0, '/view/']
-            }
-            else{
+            } else {
                 if (final_url === 'type') {
                     if (final_1 === datas.type.toLowerCase()) {
                         return [1, '/view/type/' + datas.type + '/']
@@ -48,8 +204,7 @@ function buttonclick(datas){
                     if (datas.category) {
                         if (datas.type.toLowerCase() === 'transfer') {
                             return [0, '/view/']
-                        }
-                        else{
+                        } else {
                             if (final_1.replace('%20', ' ') === datas.category.toLowerCase()) {
                                 return [1, '/view/category/' + datas.category + '/']
                             } else {
@@ -63,12 +218,10 @@ function buttonclick(datas){
                     return [0, '/view/']
                 }
             }
-        }
-        else{
+        } else {
             return [0, '/']
         }
-    }
-    else{
+    } else {
         return [1, '/view/']
     }
 }
@@ -153,9 +306,10 @@ function Delete(id, h_id, s_id){
         if (isConfirm) {
             swal("Deleted!", "Your Transaction No. (" + h_id + ") has been deleted.", "success");
             var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+            var date_val = $('#date-iss').val();
             $.ajax({
                 url: '/remove_pri/',
-                data: {'id': id, csrfmiddlewaretoken: csrf_token },
+                data: {'id': id, csrfmiddlewaretoken: csrf_token, 'date_val': date_val },
                 dataType: 'JSON',
                 method: 'POST',
                 success: function (data){

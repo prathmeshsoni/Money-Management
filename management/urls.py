@@ -5,6 +5,7 @@ urlpatterns = [
     path('', views.admin_private),
     path('logout/', views.logout_private_admin),
     path('view/', views.admin_private_view),
+    path('get_data/', views.get_date_transaction),
     path('search/', views.search_page),
     path('chart/<str:hid>/', views.chart_page),
     path('chart/', views.chart_page_1),

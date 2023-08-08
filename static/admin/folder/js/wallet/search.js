@@ -95,6 +95,7 @@ function get_datas(chaek){
 
 
 function renderTableRows_1(dataArray, id) {
+
     const formattedDate = formatDate(dataArray.date_name);
     const rowHTML = createTableRow_1(dataArray, formattedDate, id)
     const newRow = document.createElement("tr");
@@ -112,7 +113,7 @@ function renderTableRows_1(dataArray, id) {
 }
 
 
-function createTableRow_1(i, formattedDate, id) {
+function createTableRow_1(i, formattedDate, id, check) {
     if (i.type.type_name.toLowerCase() === 'transfer'){
         var searchValue = document.querySelector('input[name="search-param"]').value;
         var filter_name = $('#filter_name').val();
@@ -194,6 +195,7 @@ function createTableRow_1(i, formattedDate, id) {
     }
 }
 
+
 function remove_all(){
     const tbodyElements = document.querySelectorAll('tbody');
 
@@ -222,11 +224,9 @@ function data_is(){
         var value = f[i].textContent;
         let d = document.querySelectorAll("#myTable_1 tbody tr [name='" + value + "']").length
         if ( d === 0 ){
-            console.log('not avail ' + value)
             document.querySelector('#myTable_1 tbody tr[id="date-' + value + '"]').remove();
         }
         else {
-            console.log('avail ' + value)
 
         }
 

@@ -107,6 +107,9 @@ def get_date_data(b):
                 pass
             else:
                 categorized_data_1[date] = [entry]
+
+    categorized_data = dict(sorted(categorized_data.items(), key=lambda item: item[0]))
+    categorized_data_1 = dict(sorted(categorized_data_1.items(), key=lambda item: item[0]))
     return categorized_data, categorized_data_1
 
 
@@ -165,11 +168,9 @@ def logout_private_admin(request):
 @custom_login_required
 def admin_private_view(request):
     import datetime
-    parsed_date = datetime.datetime.now()
-    month_ = parsed_date.month
-    year_ = parsed_date.year
     user_obj = get_user_obj(request)
     if request.method == 'POST':
+        dat_ = request.POST.get('date-iss')
         try:
             id_1 = request.POST.get('id')
             jj = ManageModel.objects.get(id=id_1)
@@ -218,9 +219,8 @@ def admin_private_view(request):
             private_data.user = user_obj
             private_data.save()
             link_check = request.META.get('HTTP_REFERER').split('/view/')
-            print(link_check)
             if len(link_check) >= 2:
-                items = calculate_amount(user_obj, link_check[1])
+                items = calculate_amount(user_obj, link_check[1], dat_)
             else:
                 items = []
             p_id = private_data.id
@@ -238,8 +238,9 @@ def admin_private_view(request):
             a = {'status': False}
             return JsonResponse(a)
     else:
-        import datetime
-        # b = ManageModel.objects.filter(user=user_obj).order_by('-date_name')
+        parsed_date = datetime.datetime.now()
+        month_ = parsed_date.month
+        year_ = parsed_date.year
         b = ManageModel.objects.filter(user=user_obj, date_name__month=month_, date_name__year=year_).order_by('-date_name')
         d, cat_obj, account_obj, type_obj = get_forms(user_obj)
         categorized_data, categorized_data_1 = get_date_data(b)
@@ -259,6 +260,66 @@ def admin_private_view(request):
         }
 
         return render(request, 'private_des.html', items)
+
+
+@custom_login_required
+def get_date_transaction(request):
+    if request.method == 'POST':
+        hid = request.POST.get('transaction-month')
+        date_ = "".join(hid).split('-')
+        parsed_date = datetime.strptime(hid, "%Y-%m").strftime('%B %Y')
+        month_ = date_[1]
+        year_ = date_[0]
+        user_obj = get_user_obj(request)
+        obj_manage = ManageModel.objects.filter(user=user_obj, date_name__month=month_, date_name__year=year_).order_by('-date_name')
+        categorized_data, categorized_data_1 = get_date_data(obj_manage)
+        items = calculate_amount(user_obj, '', hid)
+        try:
+            final_list_not_transfer = get_serialize_list(categorized_data_1)
+        except:
+            final_list_not_transfer = []
+        try:
+            final_list_transfer = get_serialize_list(categorized_data)
+        except:
+            final_list_transfer = []
+        if final_list_transfer or final_list_not_transfer:
+            a = {
+                'status': True,
+                'transfer': final_list_transfer,
+                'not_transfer': final_list_not_transfer,
+                'price': items,
+                'date': parsed_date,
+                'hid': hid
+            }
+        else:
+            a = {
+                'status': False,
+                'date': parsed_date,
+                'hid': hid,
+                'price': items,
+            }
+        return JsonResponse(a, safe=False)
+    else:
+        return redirect('/view/')
+
+
+def get_serialize_list(data_list):
+    final_list = []
+    for k in data_list:
+        temp_list = []
+        if data_list[f'{k}']:
+            for i in data_list[f'{k}']:
+                m_id = i.id
+                get_data = ManageModel.objects.get(id=m_id)
+                serializer = ManageSerialize_1(get_data)
+                temp_list.append(serializer.data)
+
+            a = {
+                'date': k,
+                'data_list': temp_list
+            }
+            final_list.append(a)
+    return final_list
 
 
 # Search Page
@@ -474,7 +535,7 @@ def category_add(request):
         return redirect('/view/')
 
 
-# @custom_login_required
+@custom_login_required
 def view_all(request, other):
     user_obj = get_user_obj(request)
     if other.lower() == 'account':
@@ -553,13 +614,14 @@ def get_value(request):
 def remove_pri(request):
     if request.method == 'POST':
         try:
+            dat_ = request.POST.get('date_val')
             user_obj = get_user_obj(request)
             hid = request.POST.get('id')
             obj = ManageModel.objects.get(id=hid)
             obj.delete()
             link_check = request.META.get('HTTP_REFERER').split('/view/')
             if len(link_check) >= 2:
-                items = calculate_amount(user_obj, link_check[1])
+                items = calculate_amount(user_obj, link_check[1], dat_)
             else:
                 items = []
             a = {'status': True, 'exists': 'done', 'prices': items}
@@ -744,7 +806,13 @@ def dd(request):
     return render(request, 'admin/account.html')
 
 
-def calculate_amount(user_obj, url_list):
+def calculate_amount(user_obj, url_list, dates):
+    if dates:
+        date_ = "".join(dates).split('-')
+        month_ = date_[1]
+        year_ = date_[0]
+    else:
+        pass
     total_amount = 0
     temp_add = 0
     temp_sub = 0
@@ -771,15 +839,16 @@ def calculate_amount(user_obj, url_list):
                 user=user_obj
             )
     else:
-        import datetime
-        parsed_date = datetime.datetime.now()
-        month_ = parsed_date.month
-        year_ = parsed_date.year
-        obj_list = ManageModel.objects.filter(
-            user=user_obj,
-            date_name__month=month_,
-            date_name__year=year_
-        )
+        try:
+            obj_list = ManageModel.objects.filter(
+                user=user_obj,
+                date_name__month=month_,
+                date_name__year=year_
+            )
+        except:
+            obj_list = ManageModel.objects.filter(
+                user=user_obj,
+            )
         check = 0
     for j in obj_list:
         tye = j.type.type_name
