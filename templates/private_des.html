@@ -101,23 +101,25 @@
                                         </div>
                                     </a>
                                 </div>
-                                <div class="col-12 col-lg-6 col-xl-6 mt-4" style="float: left" >
-                                    <a href="javascript:void(0)">
-<!--                                        <h3 class=" db mr-2" style="width: auto; float: left;">-->
-<!--                                            <span>-->
-<!--                                            <i style="margin-right: 20px;" class="fa fa-info-circle" aria-hidden="true"></i>-->
-<!--                                        </span>-->
-<!--                                            Total :-->
-<!--                                        </h3>-->
-<!--                                        <div style="padding-top: 8px;" >-->
-<!--                                            <input type="text" style="width: 120px !important; font-weight: bold; font-size: 15px; font-family: cursive; float: left;" id="balance-3" value="0" class="form-control mr-1" readonly />-->
-<!--                                        </div>-->
-                                        <form method="post" id="transaction_form" >
-                                            <input type="month" name="transaction-month" class="numberinput form-control" id="transaction-month" value='{{month|date:"Y-m"}}' onchange="gettransaction()" />
-                                            {% csrf_token %}
-                                        </form>
-                                    </a>
-                                </div>
+                                {% if not main %}
+                                    <div class="col-12 col-lg-6 col-xl-6 mt-4" style="float: left" >
+                                        <a href="javascript:void(0)">
+    <!--                                        <h3 class=" db mr-2" style="width: auto; float: left;">-->
+    <!--                                            <span>-->
+    <!--                                            <i style="margin-right: 20px;" class="fa fa-info-circle" aria-hidden="true"></i>-->
+    <!--                                        </span>-->
+    <!--                                            Total :-->
+    <!--                                        </h3>-->
+    <!--                                        <div style="padding-top: 8px;" >-->
+    <!--                                            <input type="text" style="width: 120px !important; font-weight: bold; font-size: 15px; font-family: cursive; float: left;" id="balance-3" value="0" class="form-control mr-1" readonly />-->
+    <!--                                        </div>-->
+                                            <form method="post" id="transaction_form" >
+                                                <input type="month" name="transaction-month" class="numberinput form-control" id="transaction-month" value='{{month|date:"Y-m"}}' onchange="gettransaction()" />
+                                                {% csrf_token %}
+                                            </form>
+                                        </a>
+                                    </div>
+                                {% endif %}
                             {% endif %}
                         </div>
                     </div>
@@ -150,7 +152,12 @@
                                     <tr id="tra_{{ i.id }}" >
                                         <td><i style="margin-right: 20px;" class="fa fa-info-circle" aria-hidden="true"></i></td>
                                         <td>{{ i.date_name|time:"g:iA" }}</td>
-                                        <td>{{i.category}}</td>
+                                        {% if request.session.not_show %}
+                                            <td>food</td>
+                                        {% else %}
+                                            <td>{{i.category}}</td>
+                                        {% endif %}
+
                                         <td>{{i.account}}</td>
                                         <td style="
                                             {% if i.type.type_name == 'Available' or i.type.type_name == 'Income' %}
@@ -171,7 +178,11 @@
                                                 {% endif %}
                                             {% endif %}
                                         ">{{i.amount}} ₹</td>
-                                        <td>{{i.note}}</td>
+                                        {% if request.session.not_show %}
+                                            <td></td>
+                                        {% else %}
+                                            <td>{{i.note}}</td>
+                                        {% endif %}
                                         <td>
                                             <a href="javascript:void(0)" onclick="updateModel({{i.id}}, 0)" class="bg-info mr-2">
                                                 <span class="label label-success">
@@ -247,7 +258,12 @@
                                                 {% endif %}
                                             {% endif %}
                                         ">{{i.amount}} ₹</td>
-                                        <td>{{i.note}}</td>
+                                        {% if request.session.not_show %}
+
+                                        {% else %}
+                                            <td>{{i.note}}</td>
+                                        {% endif %}
+
                                         <td>
                                             <a href="javascript:void(0)" onclick="updateModel({{i.id}}, 0)" class="bg-info mr-2">
                                                 <span class="label label-success">
