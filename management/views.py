@@ -17,6 +17,7 @@ from rest_framework.decorators import api_view
 from datetime import datetime, timedelta
 from django.http import JsonResponse
 from django.contrib.auth.views import PasswordChangeForm
+from django_user_agents.utils import get_user_agent
 
 
 # 404 Page Not Found
@@ -84,7 +85,7 @@ def get_forms(user_obj):
     return d, cat_obj, account_obj, type_obj
 
 
-def get_date_data(b):
+def get_date_data(b, check):
     categorized_data = {}
     for entry in b:
         date = entry.date_name.strftime("%d %B")  # Format the date as 'dd-mm-yyyy'
@@ -107,10 +108,38 @@ def get_date_data(b):
                 pass
             else:
                 categorized_data_1[date] = [entry]
+    if check == 0:
+        categorized_data = dict(sorted(categorized_data.items(), key=lambda item: item[0]))
+        categorized_data_1 = dict(sorted(categorized_data_1.items(), key=lambda item: item[0]))
+    else:
+        categorized_data = dict(sorted(categorized_data.items(), key=lambda item: item[0], reverse=True))
+        categorized_data_1 = dict(sorted(categorized_data_1.items(), key=lambda item: item[0], reverse=True))
 
-    categorized_data = dict(sorted(categorized_data.items(), key=lambda item: item[0]))
-    categorized_data_1 = dict(sorted(categorized_data_1.items(), key=lambda item: item[0]))
     return categorized_data, categorized_data_1
+
+
+def user_details(request):
+    user_agent = get_user_agent(request)
+    item = {}
+    if user_agent.is_mobile:
+        doe = 'mobile'
+    elif user_agent.is_tablet:
+        doe = 'tablet'
+    elif user_agent.is_pc:
+        doe = 'pc'
+    else:
+        doe = ''
+    item['Username'] = request.session['private_admin']
+    item['current time'] = datetime.now().strftime("%I:%M %p %d %B %Y")
+    item[f'{doe.upper()}'] = f'{user_agent.os.family} {user_agent.os.version_string}'
+    try:
+        item[f'{user_agent.browser.family}'] = user_agent.browser.version_string
+    except Exception as e:
+        item['Error'] = e
+
+    file_path = 'login details'
+    with open(file_path, "a") as file:
+        file.write(f"{item}\n")
 
 
 # Private Login
@@ -138,12 +167,13 @@ def admin_private(request):
             user = UserModel.objects.get(Q(username=username) | Q(email=username))
             user11 = authenticate(username=user, password=password)
             if user11 is None:
+
                 messages.success(request, 'Wrong Password.')
                 return redirect('/')
-
             request.session['private_admin'] = user.username
             request.session['private_id'] = user11.id
             request.session['login_time'] = datetime.now().timestamp()
+            user_details(request)
             return redirect('/view/')
 
     else:
@@ -155,6 +185,7 @@ def admin_private(request):
 # Private Logout
 def logout_private_admin(request):
     if 'private_admin' in request.session:
+        user_details(request)
         del request.session['private_admin']
     if 'login_time' in request.session:
         del request.session['login_time']
@@ -170,6 +201,7 @@ def admin_private_view(request):
     import datetime
     user_obj = get_user_obj(request)
     if request.method == 'POST':
+        user_details(request)
         dat_ = request.POST.get('date-iss')
         try:
             id_1 = request.POST.get('id')
@@ -243,7 +275,7 @@ def admin_private_view(request):
         year_ = parsed_date.year
         b = ManageModel.objects.filter(user=user_obj, date_name__month=month_, date_name__year=year_).order_by('-date_name')
         d, cat_obj, account_obj, type_obj = get_forms(user_obj)
-        categorized_data, categorized_data_1 = get_date_data(b)
+        categorized_data, categorized_data_1 = get_date_data(b, 1)
         items = {
             'm': d,
             'list': b,
@@ -272,7 +304,7 @@ def get_date_transaction(request):
         year_ = date_[0]
         user_obj = get_user_obj(request)
         obj_manage = ManageModel.objects.filter(user=user_obj, date_name__month=month_, date_name__year=year_).order_by('-date_name')
-        categorized_data, categorized_data_1 = get_date_data(obj_manage)
+        categorized_data, categorized_data_1 = get_date_data(obj_manage, 0)
         items = calculate_amount(user_obj, '', hid)
         try:
             final_list_not_transfer = get_serialize_list(categorized_data_1)
@@ -642,7 +674,7 @@ def view_type(request, hid):
         return redirect('/view/type')
     b = ManageModel.objects.filter(type=type_.id, user=user_obj).order_by('-date_name')
     d, cat_obj, account_obj, type_obj = get_forms(user_obj)
-    categorized_data, categorized_data_1 = get_date_data(b)
+    categorized_data, categorized_data_1 = get_date_data(b, 1)
 
     x = {
         'm': d,
@@ -676,7 +708,7 @@ def view_account(request, hid):
         Q(user=user_obj)
     ).order_by('-date_name')
     d, cat_obj, account_obj, type_obj = get_forms(user_obj)
-    categorized_data, categorized_data_1 = get_date_data(b)
+    categorized_data, categorized_data_1 = get_date_data(b, 1)
 
     x = {
         'm': d,
@@ -705,7 +737,7 @@ def view_category(request, hid):
         return redirect('/view/category')
     b = ManageModel.objects.filter(category=type_.id, user=user_obj).order_by('-date_name')
     d, cat_obj, account_obj, type_obj = get_forms(user_obj)
-    categorized_data, categorized_data_1 = get_date_data(b)
+    categorized_data, categorized_data_1 = get_date_data(b, 1)
 
     x = {
         'm': d,

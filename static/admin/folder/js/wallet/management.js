@@ -102,6 +102,11 @@ function transfer_table(dataArray, date_id, id, check){
     }
 }
 
+function formatDate11(dateString) {
+    const options = { hour: 'numeric', minute: 'numeric', hour12: true };
+    const formattedDate = new Date(dateString).toLocaleTimeString('en-US', options);
+    return formattedDate;
+}
 
 function createTable(i, formattedDate, date_id, id) {
     let color_ = '#000'
@@ -109,7 +114,7 @@ function createTable(i, formattedDate, date_id, id) {
     if (id === 1){
         return [(
             '<td><i style="margin-right: 20px;" class="fa fa-info-circle" aria-hidden="true"></i></td>' +
-            '<td>' + formattedDate[0] + '</td>' +
+            '<td>' + formatDate11(i.date_name.replace('Z', '')) + '</td>' +
             '<td>' + i.from_account.account_name + '</td>' +
             '<td>' + i.to_account.account_name + '</td>' +
             '<td style="color: '+ color_ +' !important;">' + i.amount + ' ₹</td>' +
@@ -129,6 +134,7 @@ function createTable(i, formattedDate, date_id, id) {
             '<td name="' + date_id + '" style="display:none;" >' + date_id + '</td>'
         ), che]
     }
+
     else{
         if (i.type.type_name.toLowerCase() === 'available' || i.type.type_name.toLowerCase() === 'income' ){
             color_ = '#000fff'
@@ -141,7 +147,7 @@ function createTable(i, formattedDate, date_id, id) {
 
         return [(
             '<td><i style="margin-right: 20px;" class="fa fa-info-circle" aria-hidden="true"></i></td>' +
-            '<td>' + formattedDate[0] + '</td>' +
+            '<td>' + formatDate11(i.date_name.replace('Z', '')) + '</td>' +
             '<td>' + i.category.cat_name + '</td>' +
             '<td>' + i.account.account_name + '</td>' +
             '<td style="color: '+ color_ +' !important;">' + i.amount + ' ₹</td>' +
@@ -715,7 +721,7 @@ function createTableRow(i, formattedDate, id) {
 
 function formatDate(inputDate) {
     const date = new Date(inputDate);
-    const day = date.getDate().toString().padStart(2, '0');
+    const day = date.getDate()
     const month = date.toLocaleString('default', { month: 'long' });
     const year = date.getFullYear();
     const hours = date.getHours();
