@@ -85,6 +85,7 @@
     {% else %}
         <script>
             window.onload = function closes(){
+				$('[name="username"]').focus();
 				var height_div = $("#temp").height()
 				$("#set-height-auto").css('height',+ height_div +"px");
 				$('#login_loader').css('display', 'none');
