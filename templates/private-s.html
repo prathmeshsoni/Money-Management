@@ -121,11 +121,10 @@
                 <div class="box">
                   <div class="box-body">
                     <div class="table-responsive">
-                        <table class="table text-center  table-bordered table-hover display nowrap" style="color: black !important;"  id="myTable">
+                        <table class="table text-center table-hover display nowrap" style="color: black !important;"  id="myTable">
                             <thead>
                                 <tr>
                                     <th>Date</th>
-                                    <th>Time</th>
                                     <th>Category</th>
                                     <th>Account</th>
                                     <th>Amount</th>
@@ -136,13 +135,9 @@
                             <tbody>
 
                             {% for date, entries in untransfer_data.items %}
-                                <tr id="date-{{date}}"  >
-                                    <td>{{ date }}</td>
-                                </tr>
-                                {% for i in entries.list  %}
+                                {% for i in entries.list %}
                                     <tr id="tra_{{ i.id }}" >
-                                        <td><i style="margin-right: 20px;" class="fa fa-info-circle" aria-hidden="true"></i></td>
-                                        <td>{{ i.date_name|time:"g:iA" }}</td>
+                                        <td>{{ i.date_name|time:"g:iA" }} {{ date }}</td>
                                         {% if request.session.not_show %}
                                             <td>food</td>
                                         {% else %}
@@ -175,27 +170,27 @@
                                             <td>{{i.note}}</td>
                                         {% endif %}
                                         <td>
-                                            <a href="javascript:void(0)" onclick="updateModel({{i.id}}, 0)" class="bg-info mr-2">
-                                                <span class="label label-success">
-                                                    Edit
-                                                </span>
-                                            </a>
-                                            <a href="javascript:void(0)" onclick="Delete({{ i.id }}, 1, '{{ i.date_name|date:'M d' }} {{ i.date_name|time:'g:iA' }}')" class="bg-info ml-2">
-                                                <span class="label label-danger">
-                                                    Delete
-                                                </span>
-                                            </a>
+                                            <table style="margin-left: 45px;" >
+                                                <tr>
+                                                    <a href="javascript:void(0)" onclick="updateModel({{i.id}}, 0)" class="bg-info mr-2">
+                                                        <span class="label label-success">
+                                                            Edit
+                                                        </span>
+                                                    </a>
+                                                    <a href="javascript:void(0)" onclick="Delete({{ i.id }}, 1, '{{ i.date_name|date:'M d' }} {{ i.date_name|time:'g:iA' }}')" class="bg-info ml-2">
+                                                        <span class="label label-danger">
+                                                            Delete
+                                                        </span>
+                                                    </a>
+                                                </tr>
+                                          </table>
                                         </td>
-                                        <td name="{{date}}" style="display:none;" >{{date}}</td>
                                     </tr>
                                 {% endfor %}
                             {% endfor %}
 
                             </tbody>
                         </table>
-                        <h1 id="nodatass" style="display:none;" >
-                            NO DATA
-                        </h1>
                       </div>
                   </div>
                 </div>
@@ -209,7 +204,6 @@
                             <thead>
                                 <tr>
                                     <th>Date</th>
-                                    <th>Time</th>
                                     <th>From Account</th>
                                     <th>To Account</th>
                                     <th>Amount</th>
@@ -220,13 +214,9 @@
                             <tbody>
 
                             {% for dates, entrie in transfer_data.items %}
-                                <tr id="date-{{dates}}" >
-                                    <td>{{ dates }}</td>
-                                </tr>
                                 {% for i in entrie.list %}
                                     <tr id="tra_{{ i.id }}" >
-                                        <td><i style="margin-right: 20px;" class="fa fa-info-circle" aria-hidden="true"></i></td>
-                                        <td>{{ i.date_name|time:"g:iA" }}</td>
+                                        <td>{{ i.date_name|time:"g:iA" }} {{ dates }}</td>
                                         <td>{{i.from_account}}</td>
                                         <td>{{i.to_account}}</td>
                                         <td style="
@@ -253,20 +243,22 @@
                                         {% else %}
                                             <td>{{i.note}}</td>
                                         {% endif %}
-
                                         <td>
-                                            <a href="javascript:void(0)" onclick="updateModel({{i.id}}, 0)" class="bg-info mr-2">
-                                                <span class="label label-success">
-                                                    Edit
-                                                </span>
-                                            </a>
-                                            <a href="javascript:void(0)" onclick="Delete({{ i.id }}, 1, '{{ i.date_name|date:'M d' }} {{ i.date_name|time:'g:iA' }}')" class="bg-info ml-2">
-                                                <span class="label label-danger">
-                                                    Delete
-                                                </span>
-                                            </a>
+                                            <table style="margin-left: 45px;">
+                                                <tr>
+                                                    <a href="javascript:void(0)" onclick="updateModel({{i.id}}, 0)" class="bg-info mr-2">
+                                                        <span class="label label-success">
+                                                            Edit
+                                                        </span>
+                                                    </a>
+                                                    <a href="javascript:void(0)" onclick="Delete({{ i.id }}, 1, '{{ i.date_name|date:'M d' }} {{ i.date_name|time:'g:iA' }}')" class="bg-info ml-2">
+                                                        <span class="label label-danger">
+                                                            Delete
+                                                        </span>
+                                                    </a>
+                                                </tr>
+                                            </table>
                                         </td>
-                                        <td name="{{dates}}" style="display:none;" >{{dates}}</td>
                                     </tr>
                                 {% endfor %}
                             {% endfor %}
@@ -274,14 +266,13 @@
                             </tbody>
 
                         </table>
-                        <h1 id="nodatass_1" style="display:none;" >
-                            NO DATA
-                        </h1>
                       </div>
                   </div>
                 </div>
             </div>
-            <div class="col-5" style="{% if reletedtype %}{% if main == 'Transfer' %}display:none;{% endif %}{% endif %}" >
+        </div>
+
+        <div class="col-5" style="{% if reletedtype %}{% if main == 'Transfer' %}display:none;{% endif %}{% endif %}" >
                 <div class="box">
                   <div class="box-body">
                     <div class="table-responsive">
@@ -296,7 +287,7 @@
                             <tbody>
 
                             {% for date, entries in untransfer_data.items %}
-                                <tr>
+                                <tr id="date-{{date}}"  >
                                     <td>{{ date }}</td>
                                     <td style="color: #000fff !important;" >{{ entries.price.temp_add }} <i class="fa fa-rupee"></i></td>
                                     <td style="color: #ff0000 !important;" >{{ entries.price.temp_sub }} <i class="fa fa-rupee"></i></td>
@@ -313,7 +304,7 @@
                   </div>
                 </div>
             </div>
-        </div>
+
 
         <div class="row">
             <div class="col-md-12" style="padding: 0;border-bottom: 2px solid rgba(120,130,140,.13);margin-bottom: 25px;" >

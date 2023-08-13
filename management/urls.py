@@ -1,10 +1,12 @@
 from django.urls import path
+
 from . import views
 
 urlpatterns = [
     path('', views.admin_private),
     path('logout/', views.logout_private_admin),
-    path('view/', views.admin_private_view),
+    path('view/', views.admin_private_view, {'template_name': 'private_des.html'}),
+    path('view1/', views.admin_private_view, {'template_name': 'private-s.html'}),
     path('get_data/', views.get_date_transaction),
     path('search/', views.search_page),
     path('chart/<str:hid>/', views.chart_page),

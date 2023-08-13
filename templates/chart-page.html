@@ -1,6 +1,5 @@
-<script src="../static/admin/folder/js/wallet/management.js"></script>
 {% extends 'masterpage/index-1.html' %}
-{% block title3 %} Search Page {% endblock %}
+{% block title3 %} Chart Page {% endblock %}
 {% load static %}
 
 {% block content %}
@@ -147,15 +146,5 @@
     </section>
 <!-- /.content -->
 </div>
-
-<script>
-    function getchart(){
-        var data = $('#chart_form').serializeArray()[0]['value'];
-        window.location.href = '/chart/' + data + '/';
-    }
-
-</script>
-
-
 <!-- sample modal content -->
 {% endblock %}

@@ -1,23 +1,25 @@
 import json
+from datetime import datetime, timedelta
+
+from django.contrib import messages
+from django.contrib.auth import authenticate
+from django.contrib.auth.backends import UserModel
+from django.contrib.auth.models import User
+from django.contrib.auth.views import PasswordChangeForm
 # from twilio.rest import Client
 from django.db.models import Q
-from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate
-from django.contrib import messages
-from django.contrib.auth.backends import UserModel
-from .models import ManageModel
-from .forms import ManageForm
-from category.models import CategoryModel
-from account.models import AccountModel
-from Types.models import TypeModel
-from .serializer import ManageSerialize, ManageSerialize_1
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from datetime import datetime, timedelta
 from django.http import JsonResponse
-from django.contrib.auth.views import PasswordChangeForm
+from django.shortcuts import render, redirect
 from django_user_agents.utils import get_user_agent
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
+from Types.models import TypeModel
+from account.models import AccountModel
+from category.models import CategoryModel
+from .forms import ManageForm
+from .models import ManageModel
+from .serializer import ManageSerialize, ManageSerialize_1
 
 
 # 404 Page Not Found
@@ -25,6 +27,7 @@ def page_not_found_view(request, exception):
     return render(request, '404.html', status=404)
 
 
+# Custom Login Required
 def custom_login_required(view_func):
     def wrapper(request, *args, **kwargs):
         if request.session.get('private_admin'):
@@ -36,6 +39,7 @@ def custom_login_required(view_func):
     return wrapper
 
 
+# Custom Login Not Required
 def custom_login_required_not(view_func):
     def wrapper(request, *args, **kwargs):
         if not request.session.get('private_admin'):
@@ -46,6 +50,7 @@ def custom_login_required_not(view_func):
     return wrapper
 
 
+# Change Password
 @custom_login_required
 def custom_change_password(request):
     user_obj = get_user_obj(request)
@@ -71,12 +76,14 @@ def custom_change_password(request):
     })
 
 
+# Get User Object
 def get_user_obj(request):
     user = request.session.get('private_admin')
     user_obj = User.objects.get(username=user)
     return user_obj
 
 
+# Get Category, Type, Account Object
 def get_forms(user_obj):
     d = ManageForm()
     cat_obj = CategoryModel.objects.filter(user=user_obj)
@@ -85,39 +92,55 @@ def get_forms(user_obj):
     return d, cat_obj, account_obj, type_obj
 
 
+# Categorized Data
 def get_date_data(b, check):
     categorized_data = {}
     for entry in b:
         date = entry.date_name.strftime("%d %B")  # Format the date as 'dd-mm-yyyy'
+
         if date in categorized_data:
             if entry.type.type_name == 'Transfer':
-                categorized_data[date].append(entry)
+                categorized_data[date]['list'].append(entry)
         else:
             if entry.type.type_name == 'Transfer':
-                categorized_data[date] = [entry]
+                categorized_data[date] = {'list': [entry]}
     categorized_data_1 = {}
     for entry in b:
         date = entry.date_name.strftime("%d %B")  # Format the date as 'dd-mm-yyyy'
+
         if date in categorized_data_1:
             if entry.type.type_name == 'Transfer':
                 pass
             else:
-                categorized_data_1[date].append(entry)
+                categorized_data_1[date]['list'].append(entry)
         else:
             if entry.type.type_name == 'Transfer':
                 pass
             else:
-                categorized_data_1[date] = [entry]
+                categorized_data_1[date] = {'list': [entry]}
+
     if check == 0:
         categorized_data = dict(sorted(categorized_data.items(), key=lambda item: datetime.strptime(item[0], "%d %B")))
-        categorized_data_1 = dict(sorted(categorized_data_1.items(), key=lambda item: datetime.strptime(item[0], "%d %B")))
+        categorized_data_1 = dict(
+            sorted(categorized_data_1.items(), key=lambda item: datetime.strptime(item[0], "%d %B")))
     else:
-        categorized_data = dict(sorted(categorized_data.items(), key=lambda item: datetime.strptime(item[0], "%d %B"), reverse=True))
-        categorized_data_1 = dict(sorted(categorized_data_1.items(), key=lambda item: datetime.strptime(item[0], "%d %B"), reverse=True))
+        categorized_data = dict(
+            sorted(categorized_data.items(), key=lambda item: datetime.strptime(item[0], "%d %B"), reverse=True))
+        categorized_data_1 = dict(
+            sorted(categorized_data_1.items(), key=lambda item: datetime.strptime(item[0], "%d %B"), reverse=True))
+
+    for k in categorized_data_1.items():
+        data_ = k[1]['list']
+        k[1]['price'] = calculate_amount_1(data_)
+
+    for k in categorized_data.items():
+        data_ = k[1]['list']
+        k[1]['price'] = calculate_amount_1(data_)
 
     return categorized_data, categorized_data_1
 
 
+# User Massage
 def user_details(request):
     user_agent = get_user_agent(request)
     item = {}
@@ -142,7 +165,7 @@ def user_details(request):
         file.write(f"{item}\n")
 
 
-# Private Login
+# Login Page
 @custom_login_required_not
 def admin_private(request):
     if request.method == 'POST':
@@ -167,10 +190,9 @@ def admin_private(request):
             user = UserModel.objects.get(Q(username=username) | Q(email=username))
             user11 = authenticate(username=user, password=password)
             if user11 is None:
-
                 messages.success(request, 'Wrong Password.')
                 return redirect('/')
-            if user.username == 'admin':
+            if user.username == 'collage':
                 try:
                     demo = int(request.POST.get('check_1'))
                 except:
@@ -180,7 +202,7 @@ def admin_private(request):
             request.session['private_admin'] = user.username
             request.session['private_id'] = user11.id
             request.session['login_time'] = datetime.now().timestamp()
-            # user_details(request)
+            user_details(request)
             return redirect('/view/')
 
     else:
@@ -189,26 +211,29 @@ def admin_private(request):
     return render(request, 'login.html', {"checkcon": 10, "Title": "Private "})
 
 
-# Private Logout
+# Logout Page
 def logout_private_admin(request):
     if 'private_admin' in request.session:
-        # user_details(request)
+        user_details(request)
         del request.session['private_admin']
     if 'login_time' in request.session:
         del request.session['login_time']
     if 'private_id' in request.session:
         del request.session['private_id']
+    if 'not_show' in request.session:
+        del request.session['not_show']
+
     # logout(request)
     return redirect('/')
 
 
 # View All Transaction
 @custom_login_required
-def admin_private_view(request):
+def admin_private_view(request, template_name):
     import datetime
     user_obj = get_user_obj(request)
     if request.method == 'POST':
-        # user_details(request)
+        user_details(request)
         dat_ = request.POST.get('date-iss')
         try:
             id_1 = request.POST.get('id')
@@ -280,7 +305,8 @@ def admin_private_view(request):
         parsed_date = datetime.datetime.now()
         month_ = parsed_date.month
         year_ = parsed_date.year
-        b = ManageModel.objects.filter(user=user_obj, date_name__month=month_, date_name__year=year_).order_by('-date_name')
+        b = ManageModel.objects.filter(user=user_obj, date_name__month=month_, date_name__year=year_).order_by(
+            '-date_name')
         d, cat_obj, account_obj, type_obj = get_forms(user_obj)
         categorized_data, categorized_data_1 = get_date_data(b, 1)
         items = {
@@ -298,9 +324,11 @@ def admin_private_view(request):
             'month': parsed_date
         }
 
-        return render(request, 'private_des.html', items)
+        # return render(request, , items)
+        return render(request, template_name, items)
 
 
+# View Date Transaction
 @custom_login_required
 def get_date_transaction(request):
     if request.method == 'POST':
@@ -310,7 +338,8 @@ def get_date_transaction(request):
         month_ = date_[1]
         year_ = date_[0]
         user_obj = get_user_obj(request)
-        obj_manage = ManageModel.objects.filter(user=user_obj, date_name__month=month_, date_name__year=year_).order_by('-date_name')
+        obj_manage = ManageModel.objects.filter(user=user_obj, date_name__month=month_, date_name__year=year_).order_by(
+            '-date_name')
         categorized_data, categorized_data_1 = get_date_data(obj_manage, 0)
         items = calculate_amount(user_obj, '', hid)
         try:
@@ -342,12 +371,14 @@ def get_date_transaction(request):
         return redirect('/view/')
 
 
+# Date Serialize
 def get_serialize_list(data_list):
     final_list = []
     for k in data_list:
         temp_list = []
-        if data_list[f'{k}']:
-            for i in data_list[f'{k}']:
+        if data_list[f'{k}']['list']:
+            item = calculate_amount_1(data_list[f'{k}']['list'])
+            for i in data_list[f'{k}']['list']:
                 m_id = i.id
                 get_data = ManageModel.objects.get(id=m_id)
                 serializer = ManageSerialize_1(get_data)
@@ -355,7 +386,8 @@ def get_serialize_list(data_list):
 
             a = {
                 'date': k,
-                'data_list': temp_list
+                'data_list': temp_list,
+                'price': item
             }
             final_list.append(a)
     return final_list
@@ -454,6 +486,7 @@ def search_page(request):
         )
 
 
+# Chart Page
 @custom_login_required
 def chart_page(request, hid):
     # import datetime
@@ -490,7 +523,7 @@ def chart_page(request, hid):
         else:
             cat_list_.append(f'{ll}')
             total_income.append(str(temp_income))
-            
+
         if temp_expense == 0:
             pass
         else:
@@ -520,15 +553,15 @@ def chart_page(request, hid):
     )
 
 
+# Chart Page
 @custom_login_required
 def chart_page_1(request):
     import datetime
     datee = datetime.datetime.now().strftime("%Y-%m")
     return redirect(f'/chart/{datee}/')
-    # e = chart_page(request, datetime.datetime.now().strftime("%Y-%m"))
-    # print(e)
 
 
+# Add Category
 @custom_login_required
 def category_add(request):
     user_obj = get_user_obj(request)
@@ -580,6 +613,7 @@ def category_add(request):
         return redirect('/view/')
 
 
+# Filter Page
 @custom_login_required
 def view_all(request, other):
     user_obj = get_user_obj(request)
@@ -628,6 +662,7 @@ def view_all(request, other):
     return render(request, 'all_data.html', x)
 
 
+# Available Balance Message
 @custom_login_required
 def check_balance(request):
     user_obj = get_user_obj(request)
@@ -638,10 +673,11 @@ def check_balance(request):
         msg = msg + item['account_name'] + f' Rs: ' + str(item['amount']) + '\n'
 
     # sent_massage(msg)
+    messages.success(request, msg)
     return redirect('/view/')
 
 
-# Private Detail Function
+# Transaction Detail Function
 @custom_login_required
 @api_view(['GET', 'POST'])
 def get_value(request):
@@ -654,7 +690,7 @@ def get_value(request):
         return Response(serializer.data)
 
 
-# Delete Detail Function
+# Delete Transaction Function
 @custom_login_required
 def remove_pri(request):
     if request.method == 'POST':
@@ -678,6 +714,7 @@ def remove_pri(request):
         return redirect('/view/')
 
 
+# Filter Type Page
 @custom_login_required
 def view_type(request, hid):
     user_obj = get_user_obj(request)
@@ -707,6 +744,7 @@ def view_type(request, hid):
     return render(request, 'private_des.html', x)
 
 
+# Filter Account Page
 @custom_login_required
 def view_account(request, hid):
     user_obj = get_user_obj(request)
@@ -741,6 +779,7 @@ def view_account(request, hid):
     return render(request, 'private_des.html', x)
 
 
+# Filter Category Page
 @custom_login_required
 def view_category(request, hid):
     user_obj = get_user_obj(request)
@@ -847,10 +886,6 @@ def account_value(user_obj, a_name):
     return amount_list
 
 
-def dd(request):
-    return render(request, 'admin/account.html')
-
-
 def calculate_amount(user_obj, url_list, dates):
     if dates:
         date_ = "".join(dates).split('-')
@@ -911,6 +946,35 @@ def calculate_amount(user_obj, url_list, dates):
                 else:
                     total_amount += int(j.amount)
                     temp_add += int(j.amount)
+
+    item_1 = {
+        'total_amount': total_amount,
+        'temp_add': temp_add,
+        'temp_sub': temp_sub,
+    }
+    return item_1
+
+
+def calculate_amount_1(obj_list):
+    total_amount = 0
+    temp_add = 0
+    temp_sub = 0
+    for j in obj_list:
+        tye = j.type.type_name
+        if str(tye).lower() == 'Expense'.lower():
+            total_amount -= int(j.amount)
+            temp_sub += int(j.amount)
+        elif str(tye).lower() == 'Available'.lower() or str(tye).lower() == 'Income'.lower():
+            total_amount += int(j.amount)
+            temp_add += int(j.amount)
+        # if check == 1:
+        #     if str(tye).lower() == 'transfer'.lower():
+        #         if j.from_account.account_name.lower() == value.lower():
+        #             total_amount -= int(j.amount)
+        #             temp_sub += int(j.amount)
+        #         else:
+        #             total_amount += int(j.amount)
+        #             temp_add += int(j.amount)
 
     item_1 = {
         'total_amount': total_amount,
