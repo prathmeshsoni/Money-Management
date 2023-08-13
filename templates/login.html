@@ -37,7 +37,7 @@
 
 		<form method="POST">
 		  <div class="form-group has-feedback">
-		    <label for="exampleInputEmail1">Username</label>
+		    <label for="exampleInputEmail1">Username / email</label>
 			<input type="text" name="username" class="form-control rounded" autocomplete="off" id="exampleInputEmail1" placeholder="Enter Email/Username">
 			<span class="icon-adj fa fa-envelope form-control-feedback"></span>
 		  </div>
@@ -53,9 +53,17 @@
                     <div class="row">
                         <div class="col-12" >
                             <div class="fog-pwd text-center">
-                                <div style="border-color: red !important;
-                                            color: red !important;
-                                            background-color: #ff5e5929 !important;"
+                                <div style="
+                                	{% if message.tags == 'success' %}
+										border-color: #1e88e5 !important;
+										color: #1e88e5 !important;
+										background-color: #403df41a !important;
+									{% else %}
+                                		border-color: red !important;
+										color: red !important;
+										background-color: #ff5e5929 !important;
+									{% endif %}
+									"
                                 class="alert alert-info">
                                 {{ message }}
                                 </div>
@@ -72,7 +80,7 @@
 					<a href="/register/" class="text-danger"><i class="fa fa-user"></i> Create Account ?</a><br>
 				  </div>
 				 <div class="fog-pwd text-right float-right">
-					<a href="/admin/password-reset/" class="text-danger"><i class="fa fa-lock"></i> Forgot Your
+					<a href="/password-reset/" class="text-danger"><i class="fa fa-lock"></i> Forgot Your
                     Password ?</a><br>
 				  </div>
 			  </div>

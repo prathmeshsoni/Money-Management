@@ -20,6 +20,7 @@ from category.models import CategoryModel
 from .forms import ManageForm
 from .models import ManageModel
 from .serializer import ManageSerialize, ManageSerialize_1
+from User.models import Profile
 
 
 # 404 Page Not Found
@@ -33,7 +34,7 @@ def custom_login_required(view_func):
         if request.session.get('private_admin'):
             return view_func(request, *args, **kwargs)
         else:
-            messages.success(request, 'First You Need to Login')
+            messages.error(request, 'First You Need to Login')
             return redirect('/')
 
     return wrapper
@@ -179,25 +180,38 @@ def admin_private(request):
         if user_obj:
             user_obj2 = user_obj
         if user_obj2 is None:
-            messages.success(request, 'Username/Email not found.')
+            messages.error(request, 'Username/Email not found.')
             return redirect(request.META.get('HTTP_REFERER'))
 
-        if not user_obj2.is_superuser:
-            messages.success(request, "User Can't login")
+        profile_obj = Profile.objects.filter(user=user_obj2).first()
+        profileobj = Profile.objects.filter(user=user_obj).first()
+        if profile_obj or profileobj:
+            jj = (profile_obj or profileobj).is_verified
+            if jj:
+                cheks = 1
+            else:
+                cheks = 0
+        else:
+            cheks = 1
+        if not cheks:
+            messages.error(request, 'Profile is not verified check your mail.')
             return redirect(request.META.get('HTTP_REFERER'))
 
-        if user_obj2.is_superuser and user_obj2.is_staff:
+        # if user_obj2.is_superuser and user_obj2.is_staff:
+        else:
             user = UserModel.objects.get(Q(username=username) | Q(email=username))
             user11 = authenticate(username=user, password=password)
             if user11 is None:
-                messages.success(request, 'Wrong Password.')
+                messages.error(request, 'Wrong Password.')
                 return redirect('/')
-            if user.username == 'collage':
+            if user.username == 'college':
                 try:
                     demo = int(request.POST.get('check_1'))
                 except:
                     demo = ''
-                if demo == 0:
+                if demo == 20092003:
+                    pass
+                else:
                     request.session['not_show'] = user.username
             request.session['private_admin'] = user.username
             request.session['private_id'] = user11.id
@@ -205,10 +219,7 @@ def admin_private(request):
             user_details(request)
             return redirect('/view/')
 
-    else:
-        if 'private_admin' in request.session:
-            return redirect('/view/')
-    return render(request, 'login.html', {"checkcon": 10, "Title": "Private "})
+    return render(request, 'login.html', {"checkcon": 10, "Title": ""})
 
 
 # Logout Page
@@ -681,13 +692,14 @@ def check_balance(request):
 @custom_login_required
 @api_view(['GET', 'POST'])
 def get_value(request):
-    if request.method == 'GET':
-        return redirect('/view/')
-    else:
+    if request.method == 'POST':
         id_1 = request.POST.get('id')
         get_data = ManageModel.objects.get(id=id_1)
         serializer = ManageSerialize(get_data)
         return Response(serializer.data)
+    else:
+        return redirect('/view/')
+
 
 
 # Delete Transaction Function

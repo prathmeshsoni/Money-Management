@@ -4,269 +4,194 @@
 
 <head>
 
-  <meta charset="utf-8">
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <!--<meta name="author" content="">-->
-   <link rel="shortcut icon" href="{% static 'admin/folder/images/music_clu.png' %}" type="image/x-icon">
-   <link rel="icon" href="{% static 'admin/folder/images/music_clu.png' %}">
+    <link rel="shortcut icon" href="{% static 'admin/folder/images/music_clu.png' %}" type="image/x-icon">
+    <link rel="icon" href="{% static 'admin/folder/images/music_clu.png' %}">
 
-   <title>Music Club | {% block title %} {% endblock %}</title>
+    <title>Music Club | {% block title %} {% endblock %}</title>
 
-	<!-- Bootstrap 4.0-->
-	<link rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/bootstrap/dist/css/bootstrap.min.css' %}">
+    <!-- Bootstrap 4.0-->
+    <link rel="stylesheet"
+          href="{% static 'admin/folder/assets/vendor_components/bootstrap/dist/css/bootstrap.min.css' %}">
 
-	<!-- Bootstrap extend-->
-	<link rel="stylesheet" href="{% static 'admin/folder/css/bootstrap-extend.css' %}">
+    <!-- Bootstrap extend-->
+    <link rel="stylesheet" href="{% static 'admin/folder/css/bootstrap-extend.css' %}">
 
-	<!-- Theme style -->
-	<link rel="stylesheet" href="{% static 'admin/folder/css/master_style.css' %}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{% static 'admin/folder/css/master_style.css' %}">
 
-	<!-- Fab Admin skins -->
-	<link rel="stylesheet" href="{% static 'admin/folder/css/skins/_all-skins.css' %}">
+    <!-- Fab Admin skins -->
+    <link rel="stylesheet" href="{% static 'admin/folder/css/skins/_all-skins.css' %}">
 
-	<link rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/themify-icons/themify-icons.css' %}">
-	<link rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/linea-icons/linea.css' %}">
-	<link rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/glyphicons/glyphicon.css' %}">
-	<link rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/flag-icon/css/flag-icon.css' %}">
-	<link rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/material-design-iconic-font/css/materialdesignicons.css' %}">
-	<link rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/simple-line-icons-master/css/simple-line-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/themify-icons/themify-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/linea-icons/linea.css' %}">
+    <link rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/glyphicons/glyphicon.css' %}">
+    <link rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/flag-icon/css/flag-icon.css' %}">
+    <link rel="stylesheet"
+          href="{% static 'admin/folder/assets/vendor_components/material-design-iconic-font/css/materialdesignicons.css' %}">
+    <link rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.css' %}">
+    <link rel="stylesheet"
+          href="{% static 'admin/folder/assets/vendor_components/simple-line-icons-master/css/simple-line-icons.css' %}">
     <script src="https://use.fontawesome.com/c0fc7bc651.js"></script>
 
 </head>
-<body class="hold-transition login-page"  >
-	<div class="img-blury" style="background-image: url({% static 'admin/folder/images/afs.jpg' %})"></div>
-	<!--asd.jpg-->
-	<!--.jpg-->
+<body class="hold-transition login-page">
+<div class="img-blury" style="background-image: url({% static 'admin/folder/images/afs.jpg' %})"></div>
+<!--asd.jpg-->
+<!--.jpg-->
 
-	<!--rock.jpg-->
-	<!--jor.jpg-->
-	<!--music_opp.jpg-->
-	<div class="container h-p100 blury " >
-		<div class="row align-items-center justify-content-md-center h-p100">
-			<div class="col-lg-3 col-md-8 col-12 d-none d-lg-block bg-clor " id="set-height-auto" >
-				<div class="box mb-0 b-0 bg-transparent" style="height: inherit; justify-content: center;">
-					<!--<div class="box-body login-slider p-0">-->
-						<div id="carousel-example-generic-captions" class="carousel slide" data-ride="carousel">
+<!--rock.jpg-->
+<!--jor.jpg-->
+<!--music_opp.jpg-->
+<div class="container h-p100 blury ">
+    <div class="row align-items-center justify-content-md-center h-p100">
+        <div class="col-lg-3 col-md-8 col-12 d-none d-lg-block bg-clor " id="set-height-auto">
+            <div class="box mb-0 b-0 bg-transparent" style="height: inherit; justify-content: center;">
+                <!--<div class="box-body login-slider p-0">-->
+                <div id="carousel-example-generic-captions" class="carousel slide" data-ride="carousel">
 
-					         <div class="col-md-8 display-block mx-auto display-flex h-100"
-                                style=" justify-content: center; display: flex; align-items: center;">
-					             <a href="/" >
-                                    <img class="width-255" src="{% static 'admin/folder/images/music_club.png' %}" alt="">
-                                </a>
-                            </div>
+                    <div class="col-md-8 display-block mx-auto display-flex h-100"
+                         style=" justify-content: center; display: flex; align-items: center;">
+                        <a href="/">
+                            <img class="width-255" src="{% static 'admin/folder/images/music_club.png' %}" alt="">
+                        </a>
+                    </div>
 
-						</div>
-					<!--</div>-->
-				</div>
-			</div>
+                </div>
+                <!--</div>-->
+            </div>
+        </div>
 
-			{% block content %}
+        {% block content %}
 
-			{% endblock %}
+        {% endblock %}
 
-		</div>
-	</div>
+    </div>
+</div>
 
 
-	<!-- jQuery 3 -->
-	<script src="{% static 'admin/folder/assets/vendor_components/jquery-3.3.1/jquery-3.3.1.js' %}"></script>
+<!-- jQuery 3 -->
+<script src="{% static 'admin/folder/assets/vendor_components/jquery-3.3.1/jquery-3.3.1.js' %}"></script>
 
-	<!-- popper -->
-	<script src="{% static 'admin/folder/assets/vendor_components/popper/dist/popper.min.js' %}"></script>
+<!-- popper -->
+<script src="{% static 'admin/folder/assets/vendor_components/popper/dist/popper.min.js' %}"></script>
 
-	<!-- Bootstrap 4.0-->
-	<script src="{% static 'admin/folder/assets/vendor_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+<!-- Bootstrap 4.0-->
+<script src="{% static 'admin/folder/assets/vendor_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>
 
-    <script src="{% static 'user/folder/assets/js/bootstrap-notify.min.js' %}"></script>
+<script src="{% static 'user/folder/assets/js/bootstrap-notify.min.js' %}"></script>
+<script src="{% static 'admin/folder/assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js' %}"></script>
 
-    {% if request.session.private_admin %}
-    {% else %}
-        <script>
-            window.onload = function closes(){
-				$('[name="username"]').focus();
-				var height_div = $("#temp").height()
-				$("#set-height-auto").css('height',+ height_div +"px");
-				$('#login_loader').css('display', 'none');
-            }
-        </script>
-    {% endif %}
+{% if request.session.private_admin %}
+{% else %}
+<script>
+    window.onload = function closes() {
+        $('[name="username"]').focus();
+        var height_div = $("#temp").height()
+        $("#set-height-auto").css('height', +height_div + "px");
+        $('#login_loader').css('display', 'none');
+    }
+</script>
+{% endif %}
 
-    <script>
-        function registerr(){
-            var pass = $('#exampleInputPassword1').val().length;
-    
-            if(pass >= 8){
-                $('#login_loader').css('display', 'flex');
-                $.ajax({
-                  url: '/register/',
-                  method: 'POST',
-                  data: $('#registerr_form').serialize(),
-                  dataType: 'JSON',
-                  success: function (data) {
-    
+<script>
+    function registerr() {
+        var pass = $('#exampleInputPassword1').val().length;
+
+        if (pass >= 8) {
+            $('#login_loader').css('display', 'flex');
+            $('#login_loader').css('background-color', 'rgba(0, 0, 0, 0.4)');
+            $.ajax({
+                url: '/register/',
+                method: 'POST',
+                data: $('#registerr_form').serialize(),
+                dataType: 'JSON',
+                success: function (data) {
+
                     if (data.status == true) {
-    
+
                         if (data.exists == "existuser") {
-                            $.notify({
-                                  message: 'Username is taken!',
-                                },{
-                                  element: 'body',
-                                  position: null,
-                                  type: "success",
-                                  allow_dismiss: true,
-                                  newest_on_top: false,
-                                  showProgressbar: true,
-                                  placement: {
-                                    from: "top",
-                                    align: "right"
-                                  },
-                                  offset: 90,
-                                  spacing: 10,
-                                  z_index: 999999999999,
-                                  delay: 6000,
-                                  animate: {
-                                    enter: 'animated fadeInDown',
-                                    exit: 'animated fadeOutUp'
-                                  },
-                                  icon_type: 'class',
-                                  template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert " style="color:#842029 !important;background-color:#f8d7da !important;border-color:#f5c2c7 !important; width: 215px !important;" role="alert">' +
-                                    '<button type="button" aria-hidden="true" class="btn-close" data-notify="dismiss"></button>' +
-                                    '<span style="color:#842029 !important;" data-notify="message">{2}</span>' +
-                                    '<a href="{3}" target="{4}" data-notify="url"></a>' +
-                                    '</div>'
-                                });
+                            $.toast({
+                                heading: 'Failed ',
+                                text: 'Username is taken!',
+                                position: 'top-right',
+                                loaderBg: '#fc4b6c !important',
+                                icon: 'error',
+                                hideAfter: 8000
+                            });
                             $('#exampleInputusername1').val('');
                             $("#exampleInputusername1").focus();
                             $("#exampleInputusername1").attr("placeholder", "Enter Another Username......");
                             $("#exampleInputEmail1").attr("placeholder", "");
                             $('#exampleInputusername1').addClass('warningsd');
                             $('#login_loader').css('display', 'none');
-                        }
-                        else if (data.exists == "existemail") {
-                            $.notify({
-                                message: 'Email is taken!',
-                            },{
-                                element: 'body',
-                                position: null,
-                                type: "success",
-                                allow_dismiss: true,
-                                newest_on_top: false,
-                                showProgressbar: true,
-                                placement: {
-                                  from: "top",
-                                  align: "right"
-                                },
-                               offset: 90,
-                                spacing: 10,
-                                z_index: 999999999999,
-                                delay: 6000,
-                                animate: {
-                                enter: 'animated fadeInDown',
-                                exit: 'animated fadeOutUp'
-                                },
-                                icon_type: 'class',
-                                template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert " style="color:#842029 !important;background-color:#f8d7da !important;border-color:#f5c2c7 !important; width: 215px !important;" role="alert">' +
-                                  '<button type="button" aria-hidden="true" class="btn-close" data-notify="dismiss"></button>' +
-                                  '<span style="color:#842029 !important;" data-notify="message">{2}</span>' +
-                                  '<a href="{3}" target="{4}" data-notify="url"></a>' +
-                                  '</div>'
-                              });
+                        } else if (data.exists == "existemail") {
+                            $.toast({
+                                heading: 'Failed ',
+                                text: 'Email is taken!',
+                                position: 'top-right',
+                                loaderBg: '#fc4b6c !important',
+                                icon: 'error',
+                                hideAfter: 8000
+                            });
                             $('#exampleInputEmail1').val('');
                             $("#exampleInputEmail1").focus();
                             $("#exampleInputEmail1").attr("placeholder", "Enter Another Email ID.......");
                             $("#exampleInputusername1").attr("placeholder", "");
                             $('#exampleInputEmail1').addClass('warningsd');
                             $('#login_loader').css('display', 'none');
-    
-                        }
-                        else if (data.create == "usercreate") {
-                            $.notify({
-                                icon: 'fa fa-check',
-                                title: 'Success!',
-                                message: 'Accout was created for '+ data.u_name +''
-                            },{
-                                element: 'body',
-                                position: null,
-                                type: "info",
-                                allow_dismiss: true,
-                                newest_on_top: false,
-                                showProgressbar: true,
-                                placement: {
-                                    from: "top",
-                                    align: "right"
-                                },
-                                offset: 20,
-                                spacing: 10,
-                                z_index: 999999999999999,
-                                delay: 4300,
-                                animate: {
-                                    enter: 'animated fadeInDown',
-                                    exit: 'animated fadeOutUp'
-                                },
-                                icon_type: 'class',
-                                template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
-                                    '<button type="button" aria-hidden="true" class="btn-close" data-notify="dismiss"></button>' +
-                                    '<span data-notify="icon"></span> ' +
-                                    '<span data-notify="message">{2}</span>' +
-                                    '<div class="progress" data-notify="progressbar">' +
-                                    '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
-                                    '</div>' +
-                                    '<a href="{3}" target="{4}" data-notify="url"></a>' +
-                                    '</div>'
+
+                        } else if (data.create == "usercreate") {
+                            $.toast({
+                                heading: 'Success ',
+                                text: 'Accout was created for ' + data.u_name + '',
+                                position: 'top-right',
+                                loaderBg: '#fc4b6c !important',
+                                icon: 'success',
+                                hideAfter: 8000
                             });
-                            $('#login_loader').css('display', 'none');
-                            setTimeout(function() {
-                                window.location.href = "/token";
-                            }, 4500);
+
+                            var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+                            $.ajax({
+                                url: '/send_email/',
+                                method: 'POST',
+                                data: {csrfmiddlewaretoken: csrf_token },
+                                dataType: 'JSON',
+                                success: function (data) {
+
+                                    if (data.status == true) {
+                                        window.location.href = "/token/";
+                                    }
+                                }
+
+                            });
                         }
-    
+
+                    } else {
+                        alert('Something is Wrong')
                     }
-    
-                    else {
-                      alert('Something is Wrong')
-                    }
-                  }
-    
-                });
-              }
-            else{
-                  $.notify({
-                        message: 'Please enter minimum 8 characters!',
-                    },{
-                        element: 'body',
-                        position: null,
-                        type: "success",
-                        allow_dismiss: true,
-                        newest_on_top: false,
-                        showProgressbar: true,
-                        placement: {
-                          from: "top",
-                          align: "right"
-                        },
-                       offset: 90,
-                        spacing: 10,
-                        z_index: 999999999999,
-                        delay: 5000,
-                        animate: {
-                        enter: 'animated fadeInDown',
-                        exit: 'animated fadeOutUp'
-                        },
-                        icon_type: 'class',
-                        template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert " style="color:#842029 !important;background-color:#f8d7da !important;border-color:#f5c2c7 !important;" role="alert">' +
-                          '<button type="button" aria-hidden="true" class="btn-close" data-notify="dismiss"></button>' +
-                          '<span style="color:#842029 !important;" data-notify="message">{2}</span>' +
-                          '<a href="{3}" target="{4}" data-notify="url"></a>' +
-                          '</div>'
-                      });
-                  $('#exampleInputPassword1').focus();
-              }
-    
+                }
+
+            });
+        } else {
+            $.toast({
+                heading: 'Failed ',
+                text: 'Please enter minimum 8 characters!',
+                position: 'top-right',
+                loaderBg: '#fc4b6c !important',
+                icon: 'error',
+                hideAfter: 8000
+            });
+            $('#exampleInputPassword1').focus();
         }
-    </script>
+
+    }
+</script>
 
 </body>
 
-<!-- Mirrored from fab-admin-templates.multipurposethemes.com/fab-admin/ecommerce-dashboard/pages/samplepage/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 03 May 2022 18:34:07 GMT -->
 </html>
