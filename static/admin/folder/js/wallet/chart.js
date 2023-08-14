@@ -99,6 +99,56 @@ function chart_shows(names, values) {
                 borderWidth: 2,
             },
         },
+        onClick: function (event, activeElements) {
+            if (activeElements.length > 0) {
+                var activeIndex = activeElements[0].index;
+
+                // Retrieve data for the clicked segment
+                var clickedLabel = data6.labels[activeIndex];
+                // window.location.href = "/view/category/" + clickedLabel + "/";
+                swal({
+                    title: "Go To " + clickedLabel + " Page ? ",
+                    text: '',
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, Redirect Pls",
+                    cancelButtonText: "No",
+                    closeOnConfirm: false,
+                    closeOnCancel: true
+                }, function (isConfirm) {
+                    if (isConfirm) {
+
+                        swal("Redirect In 2 Second");
+                        $.toast({
+                            heading: 'Redirect',
+                            text: 'Redirecting......',
+                            position: 'top-right',
+                            loaderBg: '#fc4b6c !important',
+                            icon: 'success',
+                            hideAfter: 2000
+                        });
+                        setTimeout(() => {
+                            window.location.href = "/view/category/" + clickedLabel + "/";
+                        }, 2000);
+                    }
+                });
+                // var clickedValue = data6.datasets[0].data[activeIndex];
+                //
+                // // Show the popup with the clicked segment information
+                // var popup = document.getElementById("popup");
+                // var popupTitle = document.getElementById("popup-title");
+                // var popupLabel = document.getElementById("popup-label");
+                // var popupValue = document.getElementById("popup-value");
+                //
+                // popupLabel.textContent = "Label: " + clickedLabel;
+                // popupValue.textContent = "Value: " + clickedValue;
+                //
+                // popup.style.display = "block";
+                // popup.style.left = event.pageX + "px";
+                // popup.style.top = event.pageY + "px";
+            }
+        }
 // cutoutPercentage: 10,
     };
 
@@ -203,28 +253,56 @@ function chart_shows_1(names, values) {
                 borderWidth: 2,
             },
         },
-// onClick: function (event, activeElements) {
-//     if (activeElements.length > 0) {
-//         var activeIndex = activeElements[0].index;
-//
-//         // Retrieve data for the clicked segment
-//         var clickedLabel = data6.labels[activeIndex];
-//         var clickedValue = data6.datasets[0].data[activeIndex];
-//
-//         // Show the popup with the clicked segment information
-//         var popup = document.getElementById("popup");
-//         var popupTitle = document.getElementById("popup-title");
-//         var popupLabel = document.getElementById("popup-label");
-//         var popupValue = document.getElementById("popup-value");
-//
-//         popupLabel.textContent = "Label: " + clickedLabel;
-//         popupValue.textContent = "Value: " + clickedValue;
-//
-//         popup.style.display = "block";
-//         popup.style.left = event.pageX + "px";
-//         popup.style.top = event.pageY + "px";
-//     }
-// }
+        onClick: function (event, activeElements) {
+            if (activeElements.length > 0) {
+                var activeIndex = activeElements[0].index;
+
+                // Retrieve data for the clicked segment
+                var clickedLabel = data6.labels[activeIndex];
+                // window.location.href = "/view/category/" + clickedLabel + "/";
+                swal({
+                    title: "Go To " + clickedLabel + " Page ? ",
+                    text: '',
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, Redirect Pls",
+                    cancelButtonText: "No",
+                    closeOnConfirm: false,
+                    closeOnCancel: true
+                }, function (isConfirm) {
+                    if (isConfirm) {
+
+                        swal("Redirect In 2 Second");
+                        $.toast({
+                            heading: 'Redirect',
+                            text: 'Redirecting......',
+                            position: 'top-right',
+                            loaderBg: '#fc4b6c !important',
+                            icon: 'success',
+                            hideAfter: 2000
+                        });
+                        setTimeout(() => {
+                            window.location.href = "/view/category/" + clickedLabel + "/";
+                        }, 2000);
+                    }
+                });
+                // var clickedValue = data6.datasets[0].data[activeIndex];
+                //
+                // // Show the popup with the clicked segment information
+                // var popup = document.getElementById("popup");
+                // var popupTitle = document.getElementById("popup-title");
+                // var popupLabel = document.getElementById("popup-label");
+                // var popupValue = document.getElementById("popup-value");
+                //
+                // popupLabel.textContent = "Label: " + clickedLabel;
+                // popupValue.textContent = "Value: " + clickedValue;
+                //
+                // popup.style.display = "block";
+                // popup.style.left = event.pageX + "px";
+                // popup.style.top = event.pageY + "px";
+            }
+        }
     };
 
     var pieChart = new Chart(ctx6, {

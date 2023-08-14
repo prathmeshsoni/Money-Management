@@ -56,7 +56,7 @@
                                         <h3 class="box-title mb-0">
 
                                             {% if type_nam == 'account_name' %}
-                                                {{i.account_name}}: {{i.amount}} ₹
+                                                {{i.account_name}}: {{i.amount}} <i class="fa fa-rupee"></i>
                                             {% else %}
                                                 {% get_attribute i type_nam %}
                                             {% endif %}

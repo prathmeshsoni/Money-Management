@@ -10,7 +10,7 @@ from django.contrib.auth.views import PasswordChangeForm
 from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
-from django_user_agents.utils import get_user_agent
+# from django_user_agents.utils import get_user_agent
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -216,7 +216,7 @@ def admin_private(request):
             request.session['private_admin'] = user.username
             request.session['private_id'] = user11.id
             request.session['login_time'] = datetime.now().timestamp()
-            user_details(request)
+            # user_details(request)
             return redirect('/view/')
 
     return render(request, 'login.html', {"checkcon": 10, "Title": ""})
@@ -225,7 +225,7 @@ def admin_private(request):
 # Logout Page
 def logout_private_admin(request):
     if 'private_admin' in request.session:
-        user_details(request)
+        # user_details(request)
         del request.session['private_admin']
     if 'login_time' in request.session:
         del request.session['login_time']
@@ -244,7 +244,7 @@ def admin_private_view(request, template_name):
     import datetime
     user_obj = get_user_obj(request)
     if request.method == 'POST':
-        user_details(request)
+        # user_details(request)
         dat_ = request.POST.get('date-iss')
         try:
             id_1 = request.POST.get('id')
@@ -701,7 +701,6 @@ def get_value(request):
         return redirect('/view/')
 
 
-
 # Delete Transaction Function
 @custom_login_required
 def remove_pri(request):
@@ -726,9 +725,10 @@ def remove_pri(request):
         return redirect('/view/')
 
 
-# Filter Type Page
+# Filter Type View Page
 @custom_login_required
 def view_type(request, hid):
+    hid = hid.replace('%20', ' ')
     user_obj = get_user_obj(request)
     try:
         type_ = TypeModel.objects.get(type_name__iexact=hid)
@@ -756,9 +756,10 @@ def view_type(request, hid):
     return render(request, 'private_des.html', x)
 
 
-# Filter Account Page
+# Filter Account View Page
 @custom_login_required
 def view_account(request, hid):
+    hid = hid.replace('%20', ' ')
     user_obj = get_user_obj(request)
     try:
         type_ = AccountModel.objects.get(account_name__iexact=hid, user=user_obj)
@@ -791,10 +792,12 @@ def view_account(request, hid):
     return render(request, 'private_des.html', x)
 
 
-# Filter Category Page
+# Filter Category View Page
 @custom_login_required
 def view_category(request, hid):
+    hid = hid.replace('%20', ' ')
     user_obj = get_user_obj(request)
+    print(hid)
     try:
         type_ = CategoryModel.objects.get(cat_name__iexact=hid.lower(), user=user_obj)
     except:
@@ -912,7 +915,7 @@ def calculate_amount(user_obj, url_list, dates):
         check = 1
         temp = url_list.split('/')
         name = temp[0]
-        value = temp[1]
+        value = (temp[1]).replace('%20', ' ')
         if name.lower() == 'type':
             obj_list = ManageModel.objects.filter(
                 Q(type__type_name__iexact=value.lower()),

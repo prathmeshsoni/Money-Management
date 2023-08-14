@@ -141,19 +141,19 @@ def forget_password(request):
                 html_template = render_to_string(email_template_name, parameters)
                 receiver_email = data
 
-                try:
-                    send_mail(
-                        subject=subject,
-                        message='',  # Since you're using an HTML template, message can be empty
-                        from_email=sender_email,
-                        recipient_list=[receiver_email],
-                        fail_silently=False,
-                        html_message=html_template,
-                        auth_user=sender_email,
-                        auth_password=sender_password,
-                    )
-                except:
-                    pass
+                # try:
+                send_mail(
+                    subject=subject,
+                    message='',  # Since you're using an HTML template, message can be empty
+                    from_email=sender_email,
+                    recipient_list=[receiver_email],
+                    fail_silently=False,
+                    html_message=html_template,
+                    auth_user=sender_email,
+                    auth_password=sender_password,
+                )
+                # except:
+                #     pass
                 return render(request, 'password_reset_done.html')
             else:
                 messages.success(request, "Email Address Not Found.")

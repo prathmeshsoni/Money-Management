@@ -72,7 +72,7 @@
                <div class="box">
             <div class="box-header with-border  {%if not income %}  text-center{% endif %}" >
                 {%if income %}
-                <h3 class="box-title" style="color: blue" > Income Chart : ₹ {{income}} </h3>
+                <h3 class="box-title" style="color: blue" > Income Chart : <i class="fa fa-rupee"></i> {{income}} </h3>
                 {% else %}
                 <h3 class="box-title" style="color: blue" > Income Chart </h3>
                 {% endif %}
@@ -83,20 +83,18 @@
             </div>
             <div class="box-body">
               <div class="chart">
-                  {%if income %}
                   {% if request.session.not_show %}
-                        Not Allowed
-                    {% else %}
-                       <canvas id="chart_6" height="200"></canvas>
-                    {% endif %}
-
-
+                      Not Allowed
                   {% else %}
-                    <div class="box-body text-center" >
-                    <h1>
-                        No Data
-                    </h1>
-                  </div>
+                      {%if income %}
+                          <canvas id="chart_6" height="200"></canvas>
+                      {% else %}
+                          <div class="box-body text-center" >
+                              <h1>
+                                  No Data
+                              </h1>
+                          </div>
+                      {% endif %}
                   {% endif %}
               </div>
             </div>
@@ -109,7 +107,7 @@
                <div class="box">
             <div class="box-header with-border {%if not expense %}  text-center{% endif %}">
                 {%if expense %}
-                <h3 class="box-title" style="color: red" > Expense Chart : ₹ {{expense}} </h3>
+                <h3 class="box-title" style="color: red" > Expense Chart : <i class="fa fa-rupee"></i> {{expense}} </h3>
                 {% else %}
                 <h3 class="box-title" style="color: red" > Expense Chart  </h3>
                 {% endif %}
@@ -120,19 +118,18 @@
             </div>
             <div class="box-body">
               <div class="chart">
-                  {%if expense %}
                   {% if request.session.not_show %}
-                        Not Allowed
-                    {% else %}
-                    <canvas id="chart_7" height="200"></canvas>
-                    {% endif %}
-
+                      Not Allowed
                   {% else %}
-                  <div class="box-body text-center" >
-                    <h1>
-                        No Data
-                    </h1>
-                  </div>
+                      {%if expense %}
+                          <canvas id="chart_7" height="200"></canvas>
+                      {% else %}
+                          <div class="box-body text-center" >
+                              <h1>
+                                  No Data
+                              </h1>
+                          </div>
+                      {% endif %}
                   {% endif %}
               </div>
             </div>

@@ -149,7 +149,7 @@ function createTable(i, formattedDate, date_id, id) {
             '<td>' + f_date[0] + '</td>' +
             '<td>' + i.from_account.account_name + '</td>' +
             '<td>' + i.to_account.account_name + '</td>' +
-            '<td style="color: ' + color_ + ' !important;">' + i.amount + ' ₹</td>' +
+            '<td style="color: ' + color_ + ' !important;">' + i.amount + ' <i class="fa fa-rupee"></i></td>' +
             '<td>' + i.note + '</td>' +
             '<td>' +
             '    <a href="javascript:void(0)" onclick="updateModel(' + i.id + ',' + 0 + ')" class="bg-info mr-2">' +
@@ -179,7 +179,7 @@ function createTable(i, formattedDate, date_id, id) {
             '<td>' + f_date[0] + '</td>' +
             '<td>' + i.category.cat_name + '</td>' +
             '<td>' + i.account.account_name + '</td>' +
-            '<td style="color: ' + color_ + ' !important;">' + i.amount + ' ₹</td>' +
+            '<td style="color: ' + color_ + ' !important;">' + i.amount + ' <i class="fa fa-rupee"></i></td>' +
             '<td>' + i.note + '</td>' +
             '<td>' +
             '    <a href="javascript:void(0)" onclick="updateModel(' + i.id + ',' + 0 + ')" class="bg-info mr-2">' +
@@ -681,7 +681,7 @@ function createTableRow(i, formattedDate, id) {
             '<td>' + formattedDate[0] + '</td>' +
             '<td>' + i.from_account + '</td>' +
             '<td>' + i.to_account + '</td>' +
-            '<td style="color: ' + color_ + ' !important;">' + i.amount + ' ₹</td>' +
+            '<td style="color: ' + color_ + ' !important;">' + i.amount + ' <i class="fa fa-rupee"></i></td>' +
             '<td>' + i.note + '</td>' +
             '<td>' +
             '    <a href="javascript:void(0)" onclick="updateModel(' + id + ',' + 0 + ')" class="bg-info mr-2">' +
@@ -716,7 +716,7 @@ function createTableRow(i, formattedDate, id) {
             '<td>' + formattedDate[0] + '</td>' +
             '<td>' + i.category + '</td>' +
             '<td>' + i.account + '</td>' +
-            '<td style="color: ' + color_ + ' !important;">' + i.amount + ' ₹</td>' +
+            '<td style="color: ' + color_ + ' !important;">' + i.amount + ' <i class="fa fa-rupee"></i></td>' +
             '<td>' + i.note + '</td>' +
             '<td>' +
             '    <a href="javascript:void(0)" onclick="updateModel(' + id + ',' + 0 + ')" class="bg-info mr-2">' +
