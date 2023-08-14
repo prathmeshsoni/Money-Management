@@ -6,11 +6,11 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.backends import UserModel
 from django.contrib.auth.models import User
 from django.contrib.auth.views import PasswordChangeForm
-# from twilio.rest import Client
+from twilio.rest import Client
 from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
-# from django_user_agents.utils import get_user_agent
+from django_user_agents.utils import get_user_agent
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -216,7 +216,7 @@ def admin_private(request):
             request.session['private_admin'] = user.username
             request.session['private_id'] = user11.id
             request.session['login_time'] = datetime.now().timestamp()
-            # user_details(request)
+            user_details(request)
             return redirect('/view/')
 
     return render(request, 'login.html', {"checkcon": 10, "Title": ""})
@@ -225,7 +225,7 @@ def admin_private(request):
 # Logout Page
 def logout_private_admin(request):
     if 'private_admin' in request.session:
-        # user_details(request)
+        user_details(request)
         del request.session['private_admin']
     if 'login_time' in request.session:
         del request.session['login_time']
@@ -244,7 +244,7 @@ def admin_private_view(request, template_name):
     import datetime
     user_obj = get_user_obj(request)
     if request.method == 'POST':
-        # user_details(request)
+        user_details(request)
         dat_ = request.POST.get('date-iss')
         try:
             id_1 = request.POST.get('id')
@@ -846,16 +846,15 @@ def convert_date(date_str):
     return date_txt
 
 
-def sent_massage(msg):
-    pass
-    # account_sid = 'AC3906f0671f92d822f886ebd6fdf66271'
-    # auth_token = '721b9dc48d0809160c16d438db5f1bf9'
-    # client = Client(account_sid, auth_token)
-    # message = client.messages.create(
-    #     body=msg,
-    #     from_='+15734982530',
-    #     to='+919157379996'
-    # )
+def sent_massages(msg):
+    account_sid = 'AC3906f0671f92d822f886ebd6fdf66271'
+    auth_token = '98fb660fc0ac8d572e4d8abd3d57c2aa'
+    client = Client(account_sid, auth_token)
+    message = client.messages.create(
+        body=msg,
+        from_='+15734982530',
+        to='+919157379996'
+    )
 
 
 def account_value(user_obj, a_name):

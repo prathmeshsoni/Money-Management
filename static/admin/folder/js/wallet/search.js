@@ -1,15 +1,15 @@
 $('#search_form').submit(function (event) {
     event.preventDefault();
 
-    var check = $('#searchdata').val()
+    let check = $('#searchdata').val();
 
     if (check) {
         check = check.toLowerCase()
     }
-    var searchValue = document.querySelector('input[name="search-param"]').value;
+    let searchValue = document.querySelector('input[name="search-param"]').value;
     searchValue = searchValue.toLowerCase()
 
-    var check_1 = $('#filter_name').val()
+    const check_1 = $('#filter_name').val();
     const radioButtons = document.getElementsByName("filter");
     let selectedValue = null;
     for (let i = 0; i < radioButtons.length; i++) {
@@ -108,9 +108,11 @@ function renderTableRows_1(dataArray, id) {
 
 
 function createTableRow_1(i, formattedDate, id, check) {
+    let che;
+    let color_;
     if (i.type.type_name.toLowerCase() === 'transfer') {
-        var searchValue = document.querySelector('input[name="search-param"]').value;
-        var filter_name = $('#filter_name').val();
+        const searchValue = document.querySelector('input[name="search-param"]').value;
+        const filter_name = $('#filter_name').val();
         if (filter_name === 'all') {
             color_ = '#000'
             che = '#a3a6a4';
@@ -147,8 +149,6 @@ function createTableRow_1(i, formattedDate, id, check) {
             '</td>'
         ), che]
     } else {
-        var color_ = ''
-        var che = 0;
         if (i.type.type_name.toLowerCase() === 'available' || i.type.type_name.toLowerCase() === 'income') {
             color_ = '#000fff'
             che = '#cbf8cb';
@@ -204,11 +204,10 @@ function remove_all() {
 }
 
 function data_is() {
-    var f = document.querySelectorAll('#myTable_1 tbody tr[id*="date"] td');
+    const f = document.querySelectorAll('#myTable_1 tbody tr[id*="date"] td');
 
 
     for (var i = 0; i < f.length; i++) {
-        var chekk = 0;
         var value = f[i].textContent;
         let d = document.querySelectorAll("#myTable_1 tbody tr [name='" + value + "']").length
         if (d === 0) {
@@ -222,7 +221,6 @@ function data_is() {
 
 
     for (var i_ = 0; i_ < f_.length; i_++) {
-        var chekk_ = 0;
         var value_ = f_[i_].textContent;
         let d_ = document.querySelectorAll("#myTable tbody tr [name='" + value_ + "']").length
         if (d_ === 0) {
