@@ -1,7 +1,6 @@
-
 from django import forms
+
 from .models import ManageModel
-from django.utils import timezone
 
 
 class ManageForm(forms.ModelForm):
@@ -43,4 +42,3 @@ class ManageForm(forms.ModelForm):
             # 'to_account',
             'from_account',
         ]
-

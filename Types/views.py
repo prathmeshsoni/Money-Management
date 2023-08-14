@@ -1,13 +1,14 @@
-from django.shortcuts import render,redirect
-from .forms import TypeForm
-from .models import TypeModel
-from management.models import ManageModel
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from .serializer import TypeSerialize
 from django.contrib import messages
 from django.http import JsonResponse
+from django.shortcuts import render, redirect
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
+from management.models import ManageModel
 from management.views import custom_login_required
+from .forms import TypeForm
+from .models import TypeModel
+from .serializer import TypeSerialize
 
 
 # Create your views here.

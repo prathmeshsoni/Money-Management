@@ -5,143 +5,148 @@
 {% block content %}
 
 
-<!-- Main content -->
-<div class="content-wrapper">
+    <!-- Main content -->
+    <div class="content-wrapper">
 
-    <section class="content-header">
-        <div class="row">
-            <div class="col-md-3">
-                <h5 class="card-title">
-                    Chart Master
-                </h5>
-            </div>
-            <div class="col-md-3">
-            </div>
-            <div class="col-md-2">
-            </div>
-            <div class="col-md-4" style=" padding-top:12px; " >
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="/view/"><i class="fa fa-dashboard"></i> Home</a></li>
-                    <li class="breadcrumb-item">
-                        <a href="javascript:void(0)">
-                            <i class="fa fa-pie-chart"></i>
-                            Chart Master
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item active text-capitalize">
-                        Chart Page
-                    </li>
-                </ol>
-            </div>
-        </div>
-    </section>
-    <section class="content">
-        <div class="row">
-            <div class="col-md-12" style="padding: 0;border-bottom: 2px solid rgba(120,130,140,.13);margin-bottom: 25px; display:block;" >
-                <div class="col-12 col-lg-6 col-xl-6 float-left">
-                    <div class="box">
-                        <div class="box-body">
-                            <div class="text-center">
-                                <h3 class="text-muted db">
-                                    Data Of {{month|date:"F Y"}}
-                                </h3>
-                            </div>
-                        </div>
-                    </div>
+        <section class="content-header">
+            <div class="row">
+                <div class="col-md-3">
+                    <h5 class="card-title">
+                        Chart Master
+                    </h5>
                 </div>
-                <div class="col-12 col-lg-6 col-xl-6 float-left">
-                    <div class="box">
-                        <div class="box-body">
-                            <div class="text-center">
-                                <div>
+                <div class="col-md-3">
+                </div>
+                <div class="col-md-2">
+                </div>
+                <div class="col-md-4" style=" padding-top:12px; ">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/view/"><i class="fa fa-dashboard"></i> Home</a></li>
+                        <li class="breadcrumb-item">
+                            <a href="javascript:void(0)">
+                                <i class="fa fa-pie-chart"></i>
+                                Chart Master
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item active text-capitalize">
+                            Chart Page
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+        <section class="content">
+            <div class="row">
+                <div class="col-md-12"
+                     style="padding: 0;border-bottom: 2px solid rgba(120,130,140,.13);margin-bottom: 25px; display:block;">
+                    <div class="col-12 col-lg-6 col-xl-6 float-left">
+                        <div class="box">
+                            <div class="box-body">
+                                <div class="text-center">
                                     <h3 class="text-muted db">
-                                        <form method="post" id="chart_form" >
-                                            <input type="hidden" id="chart-value" value='{{month|date:"Y-m"}}' />
-                                            <input type="month" name="chart-month" class="numberinput form-control" id="chart-month" value='{{month|date:"Y-m"}}' onchange="getchart()" />
-                                            {% csrf_token %}
-                                        </form>
+                                        Data Of {{ month|date:"F Y" }}
                                     </h3>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div class="col-12 col-lg-6 col-xl-6 float-left">
+                        <div class="box">
+                            <div class="box-body">
+                                <div class="text-center">
+                                    <div>
+                                        <h3 class="text-muted db">
+                                            <form method="post" id="chart_form">
+                                                <input type="hidden" id="chart-value" value='{{ month|date:"Y-m" }}'/>
+                                                <input type="month" name="chart-month" class="numberinput form-control"
+                                                       id="chart-month" value='{{ month|date:"Y-m" }}'
+                                                       onchange="getchart()"/>
+                                                {% csrf_token %}
+                                            </form>
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="col-xl-6 col-12" id="canvasee_1" >
-                <div class="container">
-               <div class="box">
-            <div class="box-header with-border  {%if not income %}  text-center{% endif %}" >
-                {%if income %}
-                <h3 class="box-title" style="color: blue" > Income Chart : <i class="fa fa-rupee"></i> {{income}} </h3>
-                {% else %}
-                <h3 class="box-title" style="color: blue" > Income Chart </h3>
-                {% endif %}
+                <div class="col-xl-6 col-12" id="canvasee_1">
+                    <div class="container">
+                        <div class="box">
+                            <div class="box-header with-border  {% if not income %}  text-center{% endif %}">
+                                {% if income %}
+                                    <h3 class="box-title" style="color: blue"> Income Chart : <i
+                                            class="fa fa-rupee"></i> {{ income }} </h3>
+                                {% else %}
+                                    <h3 class="box-title" style="color: blue"> Income Chart </h3>
+                                {% endif %}
 
-              <ul class="box-controls pull-right">
-			  	<li><a class="box-btn-slide" href="#"></a></li>
-			  </ul>
-            </div>
-            <div class="box-body">
-              <div class="chart">
-                  {% if request.session.not_show %}
-                      Not Allowed
-                  {% else %}
-                      {%if income %}
-                          <canvas id="chart_6" height="200"></canvas>
-                      {% else %}
-                          <div class="box-body text-center" >
-                              <h1>
-                                  No Data
-                              </h1>
-                          </div>
-                      {% endif %}
-                  {% endif %}
-              </div>
-            </div>
-            <!-- /.box-body -->
-          </div>
-            </div>
-            </div>
-            <div class="col-xl-6 col-12" id="canvasee_2" >
-                <div class="container">
-               <div class="box">
-            <div class="box-header with-border {%if not expense %}  text-center{% endif %}">
-                {%if expense %}
-                <h3 class="box-title" style="color: red" > Expense Chart : <i class="fa fa-rupee"></i> {{expense}} </h3>
-                {% else %}
-                <h3 class="box-title" style="color: red" > Expense Chart  </h3>
-                {% endif %}
+                                <ul class="box-controls pull-right">
+                                    <li><a class="box-btn-slide" href="#"></a></li>
+                                </ul>
+                            </div>
+                            <div class="box-body">
+                                <div class="chart">
+                                    {% if request.session.not_show %}
+                                        Not Allowed
+                                    {% else %}
+                                        {% if income %}
+                                            <canvas id="chart_6" height="200"></canvas>
+                                        {% else %}
+                                            <div class="box-body text-center">
+                                                <h1>
+                                                    No Data
+                                                </h1>
+                                            </div>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <!-- /.box-body -->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-6 col-12" id="canvasee_2">
+                    <div class="container">
+                        <div class="box">
+                            <div class="box-header with-border {% if not expense %}  text-center{% endif %}">
+                                {% if expense %}
+                                    <h3 class="box-title" style="color: red"> Expense Chart : <i
+                                            class="fa fa-rupee"></i> {{ expense }} </h3>
+                                {% else %}
+                                    <h3 class="box-title" style="color: red"> Expense Chart </h3>
+                                {% endif %}
 
-              <ul class="box-controls pull-right">
-			  	<li><a class="box-btn-slide" href="#"></a></li>
-			  </ul>
-            </div>
-            <div class="box-body">
-              <div class="chart">
-                  {% if request.session.not_show %}
-                      Not Allowed
-                  {% else %}
-                      {%if expense %}
-                          <canvas id="chart_7" height="200"></canvas>
-                      {% else %}
-                          <div class="box-body text-center" >
-                              <h1>
-                                  No Data
-                              </h1>
-                          </div>
-                      {% endif %}
-                  {% endif %}
-              </div>
-            </div>
-            <!-- /.box-body -->
-          </div>
-            </div>
+                                <ul class="box-controls pull-right">
+                                    <li><a class="box-btn-slide" href="#"></a></li>
+                                </ul>
+                            </div>
+                            <div class="box-body">
+                                <div class="chart">
+                                    {% if request.session.not_show %}
+                                        Not Allowed
+                                    {% else %}
+                                        {% if expense %}
+                                            <canvas id="chart_7" height="200"></canvas>
+                                        {% else %}
+                                            <div class="box-body text-center">
+                                                <h1>
+                                                    No Data
+                                                </h1>
+                                            </div>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <!-- /.box-body -->
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
-        </div>
-
-    </section>
-<!-- /.content -->
-</div>
-<!-- sample modal content -->
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- sample modal content -->
 {% endblock %}

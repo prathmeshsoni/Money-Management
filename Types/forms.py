@@ -1,4 +1,5 @@
 from django import forms
+
 from .models import TypeModel
 
 
@@ -12,6 +13,6 @@ class TypeForm(forms.ModelForm):
             }
         )
 
-    class Meta:  
+    class Meta:
         model = TypeModel
         fields = "__all__"

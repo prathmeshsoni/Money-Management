@@ -33,7 +33,8 @@
     <link rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/flag-icon/css/flag-icon.css' %}">
     <link rel="stylesheet"
           href="{% static 'admin/folder/assets/vendor_components/material-design-iconic-font/css/materialdesignicons.css' %}">
-    <link rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.css' %}">
+    <link rel="stylesheet"
+          href="{% static 'admin/folder/assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.css' %}">
     <link rel="stylesheet"
           href="{% static 'admin/folder/assets/vendor_components/simple-line-icons-master/css/simple-line-icons.css' %}">
     <script src="https://use.fontawesome.com/c0fc7bc651.js"></script>
@@ -88,14 +89,14 @@
 
 {% if request.session.private_admin %}
 {% else %}
-<script>
-    window.onload = function closes() {
-        $('[name="username"]').focus();
-        var height_div = $("#temp").height()
-        $("#set-height-auto").css('height', +height_div + "px");
-        $('#login_loader').css('display', 'none');
-    }
-</script>
+    <script>
+        window.onload = function closes() {
+            $('[name="username"]').focus();
+            var height_div = $("#temp").height()
+            $("#set-height-auto").css('height', +height_div + "px");
+            $('#login_loader').css('display', 'none');
+        }
+    </script>
 {% endif %}
 
 <script>
@@ -159,7 +160,7 @@
                             $.ajax({
                                 url: '/send_email/',
                                 method: 'POST',
-                                data: {csrfmiddlewaretoken: csrf_token },
+                                data: {csrfmiddlewaretoken: csrf_token},
                                 dataType: 'JSON',
                                 success: function (data) {
 

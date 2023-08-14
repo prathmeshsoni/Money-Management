@@ -1,4 +1,5 @@
 from django import forms
+
 from .models import CategoryModel
 
 
@@ -12,7 +13,7 @@ class CategoryForm(forms.ModelForm):
             }
         )
 
-    class Meta:  
+    class Meta:
         model = CategoryModel
         exclude = [
             'user'

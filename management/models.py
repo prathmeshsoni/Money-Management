@@ -1,9 +1,9 @@
-
-from django.db import models
 from django.contrib.auth.models import User
-from category.models import CategoryModel
-from account.models import AccountModel
+from django.db import models
+
 from Types.models import TypeModel
+from account.models import AccountModel
+from category.models import CategoryModel
 
 
 class ManageModel(models.Model):
@@ -11,8 +11,10 @@ class ManageModel(models.Model):
     date_name = models.DateTimeField()
     account = models.ForeignKey(AccountModel, on_delete=models.CASCADE, null=True)
     category = models.ForeignKey(CategoryModel, on_delete=models.CASCADE, null=True, blank=True)
-    to_account = models.ForeignKey(AccountModel, on_delete=models.CASCADE, null=True, blank=True, related_name='to_account')
-    from_account = models.ForeignKey(AccountModel, on_delete=models.CASCADE, null=True, blank=True, related_name='from_account')
+    to_account = models.ForeignKey(AccountModel, on_delete=models.CASCADE, null=True, blank=True,
+                                   related_name='to_account')
+    from_account = models.ForeignKey(AccountModel, on_delete=models.CASCADE, null=True, blank=True,
+                                     related_name='from_account')
     amount = models.IntegerField()
     note = models.TextField(null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)

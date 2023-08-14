@@ -1,15 +1,15 @@
+from django.contrib import messages
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
+from management.models import ManageModel
+from management.views import account_value
+from management.views import custom_login_required, get_user_obj
 from .forms import AccountForm
 from .models import AccountModel
-from management.models import ManageModel
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
 from .serializer import AccountSerialize
-from django.http import JsonResponse
-from management.views import account_value
-from django.contrib import messages
-from django.contrib.auth.models import User
-from management.views import custom_login_required, get_user_obj
 
 
 @custom_login_required

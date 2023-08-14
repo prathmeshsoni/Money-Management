@@ -3,210 +3,225 @@
 <html lang="en">
 
 <head>
-  <title>Music Club | {% block title %} {% endblock %}</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Music-club">
-  <!--<meta name="keywords" content="Music-club">-->
-  <!--<meta name="author" content="Music-club">-->
-   <link rel="icon" href="{% static 'user/folder/assets/images/favicon/favicon.png' %}" type="image/x-icon">
-  <link rel="shortcut icon" href="{% static 'user/folder/assets/images/avtar/music_clu.png' %}" type="image/x-icon">
+    <title>Music Club | {% block title %} {% endblock %}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="Music-club">
+    <!--<meta name="keywords" content="Music-club">-->
+    <!--<meta name="author" content="Music-club">-->
+    <link rel="icon" href="{% static 'user/folder/assets/images/favicon/favicon.png' %}" type="image/x-icon">
+    <link rel="shortcut icon" href="{% static 'user/folder/assets/images/avtar/music_clu.png' %}" type="image/x-icon">
 
-  <!--Google font-->
+    <!--Google font-->
 
-  {% block css %}
-  {% endblock %}
+    {% block css %}
+    {% endblock %}
 
-  <!--icon css-->
-  <!--Slick slider css-->
-  <script src="https://use.fontawesome.com/c0fc7bc651.js"></script>
-  <link rel="stylesheet" type="text/css" href="{% static 'user/folder/assets/css/slick.css' %}">
-  <link rel="stylesheet" type="text/css" href="{% static 'user/folder/assets/css/slick-theme.css' %}">
-  <!-- <link href="{% static 'admin/assets/css/components.min.css' %}" rel="stylesheet" type="text/css"> -->
+    <!--icon css-->
+    <!--Slick slider css-->
+    <script src="https://use.fontawesome.com/c0fc7bc651.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'user/folder/assets/css/slick.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'user/folder/assets/css/slick-theme.css' %}">
+    <!-- <link href="{% static 'admin/assets/css/components.min.css' %}" rel="stylesheet" type="text/css"> -->
 
-  <!--Animate css-->
-  <link rel="stylesheet" type="text/css" href="{% static 'user/folder/assets/css/animate.css' %}">
-  <!-- Bootstrap css -->
-  <link rel="stylesheet" type="text/css" href="{% static 'user/folder/assets/css/bootstrap.css' %}">
+    <!--Animate css-->
+    <link rel="stylesheet" type="text/css" href="{% static 'user/folder/assets/css/animate.css' %}">
+    <!-- Bootstrap css -->
+    <link rel="stylesheet" type="text/css" href="{% static 'user/folder/assets/css/bootstrap.css' %}">
 
-  <!-- Theme css -->
-  <link rel="stylesheet" type="text/css" href="{% static 'user/folder/assets/css/color2.css' %}" >
+    <!-- Theme css -->
+    <link rel="stylesheet" type="text/css" href="{% static 'user/folder/assets/css/color2.css' %}">
 
 </head>
 
-<body style="background-color: #f5f6fb!important ;"  >
-    <style>
-        .oorder_detail{
-            align-self: center;
-            /*align-items: center;*/
+<body style="background-color: #f5f6fb!important ;">
+<style>
+    .oorder_detail {
+        align-self: center;
+        /*align-items: center;*/
+    }
+
+    @media (max-width: 577px) {
+        .oorder_detail h5 {
+            font-size: 14px;
+            line-height: 1.2;
         }
-        @media (max-width: 577px){
-            .oorder_detail h5{
-                font-size: 14px;
-                line-height: 1.2;
-            }
-        }
-        .oorder_detail h5{
-            text-transform: capitalize;
-            margin-bottom: 0;
-            font-weight: 500;
-        }
-        .successd{
-            color: #2dd02d;
-        }
-        .warningd{
-            color: red;
-        }
-        .warningsd::-webkit-input-placeholder {
-            font-size: 11px;
-            color: red;
-        }
-        .dipa-none{
-            display: none;
-        }
-    </style>
-  <!-- loader start -->
-  <div class="loader-wrapper">
+    }
+
+    .oorder_detail h5 {
+        text-transform: capitalize;
+        margin-bottom: 0;
+        font-weight: 500;
+    }
+
+    .successd {
+        color: #2dd02d;
+    }
+
+    .warningd {
+        color: red;
+    }
+
+    .warningsd::-webkit-input-placeholder {
+        font-size: 11px;
+        color: red;
+    }
+
+    .dipa-none {
+        display: none;
+    }
+</style>
+<!-- loader start -->
+<div class="loader-wrapper">
     <div>
-      <img src="{% static 'user/folder/assets/images/loader.gif' %}" alt="loader">
+        <img src="{% static 'user/folder/assets/images/loader.gif' %}" alt="loader">
     </div>
-  </div>
-  <!-- loader end -->
+</div>
+<!-- loader end -->
 
-  <!--header start-->
+<!--header start-->
 
-  <!--header end-->
+<!--header end-->
 
-    <header id="stickyheader">
-  <div class="mobile-fix-option"></div>
-  <div class="mobile-backk" >
-  <div class="layout-header2">
-    <div class="container">
-      <div class="col-md-12">
-        <div class="main-menu-block">
-          <div class="header-left">
-            <div class="brand-logo logo-sm-center">
-              <a href="/">
-                <img src="{% static 'user/folder/assets/images/avtar/music_club.png' %}" class="img-fluid" style="height: 75px;" alt="logo">
-              </a>
-            </div>
-          </div>
-          <div class="header-right">
-            <div class="icon-block">
-              <ul>
-                 <li class="mobile-wishlist">
-                    <a class="dark-menu-item" href="/">
-                        <!--<i class="fa fa-home" aria-hidden="true"></i>-->
-                        <img src="{% static 'user/folder/assets/images/home.png' %}" style="height: 20px; width:20px;" class="img-fluid" alt="logo">
-                    </a>
-                 </li>
-              </ul>
-            </div>
-            <div class="menu-nav"  >
+<header id="stickyheader">
+    <div class="mobile-fix-option"></div>
+    <div class="mobile-backk">
+        <div class="layout-header2">
+            <div class="container">
+                <div class="col-md-12">
+                    <div class="main-menu-block">
+                        <div class="header-left">
+                            <div class="brand-logo logo-sm-center">
+                                <a href="/">
+                                    <img src="{% static 'user/folder/assets/images/avtar/music_club.png' %}"
+                                         class="img-fluid" style="height: 75px;" alt="logo">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="header-right">
+                            <div class="icon-block">
+                                <ul>
+                                    <li class="mobile-wishlist">
+                                        <a class="dark-menu-item" href="/">
+                                            <!--<i class="fa fa-home" aria-hidden="true"></i>-->
+                                            <img src="{% static 'user/folder/assets/images/home.png' %}"
+                                                 style="height: 20px; width:20px;" class="img-fluid" alt="logo">
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="menu-nav">
                 <span class="toggle-nav">
                   <i class="fa fa-bars "></i>
                 </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
-  </div>
-  <div class="category-header-2">
-    <div class="custom-container">
-      <div class="row">
-        <div class="col-12">
-          <div class="navbar-menu">
-            <div class="logo-block">
-              <div class="brand-logo logo-sm-center">
-                <a href="/">
-                  <img src="{% static 'user/folder/assets/images/avtar/music_club.png' %}" class="img-fluid" style="height: 95px;" alt="logo">
-                </a>
-              </div>
+    <div class="category-header-2">
+        <div class="custom-container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="navbar-menu">
+                        <div class="logo-block">
+                            <div class="brand-logo logo-sm-center">
+                                <a href="/">
+                                    <img src="{% static 'user/folder/assets/images/avtar/music_club.png' %}"
+                                         class="img-fluid" style="height: 95px;" alt="logo">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="nav-block">
+                            <div class="brand-logo logo-sm-center">
+                                <a href="/">
+                                    <img src="{% static 'user/folder/assets/images/avtar/music_club.png' %}"
+                                         class="img-fluid" style="height: 95px;" alt="logo">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="menu-block">
+                            <nav id="main-nav">
+                                <div class="toggle-nav"><i class="fa fa-bars sidebar-bar"></i></div>
+                                <ul id="main-menu" class="sm pixelstrap sm-horizontal">
+                                    <li class="mega">
+                                        <a class="dark-menu-item" href="/">
+                                            <img src="{% static 'user/folder/assets/images/home.png' %}"
+                                                 style="height: 20px; width:20px;" class="img-fluid me-2" alt="logo">
+                                            Home
+                                        </a>
+                                    </li>
+                                    <li class="mega">
+                                        <a class="dark-menu-item" href="/register/">
+                                            <!--<i class="fa fa-user-plus me-2" aria-hidden="true"></i>-->
+                                            <img src="{% static 'user/folder/assets/images/signup-2.png' %}"
+                                                 style="height: 20px; width:20px;" class="img-fluid me-2  mobile-backkk"
+                                                 alt="logo">
+                                            <img src="{% static 'user/folder/assets/images/signup-1.png' %}"
+                                                 style="height: 20px; width:20px;" class="img-fluid me-2  mobile-backk"
+                                                 alt="logo">
+                                            Sign Up
+                                        </a>
+                                    </li>
+                                    <li class="mega">
+                                        <a class="dark-menu-item" href="/">
+                                            <!--<i class="fa fa-sign-in me-2" aria-hidden="true"></i>-->
+                                            <img src="{% static 'user/folder/assets/images/login.png' %}"
+                                                 style="height: 20px; width:20px;" class="img-fluid me-2" alt="logo">
+                                            Login
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                        <div class="nav-block">
+
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="nav-block">
-              <div class="brand-logo logo-sm-center">
-                <a href="/">
-                  <img src="{% static 'user/folder/assets/images/avtar/music_club.png' %}" class="img-fluid" style="height: 95px;" alt="logo">
-                </a>
-              </div>
-            </div>
-            <div class="menu-block" >
-              <nav id="main-nav">
-                <div class="toggle-nav"><i class="fa fa-bars sidebar-bar"></i></div>
-                <ul id="main-menu" class="sm pixelstrap sm-horizontal">
-                  <li class="mega">
-                    <a class="dark-menu-item" href="/">
-                        <img src="{% static 'user/folder/assets/images/home.png' %}" style="height: 20px; width:20px;" class="img-fluid me-2" alt="logo">
-                        Home
-                    </a>
-                  </li>
-                  <li class="mega">
-                    <a class="dark-menu-item" href="/register/">
-                        <!--<i class="fa fa-user-plus me-2" aria-hidden="true"></i>-->
-                        <img src="{% static 'user/folder/assets/images/signup-2.png' %}" style="height: 20px; width:20px;" class="img-fluid me-2  mobile-backkk" alt="logo">
-                        <img src="{% static 'user/folder/assets/images/signup-1.png' %}" style="height: 20px; width:20px;" class="img-fluid me-2  mobile-backk" alt="logo">
-                        Sign Up
-                    </a>
-                  </li>
-                  <li class="mega">
-                    <a class="dark-menu-item" href="/">
-                        <!--<i class="fa fa-sign-in me-2" aria-hidden="true"></i>-->
-                        <img src="{% static 'user/folder/assets/images/login.png' %}" style="height: 20px; width:20px;" class="img-fluid me-2" alt="logo">
-                        Login
-                    </a>
-                  </li>
-                </ul>
-              </nav>
-            </div>
-            <div class="nav-block">
-                
-            </div>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
 </header>
 
-  <!-- content start -->
-  {% block content %}
-  
-  {% endblock %}
-  <!-- content start -->
+<!-- content start -->
+{% block content %}
 
-    <!-- latest jquery-->
-    <script src="{% static 'user/folder/assets/js/jquery-3.3.1.min.js' %}"></script>
-    
-    <!-- slick js-->
-    <script src="{% static 'user/folder/assets/js/slick.js' %}"></script>
-    
-    <!-- popper js-->
-    <script src="{% static 'user/folder/assets/js/popper.min.js' %}" ></script>
-    <script src="{% static 'user/folder/assets/js/bootstrap-notify.min.js' %}"></script>
-    
-    <!-- Bootstrap js-->
-    <script src="{% static 'user/folder/assets/js/bootstrap.js' %}"></script>
-    
-    
-    <!-- father icon -->
-    <script src="{% static 'user/folder/assets/js/feather.min.js' %}"></script>
-    <script src="{% static 'user/folder/assets/js/feather-icon.js' %}"></script>
-    
-    <!-- Theme js-->
-    <script src="{% static 'user/folder/assets/js/modal.js' %}"></script>
-    <script src="{% static 'user/folder/assets/js/script.js' %}"></script>
-    <script src="{% static 'admin/global_assets/js/pnotify.min.js' %}"></script>
-    <script src="{% static 'admin/global_assets/js/extra_pnotify.js' %}"></script>
+{% endblock %}
+<!-- content start -->
 
-    <script>
+<!-- latest jquery-->
+<script src="{% static 'user/folder/assets/js/jquery-3.3.1.min.js' %}"></script>
 
-        
+<!-- slick js-->
+<script src="{% static 'user/folder/assets/js/slick.js' %}"></script>
 
-    </script>
-    
-  </body>
+<!-- popper js-->
+<script src="{% static 'user/folder/assets/js/popper.min.js' %}"></script>
+<script src="{% static 'user/folder/assets/js/bootstrap-notify.min.js' %}"></script>
+
+<!-- Bootstrap js-->
+<script src="{% static 'user/folder/assets/js/bootstrap.js' %}"></script>
+
+
+<!-- father icon -->
+<script src="{% static 'user/folder/assets/js/feather.min.js' %}"></script>
+<script src="{% static 'user/folder/assets/js/feather-icon.js' %}"></script>
+
+<!-- Theme js-->
+<script src="{% static 'user/folder/assets/js/modal.js' %}"></script>
+<script src="{% static 'user/folder/assets/js/script.js' %}"></script>
+<script src="{% static 'admin/global_assets/js/pnotify.min.js' %}"></script>
+<script src="{% static 'admin/global_assets/js/extra_pnotify.js' %}"></script>
+
+<script>
+
+
+</script>
+
+</body>
 
 </html>

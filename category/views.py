@@ -1,14 +1,14 @@
-from django.shortcuts import render, redirect
-from .forms import CategoryForm
-from .models import CategoryModel
-from management.models import ManageModel
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from .serializer import CategorySerialize
 from django.contrib import messages
 from django.http import JsonResponse
-from django.contrib.auth.models import User
+from django.shortcuts import render, redirect
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
+from management.models import ManageModel
 from management.views import custom_login_required, get_user_obj
+from .forms import CategoryForm
+from .models import CategoryModel
+from .serializer import CategorySerialize
 
 
 @custom_login_required
@@ -77,7 +77,7 @@ def remove_cat(request):
     if request.method == 'POST':
         try:
             hid = request.POST.get('id')
-            obj = CategoryModel.objects.get(id = hid)
+            obj = CategoryModel.objects.get(id=hid)
             name = obj.cat_name
             aa = ManageModel.objects.filter(category=hid)
             aa_count = aa.count()

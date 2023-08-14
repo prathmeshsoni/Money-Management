@@ -3,7 +3,7 @@
 {% block title %} Register   {% endblock %}
 {% block content %}
 
-<div style="margin: 0;
+    <div style="margin: 0;
             height: 100vh;
             width: 100vw;
             display: none;
@@ -13,77 +13,86 @@
             z-index: 99;
             top: 0;
             left: 0;" id="login_loader">
-    <img  style="max-height: 130px;" src="{% static 'user/folder/assets/images/loader.gif' %}" alt="loader">
-</div>
+        <img style="max-height: 130px;" src="{% static 'user/folder/assets/images/loader.gif' %}" alt="loader">
+    </div>
 
-<div class="breadcrumb-main ">
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <div class="breadcrumb-contain">
-                    <div>
-                        <h2>login</h2>
-                        <ul>
-                            <li><a href="/">home</a></li>
-                            <li><i class="fa fa-angle-double-right"></i></li>
-                            <li><a href="javascript:void(0)">Register</a></li>
-                        </ul>
+    <div class="breadcrumb-main ">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <div class="breadcrumb-contain">
+                        <div>
+                            <h2>login</h2>
+                            <ul>
+                                <li><a href="/">home</a></li>
+                                <li><i class="fa fa-angle-double-right"></i></li>
+                                <li><a href="javascript:void(0)">Register</a></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<section class="login-page breadcrumb-main pt-5 pb-5">
-    <div class="custom-container col-md-4">
-        <div class="global-container">
-            <div class="card login-form">
-                <div class="card-body" style="box-shadow: 0px 1px 18px 9px #60575773;" >
-                    <h3 class="text-center">Create account</h3>
+    <section class="login-page breadcrumb-main pt-5 pb-5">
+        <div class="custom-container col-md-4">
+            <div class="global-container">
+                <div class="card login-form">
+                    <div class="card-body" style="box-shadow: 0px 1px 18px 9px #60575773;">
+                        <h3 class="text-center">Create account</h3>
                         {% if messages %}
-                    
+
                             {% for message in messages %}
-                            <div class="alert alert-info">
-                                {{ message }}
-                            </div>
+                                <div class="alert alert-info">
+                                    {{ message }}
+                                </div>
                             {% endfor %}
-                    
+
                         {% endif %}
-                    <form class="theme-form" method="POST" id="registerr_form" onsubmit="registerr(); return false;" >
-                            {%  csrf_token %}
-                        <input type="hidden" name="cart_scroll" id="cart_scroll" value="{{cartc}}" />
-                        <div class="row g-3">
-                            <div class="form-group">
-                                <label for="exampleInputusername1">Username</label>
-                                <input type="text" name="username" required autofocus class="form-control form-control-sm" id="exampleInputusername1" aria-describedby="emailHelp" placeholder="Enter Username..." >
+                        <form class="theme-form" method="POST" id="registerr_form"
+                              onsubmit="registerr(); return false;">
+                            {% csrf_token %}
+                            <input type="hidden" name="cart_scroll" id="cart_scroll" value="{{ cartc }}"/>
+                            <div class="row g-3">
+                                <div class="form-group">
+                                    <label for="exampleInputusername1">Username</label>
+                                    <input type="text" name="username" required autofocus
+                                           class="form-control form-control-sm" id="exampleInputusername1"
+                                           aria-describedby="emailHelp" placeholder="Enter Username...">
+                                </div>
                             </div>
-                        </div>
-                        <div class="row g-3">
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Email address</label>
-                                <input type="email" name="email" required class="form-control form-control-sm" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Email..." >
+                            <div class="row g-3">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Email address</label>
+                                    <input type="email" name="email" required class="form-control form-control-sm"
+                                           id="exampleInputEmail1" aria-describedby="emailHelp"
+                                           placeholder="Enter Email...">
+                                </div>
                             </div>
-                        </div>
-                        <div class="row g-3">
-                            <div class="form-group">
-                                <label for="exampleInputPassword1">Password</label>
-                                <input type="password" name="password" class="form-control form-control-sm" id="exampleInputPassword1" placeholder="Enter Password..." >
+                            <div class="row g-3">
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">Password</label>
+                                    <input type="password" name="password" class="form-control form-control-sm"
+                                           id="exampleInputPassword1" placeholder="Enter Password...">
+                                </div>
+
+                                <div class="col-md-12 form-group">
+                                    <button type="submit" class="btn btn-normal btn-block">create Account</button>
+                                </div>
                             </div>
-                            
-                            <div class="col-md-12 form-group"><button type="submit" class="btn btn-normal btn-block">create Account</button></div>
-                        </div>
-                        
-                        <div class="row g-3">
-                            <div class="col-md-12 ">
-                                <p >Have you already account? <a href="/" class="txt-default">click</a> here to &nbsp;<a href="/" class="txt-default">Login</a></p>
+
+                            <div class="row g-3">
+                                <div class="col-md-12 ">
+                                    <p>Have you already account? <a href="/" class="txt-default">click</a> here to
+                                        &nbsp;<a href="/" class="txt-default">Login</a></p>
+                                </div>
                             </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
 {% endblock %}

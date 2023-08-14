@@ -2,658 +2,739 @@
 {% load crispy_forms_tags %}
 <html lang="en" id="main-html">
 
-    <head>
-      <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="description" content="">
-        <meta name="author" content="">
-        <link rel="shortcut icon" href="{% static 'admin/folder/images/music_clu.png' %}">
-       	<link rel="icon" href="{% static 'admin/folder/images/demo.png' %}" type="image/x-icon">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="{% static 'admin/folder/images/music_clu.png' %}">
+    <link rel="icon" href="{% static 'admin/folder/images/demo.png' %}" type="image/x-icon">
 
 
-            <title>Admin | {% block title3 %} DashBoard {% endblock %}</title>
+    <title>Admin | {% block title3 %} DashBoard {% endblock %}</title>
 
-    	<!-- Bootstrap 4.0-->
-        <link  rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/sweetalert/sweetalert.css' %}"></link>
+    <!-- Bootstrap 4.0-->
+    <link rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/sweetalert/sweetalert.css' %}"></link>
 
-    	<link rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/bootstrap/dist/css/bootstrap.min.css' %}">
-    	<script src="https://use.fontawesome.com/c0fc7bc651.js"></script>
-    	<!-- Bootstrap extend-->
-    	<link rel="stylesheet" href="{% static 'admin/folder/css/bootstrap-extend.css' %}">
+    <link rel="stylesheet"
+          href="{% static 'admin/folder/assets/vendor_components/bootstrap/dist/css/bootstrap.min.css' %}">
+    <script src="https://use.fontawesome.com/c0fc7bc651.js"></script>
+    <!-- Bootstrap extend-->
+    <link rel="stylesheet" href="{% static 'admin/folder/css/bootstrap-extend.css' %}">
 
-    	<link rel="stylesheet" type="text/css" href="{% static 'admin/folder/assets/vendor_components/datatable/datatables.min.css' %}" />
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'admin/folder/assets/vendor_components/datatable/datatables.min.css' %}"/>
 
-    	<!-- Theme style -->
-    	<link rel="stylesheet" href="{% static 'admin/folder/css/skins/master_style.css' %}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{% static 'admin/folder/css/skins/master_style.css' %}">
 
-    	<!-- Fab Admin skins -->
-    	<link rel="stylesheet" href="{% static 'admin/folder/css/skins/_all-skins.css' %}">
+    <!-- Fab Admin skins -->
+    <link rel="stylesheet" href="{% static 'admin/folder/css/skins/_all-skins.css' %}">
 
-    	<link rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/themify-icons/themify-icons.css' %}">
-    	<link rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/linea-icons/linea.css' %}">
-    	<link rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/glyphicons/glyphicon.css' %}">
-    	<link rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/flag-icon/css/flag-icon.css' %}">
-    	<link rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/material-design-iconic-font/css/materialdesignicons.css' %}">
-    	<link rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/simple-line-icons-master/css/simple-line-icons.css' %}">
-    	<link rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.css' %}">
+    <link rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/themify-icons/themify-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/linea-icons/linea.css' %}">
+    <link rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/glyphicons/glyphicon.css' %}">
+    <link rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/flag-icon/css/flag-icon.css' %}">
+    <link rel="stylesheet"
+          href="{% static 'admin/folder/assets/vendor_components/material-design-iconic-font/css/materialdesignicons.css' %}">
+    <link rel="stylesheet"
+          href="{% static 'admin/folder/assets/vendor_components/simple-line-icons-master/css/simple-line-icons.css' %}">
+    <link rel="stylesheet"
+          href="{% static 'admin/folder/assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.css' %}">
 
-    </head>
-    <body class="hold-transition skin-blue-light sidebar-mini" style="min-height: 100% !important; height: 100% !important;" >
+</head>
+<body class="hold-transition skin-blue-light sidebar-mini"
+      style="min-height: 100% !important; height: 100% !important;">
 
-        <style>
-            .warningsd::-webkit-input-placeholder {
-                font-size: 11px;
-                color: red;
-            }
-                .income-cell {
-                color: #000fff;
-            }
+<style>
+    .warningsd::-webkit-input-placeholder {
+        font-size: 11px;
+        color: red;
+    }
 
-            .expense-cell {
-                color: #ff0000;
-            }
-            .popup {
-                display: none;
-                position: absolute;
-                background-color: #fff;
-                border: 1px solid #ccc;
-                padding: 10px;
-                box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
-            }
+    .income-cell {
+        color: #000fff;
+    }
 
-            .popup-content {
-                margin: 0;
-            }
-        </style>
-        <div class="wrapper">
+    .expense-cell {
+        color: #ff0000;
+    }
 
-            <header class="main-header">
-                <!-- Logo -->
-                <a href="/" class="logo" style="position: fixed" >
-                  <!-- mini logo -->
-            	<b class="logo-mini" style="display: none;" >
-            		  <span class="light-logo"><img src="{% static 'admin/folder/images/music_clu.png' %}" style="height: 60px;width: 50px;" alt="logo"></span>
-            		  <span class="dark-logo"><img src="{% static 'admin/folder/images/music_clu.png' %}" alt="logo"></span>
-            	  </b>
-                  <!-- logo-->
-                  <span class="logo-lg">
-            		  <img src="{% static 'admin/folder/images/music_club.png' %}" alt="logo" style="width: 200px;height: 60px;" class="light-logo">
+    .popup {
+        display: none;
+        position: absolute;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        padding: 10px;
+        box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .popup-content {
+        margin: 0;
+    }
+</style>
+<div class="wrapper">
+
+    <header class="main-header">
+        <!-- Logo -->
+        <a href="/" class="logo" style="position: fixed">
+            <!-- mini logo -->
+            <b class="logo-mini" style="display: none;">
+                <span class="light-logo"><img src="{% static 'admin/folder/images/music_clu.png' %}"
+                                              style="height: 60px;width: 50px;" alt="logo"></span>
+                <span class="dark-logo"><img src="{% static 'admin/folder/images/music_clu.png' %}" alt="logo"></span>
+            </b>
+            <!-- logo-->
+            <span class="logo-lg">
+            		  <img src="{% static 'admin/folder/images/music_club.png' %}" alt="logo"
+                           style="width: 200px;height: 60px;" class="light-logo">
             	  </span>
+        </a>
+        <nav class="navbar navbar-static-top">
+            <!-- Sidebar toggle button-->
+            <div>
+                <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                    <span class="sr-only">Toggle navigation</span>
                 </a>
-                <nav class="navbar navbar-static-top">
-                  <!-- Sidebar toggle button-->
-            	  <div>
-            		  <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
-            			<span class="sr-only">Toggle navigation</span>
-            		  </a>
 
-            	  </div>
+            </div>
 
-                  <div class="navbar-custom-menu">
-                    <ul class="nav navbar-nav">
-            		  <!-- User Account-->
-                      <li class="dropdown user user-menu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding: 20px;" >
-                            <i class="fa fa-cog " ></i>
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+                    <!-- User Account-->
+                    <li class="dropdown user user-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding: 20px;">
+                            <i class="fa fa-cog "></i>
                         </a>
-                        <ul class="dropdown-menu scale-up" style="width: 240px; background: rgba(0, 0, 0, 0.4);" >
-                          <li class="user-body">
-                            <div class="row no-gutters">
-                            <div class="col-12 text-left">
-                                <a style="color: #FFF !important; background: none !important;" href="/change-password/"><i class="fa fa fa-vcard-o"></i> Change Password</a>
-                            </div>
-                            <div class="col-12 text-left">
-                                <a style="color: #FFF !important; background: none !important; " href="/logout/"><i class="fa fa-power-off"></i> Logout</a>
-                            </div>
-                            </div>
-                            <!-- /.row -->
-                          </li>
+                        <ul class="dropdown-menu scale-up" style="width: 240px; background: rgba(0, 0, 0, 0.4);">
+                            <li class="user-body">
+                                <div class="row no-gutters">
+                                    <div class="col-12 text-left">
+                                        <a style="color: #FFF !important; background: none !important;"
+                                           href="/change-password/"><i class="fa fa fa-vcard-o"></i> Change Password</a>
+                                    </div>
+                                    <div class="col-12 text-left">
+                                        <a style="color: #FFF !important; background: none !important; "
+                                           href="/logout/"><i class="fa fa-power-off"></i> Logout</a>
+                                    </div>
+                                </div>
+                                <!-- /.row -->
+                            </li>
                         </ul>
-                      </li>
-                    </ul>
-                  </div>
-        </nav>
-            </header>
-
-            <aside class="main-sidebar" style="position: fixed" >
-                <!-- sidebar-->
-                <section class="sidebar">
-
-                  <!-- sidebar menu-->
-                <ul class="sidebar-menu" data-widget="tree">
-
-                    <li class="user-profile treeview">
-                      <a href="javascript:void(0)" style="padding: 15px 10px 15px 8px !important; " >
-                        <img src="{% static 'user/folder/assets/images/avtar/user.jpg' %}" style="width: 40px !important;height: 41px !important;" class="rounded-circle" alt="">
-                        <span style="color: black;" >
-                            {% if request.session.private_admin %} {{request.session.private_admin}}{% endif %}
-                            <input type="hidden" name="count_1" id="count_1" value="" />
-                        </span>
-                      </a>
                     </li>
-                    <li class="active" >
-                      <a href="/view/">
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <aside class="main-sidebar" style="position: fixed">
+        <!-- sidebar-->
+        <section class="sidebar">
+
+            <!-- sidebar menu-->
+            <ul class="sidebar-menu" data-widget="tree">
+
+                <li class="user-profile treeview">
+                    <a href="javascript:void(0)" style="padding: 15px 10px 15px 8px !important; ">
+                        <img src="{% static 'user/folder/assets/images/avtar/user.jpg' %}"
+                             style="width: 40px !important;height: 41px !important;" class="rounded-circle" alt="">
+                        <span style="color: black;">
+                            {% if request.session.private_admin %} {{ request.session.private_admin }}{% endif %}
+                            <input type="hidden" name="count_1" id="count_1" value=""/>
+                        </span>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="/view/">
                         <i class="fa fa-dashboard"></i> <span>Dashboard</span>
                         <span class="pull-right-container">
                         </span>
-                      </a>
-                    </li>
-                </ul>
-                <ul class="sidebar-menu" data-widget="tree">
-                    <li class="treeview {% if cat_master == 'master' %} {{'menu-open'}} {% endif %} ">
-                      <a href="#">
+                    </a>
+                </li>
+            </ul>
+            <ul class="sidebar-menu" data-widget="tree">
+                <li class="treeview {% if cat_master == 'master' %} {{ 'menu-open' }} {% endif %} ">
+                    <a href="#">
                         <i class="fa fa-plus"></i>
                         <span>Master</span>
                         <span class="pull-right-container">
                           <i class="fa fa-angle-right pull-right"></i>
                         </span>
-                      </a>
-                      <ul class="treeview-menu {% if cat_master == 'master' %} {{'res-tb-block mt-2'}} {% else %} {{'mt-2'}} {% endif %}" >
-                            <li {% if cat_active == 'type_master' %} class="active mb-1" style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}  style="background: rgb(6 0 255 / 11%);" ><a href="/type/"><i class="{% if cat_active == 'type_master' %} {{'fa fa-circle'}} {% else %} {{'fa fa-circle-thin'}} {% endif %}"></i>Types</a></li>
-                            <li {% if cat_active == 'account_master' %} class="active mb-1" style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}  style="background: rgb(6 0 255 / 11%);" ><a href="/account/"><i class="{% if cat_active == 'account_master' %} {{'fa fa-circle'}} {% else %} {{'fa fa-circle-thin'}} {% endif %}"></i>Account</a></li>
-                            <li {% if cat_active == 'cat_master' %} class="active mb-1" style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}  style="background: rgb(6 0 255 / 11%);" ><a href="/category/"><i class="{% if cat_active == 'cat_master' %} {{'fa fa-circle'}} {% else %} {{'fa fa-circle-thin'}} {% endif %}"></i>Category</a></li>
-                      </ul>
-                    </li>
-                </ul>
-                <ul class="sidebar-menu" data-widget="tree">
-                    <li class="treeview {% if private_master == 'master' %} {{'menu-open'}} {% endif %} ">
-                      <a href="#">
+                    </a>
+                    <ul class="treeview-menu {% if cat_master == 'master' %} {{ 'res-tb-block mt-2' }} {% else %} {{ 'mt-2' }} {% endif %}">
+                        <li {% if cat_active == 'type_master' %} class="active mb-1"
+                                                                 style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}
+                                                                 style="background: rgb(6 0 255 / 11%);"><a
+                                href="/type/"><i
+                                class="{% if cat_active == 'type_master' %} {{ 'fa fa-circle' }} {% else %} {{ 'fa fa-circle-thin' }} {% endif %}"></i>Types</a>
+                        </li>
+                        <li {% if cat_active == 'account_master' %} class="active mb-1"
+                                                                    style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}
+                                                                    style="background: rgb(6 0 255 / 11%);"><a
+                                href="/account/"><i
+                                class="{% if cat_active == 'account_master' %} {{ 'fa fa-circle' }} {% else %} {{ 'fa fa-circle-thin' }} {% endif %}"></i>Account</a>
+                        </li>
+                        <li {% if cat_active == 'cat_master' %} class="active mb-1"
+                                                                style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}
+                                                                style="background: rgb(6 0 255 / 11%);"><a
+                                href="/category/"><i
+                                class="{% if cat_active == 'cat_master' %} {{ 'fa fa-circle' }} {% else %} {{ 'fa fa-circle-thin' }} {% endif %}"></i>Category</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="sidebar-menu" data-widget="tree">
+                <li class="treeview {% if private_master == 'master' %} {{ 'menu-open' }} {% endif %} ">
+                    <a href="#">
                         <i class="fa fa-file"></i>
                         <span>Management</span>
                         <span class="pull-right-container">
                           <i class="fa fa-angle-right pull-right"></i>
                         </span>
-                      </a>
-                      <ul class="treeview-menu {% if private_master == 'master' %} {{'res-tb-block mt-2'}} {% else %} {{'mt-2'}} {% endif %}" >
-                        <li {% if private_active == 'private_master' %} class="active mb-1" style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}  style="background: rgb(6 0 255 / 11%);" ><a href="/view/"><i class="{% if private_active == 'private_master' %} {{'fa fa-circle'}} {% else %} {{'fa fa-circle-thin'}} {% endif %}"></i>All Transaction</a></li>
+                    </a>
+                    <ul class="treeview-menu {% if private_master == 'master' %} {{ 'res-tb-block mt-2' }} {% else %} {{ 'mt-2' }} {% endif %}">
+                        <li {% if private_active == 'private_master' %} class="active mb-1"
+                                                                        style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}
+                                                                        style="background: rgb(6 0 255 / 11%);"><a
+                                href="/view/"><i
+                                class="{% if private_active == 'private_master' %} {{ 'fa fa-circle' }} {% else %} {{ 'fa fa-circle-thin' }} {% endif %}"></i>All
+                            Transaction</a></li>
                         {% if private_activee == 'private_masterr' %}
-                            <li {% if private_activee == 'private_masterr' %} class="active mb-1 mt-1" style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}  style="background: rgb(6 0 255 / 11%);" ><a href="javascript:void(0)"><i class="{% if private_activee == 'private_masterr' %} {{'fa fa-circle'}} {% else %} {{'fa fa-circle-thin'}} {% endif %}"></i>Private ID : {{order.id}}</a></li>
+                            <li {% if private_activee == 'private_masterr' %} class="active mb-1 mt-1"
+                                                                              style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}
+                                                                              style="background: rgb(6 0 255 / 11%);"><a
+                                    href="javascript:void(0)"><i
+                                    class="{% if private_activee == 'private_masterr' %} {{ 'fa fa-circle' }} {% else %} {{ 'fa fa-circle-thin' }} {% endif %}"></i>Private
+                                ID : {{ order.id }}</a></li>
                         {% endif %}
-                      </ul>
-                    </li>
-                </ul>
-                <ul class="sidebar-menu" data-widget="tree">
-                    <li class="treeview {% if filter_master == 'master' %} {{'menu-open'}} {% endif %} ">
-                      <a href="#">
+                    </ul>
+                </li>
+            </ul>
+            <ul class="sidebar-menu" data-widget="tree">
+                <li class="treeview {% if filter_master == 'master' %} {{ 'menu-open' }} {% endif %} ">
+                    <a href="#">
                         <i class="fa fa-filter"></i>
                         <span>Filter Master</span>
                         <span class="pull-right-container">
                           <i class="fa fa-angle-right pull-right"></i>
                         </span>
-                      </a>
-                      <ul class="treeview-menu {% if filter_master == 'master' %} {{'res-tb-block mt-2'}} {% else %} {{'mt-2'}} {% endif %}" >
-                            <li {% if filter_active == 'type_master' %} class="active mb-1" style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}  style="background: rgb(6 0 255 / 11%);" ><a href="/view/type"><i class="{% if filter_active == 'type_master' %} {{'fa fa-circle'}} {% else %} {{'fa fa-circle-thin'}} {% endif %}"></i>Types</a></li>
-                            <li {% if filter_active == 'account_master' %} class="active mb-1" style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}  style="background: rgb(6 0 255 / 11%);" ><a href="/view/account"><i class="{% if filter_active == 'account_master' %} {{'fa fa-circle'}} {% else %} {{'fa fa-circle-thin'}} {% endif %}"></i>Account</a></li>
-                            <li {% if filter_active == 'cat_master' %} class="active mb-1" style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}  style="background: rgb(6 0 255 / 11%);" ><a href="/view/category"><i class="{% if filter_active == 'cat_master' %} {{'fa fa-circle'}} {% else %} {{'fa fa-circle-thin'}} {% endif %}"></i>Category</a></li>
-                            <li {% if filter_active == 'all_master' %} class="active mb-1" style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}  style="background: rgb(6 0 255 / 11%);" ><a href="/view/all"><i class="{% if filter_active == 'all_master' %} {{'fa fa-circle'}} {% else %} {{'fa fa-circle-thin'}} {% endif %}"></i>All Filter</a></li>
-                      </ul>
-                    </li>
-                </ul>
-                <ul class="sidebar-menu" data-widget="tree">
-                    <li class="treeview {% if search_master == 'master' %} {{'menu-open'}} {% endif %} ">
-                      <a href="#">
+                    </a>
+                    <ul class="treeview-menu {% if filter_master == 'master' %} {{ 'res-tb-block mt-2' }} {% else %} {{ 'mt-2' }} {% endif %}">
+                        <li {% if filter_active == 'type_master' %} class="active mb-1"
+                                                                    style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}
+                                                                    style="background: rgb(6 0 255 / 11%);"><a
+                                href="/view/type"><i
+                                class="{% if filter_active == 'type_master' %} {{ 'fa fa-circle' }} {% else %} {{ 'fa fa-circle-thin' }} {% endif %}"></i>Types</a>
+                        </li>
+                        <li {% if filter_active == 'account_master' %} class="active mb-1"
+                                                                       style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}
+                                                                       style="background: rgb(6 0 255 / 11%);"><a
+                                href="/view/account"><i
+                                class="{% if filter_active == 'account_master' %} {{ 'fa fa-circle' }} {% else %} {{ 'fa fa-circle-thin' }} {% endif %}"></i>Account</a>
+                        </li>
+                        <li {% if filter_active == 'cat_master' %} class="active mb-1"
+                                                                   style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}
+                                                                   style="background: rgb(6 0 255 / 11%);"><a
+                                href="/view/category"><i
+                                class="{% if filter_active == 'cat_master' %} {{ 'fa fa-circle' }} {% else %} {{ 'fa fa-circle-thin' }} {% endif %}"></i>Category</a>
+                        </li>
+                        <li {% if filter_active == 'all_master' %} class="active mb-1"
+                                                                   style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}
+                                                                   style="background: rgb(6 0 255 / 11%);"><a
+                                href="/view/all"><i
+                                class="{% if filter_active == 'all_master' %} {{ 'fa fa-circle' }} {% else %} {{ 'fa fa-circle-thin' }} {% endif %}"></i>All
+                            Filter</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="sidebar-menu" data-widget="tree">
+                <li class="treeview {% if search_master == 'master' %} {{ 'menu-open' }} {% endif %} ">
+                    <a href="#">
                         <i class="fa fa-search"></i>
                         <span>Search Master</span>
                         <span class="pull-right-container">
                           <i class="fa fa-angle-right pull-right"></i>
                         </span>
-                      </a>
-                      <ul class="treeview-menu {% if search_master == 'master' %} {{'res-tb-block mt-2'}} {% else %} {{'mt-2'}} {% endif %}" >
-                        <li {% if search_active == 'search_master' %} class="active mb-1" style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}  style="background: rgb(6 0 255 / 11%);" ><a href="/search/"><i class="{% if search_active == 'search_master' %} {{'fa fa-circle'}} {% else %} {{'fa fa-circle-thin'}} {% endif %}"></i>Search Page</a></li>
-                      </ul>
-                    </li>
-                </ul>
-                <ul class="sidebar-menu" data-widget="tree">
-                    <li class="treeview {% if chart_master == 'master' %} {{'menu-open'}} {% endif %} ">
-                      <a href="#">
+                    </a>
+                    <ul class="treeview-menu {% if search_master == 'master' %} {{ 'res-tb-block mt-2' }} {% else %} {{ 'mt-2' }} {% endif %}">
+                        <li {% if search_active == 'search_master' %} class="active mb-1"
+                                                                      style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}
+                                                                      style="background: rgb(6 0 255 / 11%);"><a
+                                href="/search/"><i
+                                class="{% if search_active == 'search_master' %} {{ 'fa fa-circle' }} {% else %} {{ 'fa fa-circle-thin' }} {% endif %}"></i>Search
+                            Page</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="sidebar-menu" data-widget="tree">
+                <li class="treeview {% if chart_master == 'master' %} {{ 'menu-open' }} {% endif %} ">
+                    <a href="#">
                         <i class="fa fa-pie-chart"></i>
                         <span>Chart Master</span>
                         <span class="pull-right-container">
                           <i class="fa fa-angle-right pull-right"></i>
                         </span>
-                      </a>
-                      <ul class="treeview-menu {% if chart_master == 'master' %} {{'res-tb-block mt-2'}} {% else %} {{'mt-2'}} {% endif %}" >
-                        <li {% if chart_active == 'chart_master' %} class="active mb-1" style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}  style="background: rgb(6 0 255 / 11%);" ><a href="/chart/"><i class="{% if chart_active == 'chart_master' %} {{'fa fa-circle'}} {% else %} {{'fa fa-circle-thin'}} {% endif %}"></i>Chart Page</a></li>
-                      </ul>
-                    </li>
-                </ul>
-                <ul class="sidebar-menu" data-widget="tree">
-                    <li class="treeview {% if password_master == 'master' %} {{'menu-open'}} {% endif %} ">
-                      <a href="#">
+                    </a>
+                    <ul class="treeview-menu {% if chart_master == 'master' %} {{ 'res-tb-block mt-2' }} {% else %} {{ 'mt-2' }} {% endif %}">
+                        <li {% if chart_active == 'chart_master' %} class="active mb-1"
+                                                                    style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}
+                                                                    style="background: rgb(6 0 255 / 11%);"><a
+                                href="/chart/"><i
+                                class="{% if chart_active == 'chart_master' %} {{ 'fa fa-circle' }} {% else %} {{ 'fa fa-circle-thin' }} {% endif %}"></i>Chart
+                            Page</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="sidebar-menu" data-widget="tree">
+                <li class="treeview {% if password_master == 'master' %} {{ 'menu-open' }} {% endif %} ">
+                    <a href="#">
                         <i class="fa fa-lock"></i>
                         <span>Password</span>
                         <span class="pull-right-container">
                           <i class="fa fa-angle-right pull-right"></i>
                         </span>
-                      </a>
-                      <ul class="treeview-menu {% if password_master == 'master' %} {{'res-tb-block mt-2'}} {% else %} {{'mt-2'}} {% endif %}" >
-                        <li {% if password_active == 'password_master' %} class="active mb-1" style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}  style="background: rgb(6 0 255 / 11%);" ><a href="/change-password/"><i class="{% if password_active == 'password_master' %} {{'fa fa-circle'}} {% else %} {{'fa fa-circle-thin'}} {% endif %}"></i>Change Password</a></li>
-                      </ul>
-                    </li>
-                </ul>
+                    </a>
+                    <ul class="treeview-menu {% if password_master == 'master' %} {{ 'res-tb-block mt-2' }} {% else %} {{ 'mt-2' }} {% endif %}">
+                        <li {% if password_active == 'password_master' %} class="active mb-1"
+                                                                          style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}
+                                                                          style="background: rgb(6 0 255 / 11%);"><a
+                                href="/change-password/"><i
+                                class="{% if password_active == 'password_master' %} {{ 'fa fa-circle' }} {% else %} {{ 'fa fa-circle-thin' }} {% endif %}"></i>Change
+                            Password</a></li>
+                    </ul>
+                </li>
+            </ul>
 
 
+        </section>
+    </aside>
 
-    </section>
-            </aside>
-
-            {% if search %}
-            {% else %}
-                <div class="content-wrapper">
-                    <section class="content-header">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <h5 class="card-title">
-                                    {% if cat_master %}
-                                        Manage {{category}}
-                                    {% else %}
-                                        {% if private_master %}
-                                            Manage Transaction
-                                        {% else %}
-                                            Filter Master
-                                        {% endif %}
-                                    {% endif %}
-                                </h5>
-                            </div>
-                            <div class="col-md-3">
-                            </div>
-                            {% if category == 'Type' %}
+    {% if search %}
+    {% else %}
+        <div class="content-wrapper">
+        <section class="content-header">
+            <div class="row">
+                <div class="col-md-3">
+                    <h5 class="card-title">
+                        {% if cat_master %}
+                            Manage {{ category }}
+                        {% else %}
+                            {% if private_master %}
+                                Manage Transaction
                             {% else %}
-                                <div class="col-md-2">
-                                    <div style="text-align-last: center; padding-top:12px; " >
-                                        <button type="button" onclick="openModel()" class="btn btn-sm btn-light" style="
-                                        color: blue; border: blue solid 1.7px; padding: 6px 17px;" ><i class="fa fa-plus" style="font-weight: bolder;" ></i>
-                                            {% if cat_master %}
-                                                ADD {{category}}
-                                            {% else %}
-                                                ADD Transaction
-                                            {% endif %}
-                                        </button>
-                                    </div>
-                                </div>
-                             {% endif %}
-                            <div class="col-md-4" style=" padding-top:12px; " >
-                                <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="/view/"><i class="fa fa-dashboard"></i> Home</a></li>
-                                    <li class="breadcrumb-item">
-                                        <a href="javascript:void(0)">
-                                            {% if cat_master %}
-                                                <i class="fa fa-plus"></i>
-                                                Master
-                                            {% else %}
-                                                {% if private_master %}
-                                                    <i class="fa fa-file"></i>
-                                                    Management
-                                                {% else %}
-                                                    <i class="fa fa-filter"></i>
-                                                    Filter Master
-                                                {% endif %}
-                                            {% endif %}
-                                        </a>
-                                    </li>
-                                    <li class="breadcrumb-item active text-capitalize">
-                                        {% if cat_master %}
-                                            {{category}}
-                                        {% else %}
-                                            {% if private_master %}
-                                                <input type="hidden" id="check_account" value="" >
-                                                Transaction
-                                            {% else %}
-                                                <input type="hidden" id="check_account" value="{{ main }}" >
-                                                {{main}}
-                                            {% endif %}
-                                        {% endif %}
-                                    </li>
-                                </ol>
-                            </div>
-                        </div>
-                    </section>
-            {% endif %}
-            {% block content %}
-            {% endblock %}
-
-            {% if cat_master %}
-            {% else %}
-            <!-- sample modal content -->
-                <div class="modal fade bs-example-modal-lg" id="categoryModal" tabindex="-1">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title " id="add_cat" style="display: none;" >ADD DETAILS</h5>
-                            <h5 class="modal-title " id="edit_cat" style="display: none;" >EDIT DETAILS</h5>
-                            <button type="button" class="close" data-dismiss="modal">
-                                <span aria-hidden="true">&times;</span>
+                                Filter Master
+                            {% endif %}
+                        {% endif %}
+                    </h5>
+                </div>
+                <div class="col-md-3">
+                </div>
+                {% if category == 'Type' %}
+                {% else %}
+                    <div class="col-md-2">
+                        <div style="text-align-last: center; padding-top:12px; ">
+                            <button type="button" onclick="openModel()" class="btn btn-sm btn-light" style="
+                                        color: blue; border: blue solid 1.7px; padding: 6px 17px;"><i class="fa fa-plus"
+                                                                                                      style="font-weight: bolder;"></i>
+                                {% if cat_master %}
+                                    ADD {{ category }}
+                                {% else %}
+                                    ADD Transaction
+                                {% endif %}
                             </button>
                         </div>
-                        <div class="modal-body">
-                            <form method="POST" id="Addcategory" enctype="multipart/form-data" onsubmit="openForm_test(); return false;">
-                                <input type="hidden" name="date-iss" id="date-iss" value="{{month|date:"Y-m"}}" />
-                                <input type="hidden" name="id" id="id" value="" />
-                                <div class="form-group">
-                                    <div class="row">
-                                        <div id="div_id_typename_id" class="col-md-12">
-                                            <label for="id_typename_id" class=" requiredField">
-                                                Types
-                                                <span class="text-danger">*</span>
-                                            </label>
-                                            <div class="form-group">
-                                                <select name="type" class="select form-control"
-                                                    id="id_typename_id" onchange="check_condition(0)" >
-                                                    <option selected value="">Select Type</option>
-                                                    {% for i in type_obj %}
-                                                      <option value="{{i.id}}" name="{{ i.type_name }}" >{{i.type_name}}</option>
-                                                    {% endfor %}
-                                                </select>
-                                            </div>
-                                        </div>
+                    </div>
+                {% endif %}
+                <div class="col-md-4" style=" padding-top:12px; ">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/view/"><i class="fa fa-dashboard"></i> Home</a></li>
+                        <li class="breadcrumb-item">
+                            <a href="javascript:void(0)">
+                                {% if cat_master %}
+                                    <i class="fa fa-plus"></i>
+                                    Master
+                                {% else %}
+                                    {% if private_master %}
+                                        <i class="fa fa-file"></i>
+                                        Management
+                                    {% else %}
+                                        <i class="fa fa-filter"></i>
+                                        Filter Master
+                                    {% endif %}
+                                {% endif %}
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item active text-capitalize">
+                            {% if cat_master %}
+                                {{ category }}
+                            {% else %}
+                                {% if private_master %}
+                                    <input type="hidden" id="check_account" value="">
+                                    Transaction
+                                {% else %}
+                                    <input type="hidden" id="check_account" value="{{ main }}">
+                                    {{ main }}
+                                {% endif %}
+                            {% endif %}
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+    {% endif %}
+    {% block content %}
+    {% endblock %}
 
-                                        <div class="col-md-12">
-                                                {{ m.date_name|as_crispy_field }}
-                                            </div>
-
-                                        <div id="div_id_accountname_id" class="col-md-6">
-                                            <label for="id_accountname_id" class=" requiredField">
-                                                Accounts
-                                                <span class="text-danger">*</span>
-                                            </label>
-                                            <div class="form-group">
-                                                <select name="account" class="select form-control"
-                                                    id="id_accountname_id">
-                                                    <option selected value="">Select Account</option>
-                                                    {% for i in account_obj %}
-                                                        <option value="{{i.id}}" name="{{ i.account_name }}" >{{i.account_name}}</option>
-                                                    {% endfor %}
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div id="div_id_from_account" class="col-md-6" style="display:none;" >
-                                            <label for="id_from_account" class=" requiredField">
-                                                From
-                                                <span class="text-danger">*</span>
-                                            </label>
-                                            <div class="form-group">
-                                                <select name="from_account" class="select form-control" required
-                                                    id="id_from_account">
-                                                    <option selected value="">Select Account</option>
-                                                    {% for i in account_obj %}
-                                                      <option value="{{i.id}}" name="{{ i.account_name }}" >{{i.account_name}}</option>
-                                                    {% endfor %}
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div id="div_id_to_account" class="col-md-6" style="display:none;" >
-                                            <label for="id_to_account" class=" requiredField">
-                                                To
-                                                <span class="text-danger">*</span>
-                                            </label>
-                                            <div class="form-group">
-                                                <select name="to_account" class="select form-control"
-                                                    id="id_to_account">
-                                                    <option selected value="">Select Account</option>
-                                                    {% for i in account_obj %}
-                                                      <option value="{{i.id}}" name="{{ i.account_name }}" >{{i.account_name}}</option>
-                                                    {% endfor %}
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            {{ m.amount|as_crispy_field }}
-                                        </div>
-
-                                        <div id="div_id_catname_id" class="col-md-6">
-                                            <label for="id_catname_id" class=" requiredField">
-                                                Categories
-                                                <span class="text-danger">*</span>
-                                            </label>
-                                            <div class="form-group">
-                                                <select name="category" class="select form-control"
-                                                    id="id_catname_id" onchange="add_category()">
-                                                    <option selected value="">Select Category</option>
-                                                    {% for i in cat_obj %}
-                                                      <option value="{{i.id}}" name="{{ i.cat_name|lower }}" >{{i.cat_name}}</option>
-                                                    {% endfor %}
-                                                    <option value="add" name="add" >Add Category</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3" style="display: none;" id="add-cat">
-                                            <div class="form-group" >
-                                                <label for="newOptionInput" class="requiredField">
-                                                    Add Category
-                                                </label>
-                                                <div>
-                                                    <input type="text" name="newOptionInput" placeholder="Enter Amount..." class="numberinput form-control" id="newOptionInput" onkeyup="check_val()" >
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3" style="display: none;" id="add-cat-1" >
-                                            <button type="button" class="btn btn-primary mt-4" id="addButton" >Add</button>
-                                            <button type="button" class="btn btn-primary mt-4" id="deleteButton" style="display: none;" >Delete</button>
-                                        </div>
-
-                                        <div class="col-md-12">
-                                            {{ m.note|as_crispy_field }}
+    {% if cat_master %}
+    {% else %}
+        <!-- sample modal content -->
+        <div class="modal fade bs-example-modal-lg" id="categoryModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title " id="add_cat" style="display: none;">ADD DETAILS</h5>
+                        <h5 class="modal-title " id="edit_cat" style="display: none;">EDIT DETAILS</h5>
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST" id="Addcategory" enctype="multipart/form-data"
+                              onsubmit="openForm_test(); return false;">
+                            <input type="hidden" name="date-iss" id="date-iss" value="{{ month|date:"Y-m" }}"/>
+                            <input type="hidden" name="id" id="id" value=""/>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div id="div_id_typename_id" class="col-md-12">
+                                        <label for="id_typename_id" class=" requiredField">
+                                            Types
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="form-group">
+                                            <select name="type" class="select form-control"
+                                                    id="id_typename_id" onchange="check_condition(0)">
+                                                <option selected value="">Select Type</option>
+                                                {% for i in type_obj %}
+                                                    <option value="{{ i.id }}"
+                                                            name="{{ i.type_name }}">{{ i.type_name }}</option>
+                                                {% endfor %}
+                                            </select>
                                         </div>
                                     </div>
+
+                                    <div class="col-md-12">
+                                        {{ m.date_name|as_crispy_field }}
+                                    </div>
+
+                                    <div id="div_id_accountname_id" class="col-md-6">
+                                        <label for="id_accountname_id" class=" requiredField">
+                                            Accounts
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="form-group">
+                                            <select name="account" class="select form-control"
+                                                    id="id_accountname_id">
+                                                <option selected value="">Select Account</option>
+                                                {% for i in account_obj %}
+                                                    <option value="{{ i.id }}"
+                                                            name="{{ i.account_name }}">{{ i.account_name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div id="div_id_from_account" class="col-md-6" style="display:none;">
+                                        <label for="id_from_account" class=" requiredField">
+                                            From
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="form-group">
+                                            <select name="from_account" class="select form-control" required
+                                                    id="id_from_account">
+                                                <option selected value="">Select Account</option>
+                                                {% for i in account_obj %}
+                                                    <option value="{{ i.id }}"
+                                                            name="{{ i.account_name }}">{{ i.account_name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div id="div_id_to_account" class="col-md-6" style="display:none;">
+                                        <label for="id_to_account" class=" requiredField">
+                                            To
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="form-group">
+                                            <select name="to_account" class="select form-control"
+                                                    id="id_to_account">
+                                                <option selected value="">Select Account</option>
+                                                {% for i in account_obj %}
+                                                    <option value="{{ i.id }}"
+                                                            name="{{ i.account_name }}">{{ i.account_name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        {{ m.amount|as_crispy_field }}
+                                    </div>
+
+                                    <div id="div_id_catname_id" class="col-md-6">
+                                        <label for="id_catname_id" class=" requiredField">
+                                            Categories
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="form-group">
+                                            <select name="category" class="select form-control"
+                                                    id="id_catname_id" onchange="add_category()">
+                                                <option selected value="">Select Category</option>
+                                                {% for i in cat_obj %}
+                                                    <option value="{{ i.id }}"
+                                                            name="{{ i.cat_name|lower }}">{{ i.cat_name }}</option>
+                                                {% endfor %}
+                                                <option value="add" name="add">Add Category</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3" style="display: none;" id="add-cat">
+                                        <div class="form-group">
+                                            <label for="newOptionInput" class="requiredField">
+                                                Add Category
+                                            </label>
+                                            <div>
+                                                <input type="text" name="newOptionInput" placeholder="Enter Amount..."
+                                                       class="numberinput form-control" id="newOptionInput"
+                                                       onkeyup="check_val()">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3" style="display: none;" id="add-cat-1">
+                                        <button type="button" class="btn btn-primary mt-4" id="addButton">Add</button>
+                                        <button type="button" class="btn btn-primary mt-4" id="deleteButton"
+                                                style="display: none;">Delete
+                                        </button>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        {{ m.note|as_crispy_field }}
+                                    </div>
                                 </div>
-                                {% csrf_token %}
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-dark" id="m_close" data-dismiss="modal"><span class="text-light">Close</span></button>
-                                    <button type="submit" class="btn btn-primary " id="final-tra" >Submit</button>
-                                </div>
-                            </form>
-                        </div>
+                            </div>
+                            {% csrf_token %}
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-dark" id="m_close" data-dismiss="modal"><span
+                                        class="text-light">Close</span></button>
+                                <button type="submit" class="btn btn-primary " id="final-tra">Submit</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
-            {% endif %}
-
-            <footer class="main-footer">
-                <div class="pull-right d-none d-sm-inline-block">
-                    <ul class="nav nav-primary nav-dotted nav-dot-separated justify-content-center justify-content-md-end">
-            		  <li class="nav-item">
-            			<a class="nav-link" href="javascript:void(0)">Support</a>
-            		  </li>
-            		  <li class="nav-item">
-            			<a class="nav-link" href="javascript:void(0)">Docs</a>
-            		  </li>
-            		  <li class="nav-item">
-
-            			<a class="nav-link" href="#">Purchase Now</a>
-            		  </li>
-            		</ul>
-                </div>
-            	  &copy;  2015 - 2018 <a href="#">Music Club
-
-						</a> All Rights Reserved.
-            </footer>
-            <div class="control-sidebar-bg"></div>
-
         </div>
-        <!-- Include Chart.js library -->
-        <!-- Include Chart.js library -->
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <!-- Include chartjs-plugin-datalabels -->
-        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    {% endif %}
+
+    <footer class="main-footer">
+        <div class="pull-right d-none d-sm-inline-block">
+            <ul class="nav nav-primary nav-dotted nav-dot-separated justify-content-center justify-content-md-end">
+                <li class="nav-item">
+                    <a class="nav-link" href="javascript:void(0)">Support</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="javascript:void(0)">Docs</a>
+                </li>
+                <li class="nav-item">
+
+                    <a class="nav-link" href="#">Purchase Now</a>
+                </li>
+            </ul>
+        </div>
+        &copy; 2015 - 2018 <a href="#">Music Club
+
+    </a> All Rights Reserved.
+    </footer>
+    <div class="control-sidebar-bg"></div>
+
+    </div>
+    <!-- Include Chart.js library -->
+    <!-- Include Chart.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Include chartjs-plugin-datalabels -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
 
 
-        <script src="{% static 'admin/folder/assets/vendor_components/jquery-3.3.1/jquery-3.3.1.js' %}"></script>
+    <script src="{% static 'admin/folder/assets/vendor_components/jquery-3.3.1/jquery-3.3.1.js' %}"></script>
 
-        {% if chart_master %}
-            <script src="{% static 'admin/folder/js/wallet/chart.js' %}"></script>
-            {% if income %}
-                <script>
-                    chart_shows(
-                        {% autoescape off %}{{names}}{% endautoescape %},
-                      [{{total_income}}]
-                    );
-                </script>
-            {% endif %}
-
-            {% if expense %}
-                <script>
-                    chart_shows_1(
-                      {% autoescape off %}{{names_}}{% endautoescape %},
-                      [{{total_expense}}]
-                    );
-                </script>
-            {% endif %}
-
-        {% endif %}
-
-
-
-	    <!-- popper -->
-    	<script src="{% static 'admin/folder/assets/vendor_components/popper/dist/popper.min.js' %}"></script>
-
-    	<!-- Bootstrap 4.0-->
-    	<script src="{% static 'admin/folder/assets/vendor_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>
-
-    	<!-- SlimScroll -->
-    	<script src="{% static 'admin/folder/assets/vendor_components/jquery-slimscroll/jquery.slimscroll.min.js' %}"></script>
-
-    	<!-- FastClick -->
-    	<script src="{% static 'admin/folder/assets/vendor_components/fastclick/lib/fastclick.js' %}"></script>
-
-    	<!-- Fab Admin App -->
-    	<script src="{% static 'admin/folder/js/template.js' %}"></script>
-
-    	<!-- Fab Admin for demo purposes -->
-    	<script src="{% static 'admin/folder/js/demo.js' %}"></script>
-    	<script src="{% static 'admin/folder/js/pages/data-table.js' %}"></script>
-
-    	<script src="{% static 'admin/folder/assets/vendor_components/datatable/datatables.min.js' %}"></script>
-    	<script src="{% static 'admin/folder/assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js' %}"></script>
-    	<script src="{% static 'admin/folder/assets/vendor_components/sweetalert/sweetalert.min.js' %}"></script>
-
-        {% if cat_master %}
-            <script src="{% static 'admin/folder/js/wallet/master.js' %}"></script>
-        {% else %}
-            <script src="{% static 'admin/folder/js/wallet/search.js' %}"></script>
-            <script src="{% static 'admin/folder/js/wallet/management.js' %}"></script>
-        {% endif %}
-
-        {% if messages %}
+    {% if chart_master %}
+        <script src="{% static 'admin/folder/js/wallet/chart.js' %}"></script>
+        {% if income %}
             <script>
-                {% for message in messages %}
-                    {% if message.tags == 'error' %}
-                        $.toast({
-                                heading: 'Failed ',
-                                text: '{{message}}',
-                                position: 'top-right',
-                                loaderBg: '#fc4b6c !important',
-                                icon: 'error',
-                                hideAfter: 8000
-
-                        });
-                    {% else %}
-                        $.toast({
-                                {% if message.tags == 'success' %}
-                                    heading: 'Success',
-                                {% else %}
-                                    heading: 'Updated',
-                                {% endif %}
-                                text: '{{message}}',
-                                position: 'top-right',
-                                loaderBg: '#fc4b6c !important',
-                                icon: 'success',
-                                hideAfter: 8000
-
-                        });
-                    {% endif %}
-                {% endfor %}
+                chart_shows(
+                    {% autoescape off %}{{names}}{% endautoescape %},
+                    [{{total_income}}]
+                );
             </script>
         {% endif %}
-        {% if request.session.private_admin %}
+
+        {% if expense %}
+            <script>
+                chart_shows_1(
+                    {% autoescape off %}{{names_}}{% endautoescape %},
+                    [{{total_expense}}]
+                );
+            </script>
+        {% endif %}
+
+    {% endif %}
 
 
 
-            <script type="text/javascript" >
+    <!-- popper -->
+    <script src="{% static 'admin/folder/assets/vendor_components/popper/dist/popper.min.js' %}"></script>
 
+    <!-- Bootstrap 4.0-->
+    <script src="{% static 'admin/folder/assets/vendor_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>
 
-                 window.onload = function exampleFunction(){
-                    // try{
-                    //      $('#myTable').DataTable();
-                    // }
-                    // catch (error) {
-                    //
-                    // }
-                    // try{
-                    //     $('#myTable_1').DataTable();
-                    // }
-                    // catch (error) {
-                    //
-                    // }
-                    // try{
-                    //     $('#myTable_2').DataTable();
-                    // }
-                    // catch (error) {
-                    //
-                    // }
-                    var sum = 0;
-                    var subtraction = 0;
-                    var final = 0;
-                    var final_1 = 0;
-                    var count_1 = 0;
-                    {% for i in list %}
-                        count_1 += 1
-                        {% if i.type.type_name == 'Available' or i.type.type_name == 'Income'%}
-                            final_1 += 1
-                            sum += {{ i.amount }};
+    <!-- SlimScroll -->
+    <script src="{% static 'admin/folder/assets/vendor_components/jquery-slimscroll/jquery.slimscroll.min.js' %}"></script>
+
+    <!-- FastClick -->
+    <script src="{% static 'admin/folder/assets/vendor_components/fastclick/lib/fastclick.js' %}"></script>
+
+    <!-- Fab Admin App -->
+    <script src="{% static 'admin/folder/js/template.js' %}"></script>
+
+    <!-- Fab Admin for demo purposes -->
+    <script src="{% static 'admin/folder/js/demo.js' %}"></script>
+    <script src="{% static 'admin/folder/js/pages/data-table.js' %}"></script>
+
+    <script src="{% static 'admin/folder/assets/vendor_components/datatable/datatables.min.js' %}"></script>
+    <script src="{% static 'admin/folder/assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js' %}"></script>
+    <script src="{% static 'admin/folder/assets/vendor_components/sweetalert/sweetalert.min.js' %}"></script>
+
+    {% if cat_master %}
+        <script src="{% static 'admin/folder/js/wallet/master.js' %}"></script>
+    {% else %}
+        <script src="{% static 'admin/folder/js/wallet/search.js' %}"></script>
+        <script src="{% static 'admin/folder/js/wallet/management.js' %}"></script>
+    {% endif %}
+
+    {% if messages %}
+        <script>
+            {% for message in messages %}
+                {% if message.tags == 'error' %}
+                    $.toast({
+                        heading: 'Failed ',
+                        text: '{{message}}',
+                        position: 'top-right',
+                        loaderBg: '#fc4b6c !important',
+                        icon: 'error',
+                        hideAfter: 8000
+
+                    });
+                {% else %}
+                    $.toast({
+                        {% if message.tags == 'success' %}
+                            heading: 'Success',
                         {% else %}
-                            {% if i.type.type_name == 'Expense' %}
-                                final_1 += 1
-                                subtraction += {{ i.amount }};
+                            heading: 'Updated',
+                        {% endif %}
+                        text: '{{message}}',
+                        position: 'top-right',
+                        loaderBg: '#fc4b6c !important',
+                        icon: 'success',
+                        hideAfter: 8000
+
+                    });
+                {% endif %}
+            {% endfor %}
+        </script>
+    {% endif %}
+    {% if request.session.private_admin %}
+
+
+
+        <script type="text/javascript">
+
+
+            window.onload = function exampleFunction() {
+                // try{
+                //      $('#myTable').DataTable();
+                // }
+                // catch (error) {
+                //
+                // }
+                // try{
+                //     $('#myTable_1').DataTable();
+                // }
+                // catch (error) {
+                //
+                // }
+                // try{
+                //     $('#myTable_2').DataTable();
+                // }
+                // catch (error) {
+                //
+                // }
+                var sum = 0;
+                var subtraction = 0;
+                var final = 0;
+                var final_1 = 0;
+                var count_1 = 0;
+                {% for i in list %}
+                    count_1 += 1
+                    {% if i.type.type_name == 'Available' or i.type.type_name == 'Income'%}
+                        final_1 += 1
+                        sum += {{ i.amount }};
+                    {% else %}
+                        {% if i.type.type_name == 'Expense' %}
+                            final_1 += 1
+                            subtraction += {{ i.amount }};
+                        {% else %}
+                            final += 1
+                            {% if private_master %}
                             {% else %}
-                                final += 1
-                                {% if private_master %}
+                                {% if i.from_account.account_name == main %}
+                                    subtraction += {{ i.amount }};
                                 {% else %}
-                                    {% if i.from_account.account_name == main %}
-                                        subtraction += {{ i.amount }};
-                                    {% else %}
-                                        sum += {{ i.amount }};
-                                    {% endif %}
+                                    sum += {{ i.amount }};
                                 {% endif %}
                             {% endif %}
                         {% endif %}
-                    {% endfor %}
-                     if ( final_1 >= 1){
-                         $("#nodatass").css('display', 'none');
-                     }
-                     else{
-                        $("#nodatass").css('display', 'block');
-                        $("#nodatass").css('text-align', '-webkit-center');
-                     }
-                     if ( final >= 1){
-                        $("#nodatass_1").css('display', 'none');
-                     }
-                     else{
-                        $("#nodatass_1").css('display', 'block');
-                        $("#nodatass_1").css('text-align', '-webkit-center');
-                     }
-                    var result = sum - subtraction;
-                    $("#balance-1").val(sum);
-                    $("#balance-2").val(subtraction);
-                    if ( sum === 0){
-                    }
-                    else{
-                        $("#balance-3").val(result);
-                    }
-
-                    $("#count_1").val(count_1);
+                    {% endif %}
+                {% endfor %}
+                if (final_1 >= 1) {
+                    $("#nodatass").css('display', 'none');
+                } else {
+                    $("#nodatass").css('display', 'block');
+                    $("#nodatass").css('text-align', '-webkit-center');
                 }
-            </script>
-        {% else %}
-            <script>
-                 window.onload = function exampleFunction(){
-                     window.location.href = '/';
+                if (final >= 1) {
+                    $("#nodatass_1").css('display', 'none');
+                } else {
+                    $("#nodatass_1").css('display', 'block');
+                    $("#nodatass_1").css('text-align', '-webkit-center');
                 }
-            </script>
-        {% endif %}
+                var result = sum - subtraction;
+                $("#balance-1").val(sum);
+                $("#balance-2").val(subtraction);
+                if (sum === 0) {
+                } else {
+                    $("#balance-3").val(result);
+                }
+
+                $("#count_1").val(count_1);
+            }
+        </script>
+    {% else %}
+        <script>
+            window.onload = function exampleFunction() {
+                window.location.href = '/';
+            }
+        </script>
+    {% endif %}
 
 
-    </body>
+</body>
 
 </html>

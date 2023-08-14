@@ -1,4 +1,3 @@
-from django.contrib.auth import views as auth_views
 from django.urls import path
 
 from . import views
@@ -16,6 +15,6 @@ urlpatterns = [
              template_name='password_reset_confirm.html',
              success_url='/',
          ),
-         name='password_reset_confirmm'
-     ),
+         name='password_reset_confirm'
+         ),
 ]
