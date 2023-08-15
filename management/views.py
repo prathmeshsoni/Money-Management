@@ -18,7 +18,7 @@ from Types.models import TypeModel
 from User.models import Profile
 from account.models import AccountModel
 from category.models import CategoryModel
-from wallet.config import *
+from wallet.config import account_sid, auth_token, from_number, to_number
 from .forms import ManageForm
 from .models import ManageModel
 from .serializer import ManageSerialize, ManageSerialize_1

@@ -13,7 +13,7 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 
 from management.views import custom_login_required_not, sent_massages
-from wallet.config import *
+from wallet.config import sender_email, sender_password
 from .models import *
 
 

@@ -6,8 +6,6 @@ USER = 'USERNAME',
 PASSWORD = 'PASSWORD',
 
 # Sending Email Config
-smtp_server = 'smtp.gmail.com'
-smtp_port = 587
 sender_email = 'Your Email'
 sender_password = 'Email Password'
 
