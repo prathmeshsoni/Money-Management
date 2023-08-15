@@ -1,4 +1,5 @@
 import json
+import os
 from datetime import datetime, timedelta
 
 from django.contrib import messages
@@ -23,7 +24,6 @@ from .forms import ManageForm
 from .models import ManageModel
 from .serializer import ManageSerialize, ManageSerialize_1
 
-import os
 
 # 404 Page Not Found
 def page_not_found_view(request, exception):
@@ -832,6 +832,7 @@ def view_category(request, hid):
 
 
 # User Massage Log File
+@custom_login_required
 def user_log(request):
     user_obj = get_user_obj(request)
     if user_obj.username.lower() == 'admin':
@@ -846,7 +847,6 @@ def user_log(request):
         return response
     else:
         return redirect('/view/')
-
 
 
 # Logout Every 30 minutes
