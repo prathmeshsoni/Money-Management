@@ -1,10 +1,3 @@
-# Database Config
-ENGINE = 'django.db.backends.mysql',
-NAME = 'HOSTNAME',
-HOST = 'localhost',
-USER = 'USERNAME',
-PASSWORD = 'PASSWORD',
-
 # Sending Email Config
 sender_email = 'Your Email'
 sender_password = 'Email Password'

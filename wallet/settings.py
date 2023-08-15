@@ -13,8 +13,6 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 
-from wallet.config import ENGINE, NAME, HOST, USER, PASSWORD
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -82,16 +80,23 @@ WSGI_APPLICATION = 'wallet.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
+
+"""
+    Mysql Database
+"""
 DATABASES = {
     'default': {
-        'ENGINE': ENGINE,
-        'NAME': NAME,
-        'HOST': HOST,
-        'USER': USER,
-        'PASSWORD': PASSWORD,
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'db_NAME',
+        'HOST': 'localhost',
+        'USER': 'db_USER',
+        'PASSWORD': 'db_PASSWORD',
     },
 }
 
+"""
+    Sqlite Database
+"""
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
