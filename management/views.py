@@ -157,7 +157,7 @@ def user_details(request, t_type):
         doe = ''
     item['Type'] = t_type
     item['Username'] = request.session['private_admin']
-    item['current time'] = datetime.now().strftime("%I:%M %p %d %B %Y")
+    item['current time'] = (datetime.now() + timedelta(hours=5, minutes=30)).strftime("%I:%M %p %d %B %Y")
     item[f'{doe.upper()}'] = f'{user_agent.os.family} {user_agent.os.version_string}'
     try:
         item[f'{user_agent.browser.family}'] = user_agent.browser.version_string
@@ -837,7 +837,7 @@ def user_log(request):
     user_obj = get_user_obj(request)
     if user_obj.username.lower() == 'admin':
         path = os.getcwd()
-        json_file_path = path + '\\login details.json'  # Update with the actual path
+        json_file_path = path + '/login details.json'  # Update with the actual path
 
         with open(json_file_path, 'r') as json_file:
             data = json.load(json_file)
