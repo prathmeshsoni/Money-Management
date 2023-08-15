@@ -1,0 +1,116 @@
+{% extends 'masterpage/index-1.html' %}
+{% block title3 %} User Loger Page {% endblock %}
+{% load static %}
+{% block content %}
+
+
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Poppins:weight@100;200;300;400;500;600;700;800&display=swap");
+
+
+        body {
+            background-color: #eee;
+            font-family: "Poppins", sans-serif;
+            font-weight: 300;
+        }
+
+        .search {
+            position: relative;
+            box-shadow: 0 0 40px rgba(51, 51, 51, .1);
+
+        }
+
+        .search input {
+
+            height: 60px;
+            text-indent: 25px;
+            border: 2px solid #d6d4d4;
+
+
+        }
+
+
+        .search input:focus {
+
+            box-shadow: none;
+            border: 2px solid blue;
+
+
+        }
+
+        .search .fa-search {
+
+            position: absolute;
+            top: 20px;
+            left: 16px;
+
+        }
+
+        .search button {
+
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            height: 50px;
+            width: 110px;
+            background: blue;
+
+        }
+    </style>
+
+    <!-- Main content -->
+    <div class="content-wrapper">
+
+        <section class="content-header">
+            <div class="row">
+                <div class="col-md-3">
+                    <h5 class="card-title">
+                        Loger Master
+                    </h5>
+                </div>
+                <div class="col-md-3">
+                </div>
+                <div class="col-md-2">
+                </div>
+                <div class="col-md-4" style=" padding-top:12px; ">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/view/"><i class="fa fa-dashboard"></i> Home</a></li>
+                        <li class="breadcrumb-item">
+                            <a href="javascript:void(0)">
+                                <i class="fa fa-search"></i>
+                                Loger Master
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item active text-capitalize">
+                            User Loger Page
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <form method="POST" onsubmit="user_log()">
+            {% csrf_token %}
+            <button type="submit" id="user_log_form"></button>
+        </form>
+        <section class="content" style="height: 70%;">
+            <div style="background-color: #ffffff;
+            margin: 0;
+            height: -webkit-fill-available;
+            width: -webkit-fill-available;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 99;
+            top: 0;
+            left: 0;" id="login_loader">
+                <img src="{% static 'user/folder/assets/images/loader.gif' %}" style="max-height: 130px;" alt="loader">
+            </div>
+
+
+        </section>
+        <!-- /.content -->
+    </div>
+
+    <!-- sample modal content -->
+{% endblock %}
