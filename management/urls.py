@@ -19,6 +19,7 @@ urlpatterns = [
     path('view/type/<str:hid>/', views.view_type),
     path('view/account/<str:hid>/', views.view_account),
     path('view/category/<str:hid>/', views.view_category),
+    path('user-log/', views.user_log),
     path('change-password/', views.custom_change_password, name='change_password')
     # path('remove_photo/<int:hid>',views.remove_photo),
     # path('download_data/', views.download_data),

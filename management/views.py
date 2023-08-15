@@ -23,6 +23,7 @@ from .forms import ManageForm
 from .models import ManageModel
 from .serializer import ManageSerialize, ManageSerialize_1
 
+import os
 
 # 404 Page Not Found
 def page_not_found_view(request, exception):
@@ -143,7 +144,7 @@ def get_date_data(b, check):
 
 
 # User Massage
-def user_details(request):
+def user_details(request, t_type):
     user_agent = get_user_agent(request)
     item = {}
     if user_agent.is_mobile:
@@ -154,6 +155,7 @@ def user_details(request):
         doe = 'pc'
     else:
         doe = ''
+    item['Type'] = t_type
     item['Username'] = request.session['private_admin']
     item['current time'] = datetime.now().strftime("%I:%M %p %d %B %Y")
     item[f'{doe.upper()}'] = f'{user_agent.os.family} {user_agent.os.version_string}'
@@ -161,10 +163,22 @@ def user_details(request):
         item[f'{user_agent.browser.family}'] = user_agent.browser.version_string
     except Exception as e:
         item['Error'] = e
+    item['demo'] = user_agent.device.family, user_agent.device.brand, user_agent.device.model
 
-    file_path = 'login details'
+    file_path = 'login details.txt'
     with open(file_path, "a") as file:
         file.write(f"{item}\n")
+
+    file_path_1 = 'login details.json'
+    try:
+        with open(file_path_1) as f:
+            data = json.load(f)
+    except:
+        data = []
+    data.append(item)
+
+    with open(file_path_1, 'w') as f:
+        json.dump(data, f)
 
 
 # Login Page
@@ -217,7 +231,7 @@ def admin_private(request):
             request.session['private_admin'] = user.username
             request.session['private_id'] = user11.id
             request.session['login_time'] = datetime.now().timestamp()
-            user_details(request)
+            user_details(request, "LOGIN")
             return redirect('/view/')
 
     return render(request, 'login.html', {"Title": ""})
@@ -226,7 +240,7 @@ def admin_private(request):
 # Logout Page
 def logout_private_admin(request):
     if 'private_admin' in request.session:
-        user_details(request)
+        user_details(request, "LOGOUT")
         del request.session['private_admin']
     if 'login_time' in request.session:
         del request.session['login_time']
@@ -288,7 +302,7 @@ def admin_private_view(request, template_name):
                     msg = f'\n\nDear UPI User, ur A/c {account_txt} Credited by Rs.{amount_txt} on {date_text} for ' \
                           f'{note_txt} Avl Bal Rs:{final_amount_1} -{account_txt} Bank'
 
-                user_details(request)
+                user_details(request, 'Transaction add')
                 sent_massages(msg)
 
             private_data = d.save(commit=False)
@@ -675,10 +689,13 @@ def check_balance(request):
     user_obj = get_user_obj(request)
     account_list = account_value(user_obj, '')
 
+    amount = 0
     msg = '\n\nAvailable Balance : \n\n'
     for item in account_list:
-        msg = msg + item['account_name'] + f' Rs: ' + str(item['amount']) + '\n'
+        amount += item['amount']
+        msg += item['account_name'] + f' Rs: ' + str(item['amount']) + ' ₹ \n'
 
+    msg += f'\n Total Balance Rs: {amount} ₹'
     sent_massages(msg)
     messages.success(request, msg)
     return redirect('/view/')
@@ -812,6 +829,24 @@ def view_category(request, hid):
         'transfer_data': categorized_data,
     }
     return render(request, 'private_des.html', x)
+
+
+# User Massage Log File
+def user_log(request):
+    user_obj = get_user_obj(request)
+    if user_obj.username.lower() == 'admin':
+        path = os.getcwd()
+        json_file_path = path + '\\login details.json'  # Update with the actual path
+
+        with open(json_file_path, 'r') as json_file:
+            data = json.load(json_file)
+
+        response = JsonResponse(data, safe=False)
+
+        return response
+    else:
+        return redirect('/view/')
+
 
 
 # Logout Every 30 minutes
