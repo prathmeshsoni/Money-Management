@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import PasswordResetConfirmView
+from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
@@ -12,6 +13,7 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 
 from management.views import custom_login_required_not, sent_massages
+from wallet.config import *
 from .models import *
 
 
@@ -144,16 +146,16 @@ def forget_password(request):
                     sent_massages(
                         f'Forget Password ::\n\n https://money-manager.monarksoni.com/password-reset-confirm/{parameters["uid"]}/{parameters["token"]}/')
 
-                    # send_mail(
-                    #     subject=subject,
-                    #     message='',  # Since you're using an HTML template, message can be empty
-                    #     from_email=sender_email,
-                    #     recipient_list=[receiver_email],
-                    #     fail_silently=False,
-                    #     html_message=html_template,
-                    #     auth_user=sender_email,
-                    #     auth_password=sender_password,
-                    # )
+                    send_mail(
+                        subject=subject,
+                        message='',  # Since you're using an HTML template, message can be empty
+                        from_email=sender_email,
+                        recipient_list=[receiver_email],
+                        fail_silently=False,
+                        html_message=html_template,
+                        auth_user=sender_email,
+                        auth_password=sender_password,
+                    )
                 except:
                     pass
 

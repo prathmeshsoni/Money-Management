@@ -6,18 +6,19 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.backends import UserModel
 from django.contrib.auth.models import User
 from django.contrib.auth.views import PasswordChangeForm
-from twilio.rest import Client
 from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django_user_agents.utils import get_user_agent
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from twilio.rest import Client
 
 from Types.models import TypeModel
 from User.models import Profile
 from account.models import AccountModel
 from category.models import CategoryModel
+from wallet.config import *
 from .forms import ManageForm
 from .models import ManageModel
 from .serializer import ManageSerialize, ManageSerialize_1
@@ -206,10 +207,10 @@ def admin_private(request):
                 return redirect('/')
             if user.username == 'college':
                 try:
-                    demo = int(request.POST.get('check_1'))
+                    secret_password = int(request.POST.get('secret_password'))
                 except:
-                    demo = ''
-                if demo == 20092003:
+                    secret_password = ''
+                if secret_password == 20092003:
                     pass
                 else:
                     request.session['not_show'] = user.username
@@ -219,7 +220,7 @@ def admin_private(request):
             user_details(request)
             return redirect('/view/')
 
-    return render(request, 'login.html', {"checkcon": 10, "Title": ""})
+    return render(request, 'login.html', {"Title": ""})
 
 
 # Logout Page
@@ -244,7 +245,6 @@ def admin_private_view(request, template_name):
     import datetime
     user_obj = get_user_obj(request)
     if request.method == 'POST':
-        user_details(request)
         dat_ = request.POST.get('date-iss')
         try:
             id_1 = request.POST.get('id')
@@ -288,7 +288,8 @@ def admin_private_view(request, template_name):
                     msg = f'\n\nDear UPI User, ur A/c {account_txt} Credited by Rs.{amount_txt} on {date_text} for ' \
                           f'{note_txt} Avl Bal Rs:{final_amount_1} -{account_txt} Bank'
 
-                # sent_massage(msg)
+                user_details(request)
+                sent_massages(msg)
 
             private_data = d.save(commit=False)
             private_data.user = user_obj
@@ -328,8 +329,6 @@ def admin_private_view(request, template_name):
             'type_obj': type_obj,
             'private_master': 'master',
             'private_active': 'private_master',
-            "private_1": 0,
-            "checkcon": 10,
             'untransfer_data': categorized_data_1,
             'transfer_data': categorized_data,
             'month': parsed_date
@@ -474,8 +473,6 @@ def search_page(request):
                 'filter_name': filter_name
             }
             return JsonResponse(a, safe=False)
-            # a = {'status': True}
-            # return JsonResponse(a, safe=False)
         else:
             a = {'status': False}
             return JsonResponse(a, safe=False)
@@ -500,7 +497,6 @@ def search_page(request):
 # Chart Page
 @custom_login_required
 def chart_page(request, hid):
-    # import datetime
     date_ = "".join(hid).split('-')
     parsed_date = datetime.strptime(hid, "%Y-%m")
     month_ = date_[1]
@@ -683,7 +679,7 @@ def check_balance(request):
     for item in account_list:
         msg = msg + item['account_name'] + f' Rs: ' + str(item['amount']) + '\n'
 
-    # sent_massage(msg)
+    sent_massages(msg)
     messages.success(request, msg)
     return redirect('/view/')
 
@@ -746,8 +742,6 @@ def view_type(request, hid):
         'cat_obj': cat_obj,
         'account_obj': account_obj,
         'type_obj': type_obj,
-        "private_1": 0,
-        "checkcon": 0,
         "reletedtype": type_.id,
         "main": hid,
         'untransfer_data': categorized_data_1,
@@ -782,8 +776,6 @@ def view_account(request, hid):
         'cat_obj': cat_obj,
         'account_obj': account_obj,
         'type_obj': type_obj,
-        "private_1": 0,
-        "checkcon": 10,
         "reletedaccount": type_.id,
         "main": hid,
         'untransfer_data': categorized_data_1,
@@ -814,8 +806,6 @@ def view_category(request, hid):
         'cat_obj': cat_obj,
         'account_obj': account_obj,
         'type_obj': type_obj,
-        "private_1": 0,
-        "checkcon": 0,
         "reletedcat": type_.id,
         "main": hid,
         'untransfer_data': categorized_data_1,
@@ -847,13 +837,11 @@ def convert_date(date_str):
 
 
 def sent_massages(msg):
-    account_sid = 'AC3906f0671f92d822f886ebd6fdf66271'
-    auth_token = '98fb660fc0ac8d572e4d8abd3d57c2aa'
     client = Client(account_sid, auth_token)
     message = client.messages.create(
         body=msg,
-        from_='+15734982530',
-        to='+919157379996'
+        from_=from_number,
+        to=to_number
     )
 
 

@@ -10,13 +10,13 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
-from pathlib import Path
 import os
-from .config import *
+from pathlib import Path
+
+from wallet.config import *
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -28,7 +28,6 @@ SECRET_KEY = 'django-insecure-hpxpyx1s9-dl7+h6mdwf^69uy6kz7#jf2&l_k*2al&%=v9!si@
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -81,30 +80,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'wallet.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': ENGINE,
-#         'NAME': NAME,
-#         'HOST': HOST,
-#         'USER': USER,
-#         'PASSWORD': PASSWORD,
-#     },
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'wallet',
-        'USER': 'root',
-        'PASSWORD': 'password',
-        'HOST': 'localhost',  # Now it's a string
-        'PORT': '3306',
-    }
+        'ENGINE': ENGINE,
+        'NAME': NAME,
+        'HOST': HOST,
+        'USER': USER,
+        'PASSWORD': PASSWORD,
+    },
 }
 
 # DATABASES = {
@@ -132,7 +117,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -143,7 +127,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
@@ -159,10 +142,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/uploads/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
-
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'prathmesh.soni112@gmail.com'
-EMAIL_HOST_PASSWORD = 'cobykuwsrpnjbzqw'
