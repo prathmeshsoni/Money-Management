@@ -286,25 +286,47 @@
                     </ul>
                 </li>
             </ul>
+            {% if password_master == 'master' %}
+                <ul class="sidebar-menu" data-widget="tree">
+                    <li class="treeview {% if password_master == 'master' %} {{ 'menu-open' }} {% endif %} ">
+                        <a href="#">
+                            <i class="fa fa-lock"></i>
+                            <span>Password</span>
+                            <span class="pull-right-container">
+                              <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu {% if password_master == 'master' %} {{ 'res-tb-block mt-2' }} {% else %} {{ 'mt-2' }} {% endif %}">
+                            <li {% if password_active == 'password_master' %} class="active mb-1"
+                                                                              style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}
+                                                                              style="background: rgb(6 0 255 / 11%);"><a
+                                    href="/change-password/"><i
+                                    class="{% if password_active == 'password_master' %} {{ 'fa fa-circle' }} {% else %} {{ 'fa fa-circle-thin' }} {% endif %}"></i>Change
+                                Password</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            {% endif %}
+            {% if request.session.private_admin == 'admin' %}
             <ul class="sidebar-menu" data-widget="tree">
-                <li class="treeview {% if password_master == 'master' %} {{ 'menu-open' }} {% endif %} ">
+                <li class="treeview {% if log_master == 'master' %} {{ 'menu-open' }} {% endif %} ">
                     <a href="#">
-                        <i class="fa fa-lock"></i>
-                        <span>Password</span>
+                        <i class="fa fa-history"></i>
+                        <span>User Log</span>
                         <span class="pull-right-container">
                           <i class="fa fa-angle-right pull-right"></i>
                         </span>
                     </a>
-                    <ul class="treeview-menu {% if password_master == 'master' %} {{ 'res-tb-block mt-2' }} {% else %} {{ 'mt-2' }} {% endif %}">
-                        <li {% if password_active == 'password_master' %} class="active mb-1"
+                    <ul class="treeview-menu {% if log_master == 'master' %} {{ 'res-tb-block mt-2' }} {% else %} {{ 'mt-2' }} {% endif %}">
+                        <li {% if log_active == 'log_master' %} class="active mb-1"
                                                                           style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}
                                                                           style="background: rgb(6 0 255 / 11%);"><a
-                                href="/change-password/"><i
-                                class="{% if password_active == 'password_master' %} {{ 'fa fa-circle' }} {% else %} {{ 'fa fa-circle-thin' }} {% endif %}"></i>Change
-                            Password</a></li>
+                                href="/user-log/"><i
+                                class="{% if log_active == 'log_master' %} {{ 'fa fa-circle' }} {% else %} {{ 'fa fa-circle-thin' }} {% endif %}"></i>User Log Page</a></li>
                     </ul>
                 </li>
             </ul>
+            {% endif %}
 
 
         </section>
