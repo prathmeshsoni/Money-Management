@@ -204,7 +204,7 @@ function remove_all() {
 }
 
 function data_is() {
-    const f = document.querySelectorAll('#myTable_1 tbody tr[id*="date"] td');
+    const f = document.querySelectorAll('#myTable_1 tbody tr[id*="date"] td:first-child');
 
 
     for (var i = 0; i < f.length; i++) {
@@ -217,7 +217,7 @@ function data_is() {
         }
 
     }
-    var f_ = document.querySelectorAll('#myTable tbody tr[id*="date"] td');
+    var f_ = document.querySelectorAll('#myTable tbody tr[id*="date"] td:first-child');
 
 
     for (var i_ = 0; i_ < f_.length; i_++) {

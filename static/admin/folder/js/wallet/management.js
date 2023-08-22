@@ -33,7 +33,7 @@ function gettransaction() {
                         let date_name = data.not_transfer[i]['date']
 
                         transfer_table(data.not_transfer[i]['price'], date_name, 0, 2)
-                        transfer_table('', date_name, 0, 0)
+                        transfer_table(data.not_transfer[i]['price'], date_name, 0, 0)
 
                         for (var j = data.not_transfer[i]['data_list'].length - 1; j >= 0; j--) {
                             transfer_table(data.not_transfer[i]['data_list'][j], date_name, 0, 1)
@@ -47,7 +47,7 @@ function gettransaction() {
                     $('#nodatass_1').css('display', 'none')
                     for (var i = 0; i < data.transfer.length; i++) {
                         let date_name = data.transfer[i]['date']
-                        transfer_table('', date_name, 1, 0)
+                        transfer_table(data.transfer[i]['price'], date_name, 1, 0)
 
                         for (var j = data.transfer[i]['data_list'].length - 1; j >= 0; j--) {
                             transfer_table(data.transfer[i]['data_list'][j], date_name, 1, 1)
@@ -101,19 +101,17 @@ function transfer_table(dataArray, date_id, id, check) {
     } else if (check === 0) {
         const newRow_ = document.createElement("tr");
         newRow_.id = 'date-' + date_id;
-        newRow_.innerHTML = '<td>' + date_id + '</td>';
+        newRow_.style.background = '#e4f3ff';
+        newRow_.innerHTML = '<td>' + date_id + '</td>' +
+            '<td style="color:#000fff ;" >' + dataArray.temp_add + ' <i class="fa fa-rupee"></i></td>' +
+            '<td style="color:#ff0000 ;" >' + dataArray.temp_sub + ' <i class="fa fa-rupee"></i></td>' +
+            '<td colspan="4" ></td>';
         tableBody.insertBefore(newRow_, tableBody.firstChild);
     } else {
         var table = $('#myTable_2').DataTable();
-        var newData = [
-            '<td>' + date_id + '</td>'
-        ]
-        var newData1 = [
-            '<td><span class="income-cell">' + dataArray.temp_add + ' <i class="fa fa-rupee"></i></span></td>'
-        ]
-        var newData2 = [
-            '<td><span class="expense-cell">' + dataArray.temp_sub + ' <i class="fa fa-rupee"></i></span></td>'
-        ]
+        var newData = ['<td>' + date_id + '</td>']
+        var newData1 = ['<td><span class="income-cell">' + dataArray.temp_add + ' <i class="fa fa-rupee"></i></span></td>']
+        var newData2 = ['<td><span class="expense-cell">' + dataArray.temp_sub + ' <i class="fa fa-rupee"></i></span></td>']
         // var newData = [
         //   '<td>New Date 1</td>',
         //   '<td>New Price 1 <i class="fa fa-rupee"></i></td>',
@@ -144,27 +142,7 @@ function createTable(i, formattedDate, date_id, id) {
     var f_date = formatDate(i.date_name.replace('Z', ''))
     var f_date_1 = `${f_date[1]} ${f_date[0]}`;
     if (id === 1) {
-        return [(
-            '<td><i style="margin-right: 20px;" class="fa fa-info-circle" aria-hidden="true"></i></td>' +
-            '<td>' + f_date[0] + '</td>' +
-            '<td>' + i.from_account.account_name + '</td>' +
-            '<td>' + i.to_account.account_name + '</td>' +
-            '<td style="color: ' + color_ + ' !important;">' + i.amount + ' <i class="fa fa-rupee"></i></td>' +
-            '<td>' + i.note + '</td>' +
-            '<td>' +
-            '    <a href="javascript:void(0)" onclick="updateModel(' + i.id + ',' + 0 + ')" class="bg-info mr-2">' +
-            '        <span class="label label-success">\n' +
-            '            Edit\n' +
-            '    </span>' +
-            '    </a>' +
-            '    <a href="javascript:void(0)" onclick="Delete(' + i.id + ',' + 1 + ', \'' + f_date_1 + '\')" class="bg-info ml-2">' +
-            '        <span class="label label-danger">' +
-            '            Delete' +
-            '        </span>' +
-            '    </a>' +
-            '</td>' +
-            '<td name="' + date_id + '" style="display:none;" >' + date_id + '</td>'
-        ), che]
+        return [('<td><i style="margin-right: 20px;" class="fa fa-info-circle" aria-hidden="true"></i></td>' + '<td>' + f_date[0] + '</td>' + '<td>' + i.from_account.account_name + '</td>' + '<td>' + i.to_account.account_name + '</td>' + '<td style="color: ' + color_ + ' !important;">' + i.amount + ' <i class="fa fa-rupee"></i></td>' + '<td>' + i.note + '</td>' + '<td>' + '    <a href="javascript:void(0)" onclick="updateModel(' + i.id + ',' + 0 + ')" class="bg-info mr-2">' + '        <span class="label label-success">\n' + '            Edit\n' + '    </span>' + '    </a>' + '    <a href="javascript:void(0)" onclick="Delete(' + i.id + ',' + 1 + ', \'' + f_date_1 + '\')" class="bg-info ml-2">' + '        <span class="label label-danger">' + '            Delete' + '        </span>' + '    </a>' + '</td>' + '<td name="' + date_id + '" style="display:none;" >' + date_id + '</td>'), che, color_]
     } else {
         if (i.type.type_name.toLowerCase() === 'available' || i.type.type_name.toLowerCase() === 'income') {
             color_ = '#000fff'
@@ -174,27 +152,7 @@ function createTable(i, formattedDate, date_id, id) {
             che = '#f8cbcb';
         }
 
-        return [(
-            '<td><i style="margin-right: 20px;" class="fa fa-info-circle" aria-hidden="true"></i></td>' +
-            '<td>' + f_date[0] + '</td>' +
-            '<td>' + i.category.cat_name + '</td>' +
-            '<td>' + i.account.account_name + '</td>' +
-            '<td style="color: ' + color_ + ' !important;">' + i.amount + ' <i class="fa fa-rupee"></i></td>' +
-            '<td>' + i.note + '</td>' +
-            '<td>' +
-            '    <a href="javascript:void(0)" onclick="updateModel(' + i.id + ',' + 0 + ')" class="bg-info mr-2">' +
-            '        <span class="label label-success">\n' +
-            '            Edit\n' +
-            '    </span>' +
-            '    </a>' +
-            '    <a href="javascript:void(0)" onclick="Delete(' + i.id + ',' + 1 + ', \'' + f_date_1 + '\')" class="bg-info ml-2">' +
-            '        <span class="label label-danger">' +
-            '            Delete' +
-            '        </span>' +
-            '    </a>' +
-            '</td>' +
-            '<td name="' + date_id + '" style="display:none;" >' + date_id + '</td>'
-        ), che]
+        return [('<td><i style="margin-right: 20px;" class="fa fa-info-circle" aria-hidden="true"></i></td>' + '<td>' + f_date[0] + '</td>' + '<td>' + i.category.cat_name + '</td>' + '<td>' + i.account.account_name + '</td>' + '<td style="color: ' + color_ + ' !important;">' + i.amount + ' <i class="fa fa-rupee"></i></td>' + '<td>' + i.note + '</td>' + '<td>' + '    <a href="javascript:void(0)" onclick="updateModel(' + i.id + ',' + 0 + ')" class="bg-info mr-2">' + '        <span class="label label-success">\n' + '            Edit\n' + '    </span>' + '    </a>' + '    <a href="javascript:void(0)" onclick="Delete(' + i.id + ',' + 1 + ', \'' + f_date_1 + '\')" class="bg-info ml-2">' + '        <span class="label label-danger">' + '            Delete' + '        </span>' + '    </a>' + '</td>' + '<td name="' + date_id + '" style="display:none;" >' + date_id + '</td>'), che, color_]
     }
 }
 
@@ -282,10 +240,7 @@ function updateModel(id, chek_1) {
     $("#Addcategory")[0].reset();
     var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
     $.ajax({
-        url: '/updatepra/',
-        method: 'POST',
-        data: {'id': id, csrfmiddlewaretoken: csrf_token},
-        dataType: 'JSON',
+        url: '/updatepra/', method: 'POST', data: {'id': id, csrfmiddlewaretoken: csrf_token}, dataType: 'JSON',
 
         success: function (data) {
             $('[name="id"]').val(data.id);
@@ -440,8 +395,7 @@ function openForm_test() {
             var optionValues = [];
             $('#id_catname_id option').each(function () {
                 var option = {
-                    "name": $(this).val(),
-                    "id": $(this).attr('id')
+                    "name": $(this).val(), "id": $(this).attr('id')
                 }
                 optionValues.push(option);
             });
@@ -449,11 +403,7 @@ function openForm_test() {
             var optionValues_final = JSON.stringify(optionValues)
             formData.push({name: 'option_values', value: optionValues_final});
             $.ajax({
-                url: '/viewe/',
-                method: 'POST',
-                data: formData,
-                dataType: 'JSON',
-                success: function (data) {
+                url: '/viewe/', method: 'POST', data: formData, dataType: 'JSON', success: function (data) {
                     if (data.status === true) {
                         var selectElement = document.getElementById('id_catname_id');
 
@@ -620,7 +570,10 @@ function renderTableRows(dataArray, id) {
     } else {
         const newRow_ = document.createElement("tr");
         newRow_.id = 'date-' + formattedDate[1];
-        newRow_.innerHTML = '<td>' + formattedDate[1] + '</td>';
+        newRow_.style.background = '#e4f3ff';
+        newRow_.innerHTML = '<td>' + formattedDate[1] + '</td>' +
+            '<td style="color:'+ rowHTML[2] +' ;" >' + dataArray.amount + ' <i class="fa fa-rupee"></i></td>' +
+            '<td colspan="5" ></td>';
         tableBody.insertBefore(newRow_, tableBody.firstChild);
         rows = tableBody.querySelector('[id="date-' + formattedDate[1] + '"]')
     }
@@ -676,27 +629,7 @@ function createTableRow(i, formattedDate, id) {
             }
         }
 
-        return [(
-            '<td><i style="margin-right: 20px;" class="fa fa-info-circle" aria-hidden="true"></i></td>' +
-            '<td>' + formattedDate[0] + '</td>' +
-            '<td>' + i.from_account + '</td>' +
-            '<td>' + i.to_account + '</td>' +
-            '<td style="color: ' + color_ + ' !important;">' + i.amount + ' <i class="fa fa-rupee"></i></td>' +
-            '<td>' + i.note + '</td>' +
-            '<td>' +
-            '    <a href="javascript:void(0)" onclick="updateModel(' + id + ',' + 0 + ')" class="bg-info mr-2">' +
-            '        <span class="label label-success">\n' +
-            '            Edit\n' +
-            '    </span>' +
-            '    </a>' +
-            '    <a href="javascript:void(0)" onclick="Delete(' + id + ',' + 1 + ', \'' + formattedDate_1 + '\')" class="bg-info ml-2">' +
-            '        <span class="label label-danger">' +
-            '            Delete' +
-            '        </span>' +
-            '    </a>' +
-            '</td>' +
-            '<td name="' + formattedDate[1] + '" style="display:none;" >' + formattedDate[1] + '</td>'
-        ), che]
+        return [('<td><i style="margin-right: 20px;" class="fa fa-info-circle" aria-hidden="true"></i></td>' + '<td>' + formattedDate[0] + '</td>' + '<td>' + i.from_account + '</td>' + '<td>' + i.to_account + '</td>' + '<td style="color: ' + color_ + ' !important;">' + i.amount + ' <i class="fa fa-rupee"></i></td>' + '<td>' + i.note + '</td>' + '<td>' + '    <a href="javascript:void(0)" onclick="updateModel(' + id + ',' + 0 + ')" class="bg-info mr-2">' + '        <span class="label label-success">\n' + '            Edit\n' + '    </span>' + '    </a>' + '    <a href="javascript:void(0)" onclick="Delete(' + id + ',' + 1 + ', \'' + formattedDate_1 + '\')" class="bg-info ml-2">' + '        <span class="label label-danger">' + '            Delete' + '        </span>' + '    </a>' + '</td>' + '<td name="' + formattedDate[1] + '" style="display:none;" >' + formattedDate[1] + '</td>'), che, color_]
     } else {
         var color_ = ''
         var che = 0;
@@ -711,27 +644,7 @@ function createTableRow(i, formattedDate, id) {
             che = '#a3a6a4';
         }
 
-        return [(
-            '<td><i style="margin-right: 20px;" class="fa fa-info-circle" aria-hidden="true"></i></td>' +
-            '<td>' + formattedDate[0] + '</td>' +
-            '<td>' + i.category + '</td>' +
-            '<td>' + i.account + '</td>' +
-            '<td style="color: ' + color_ + ' !important;">' + i.amount + ' <i class="fa fa-rupee"></i></td>' +
-            '<td>' + i.note + '</td>' +
-            '<td>' +
-            '    <a href="javascript:void(0)" onclick="updateModel(' + id + ',' + 0 + ')" class="bg-info mr-2">' +
-            '        <span class="label label-success">\n' +
-            '            Edit\n' +
-            '    </span>' +
-            '    </a>' +
-            '    <a href="javascript:void(0)" onclick="Delete(' + id + ',' + 1 + ', \'' + formattedDate_1 + '\')" class="bg-info ml-2">' +
-            '        <span class="label label-danger">' +
-            '            Delete' +
-            '        </span>' +
-            '    </a>' +
-            '</td>' +
-            '<td name="' + formattedDate[1] + '" style="display:none;" >' + formattedDate[1] + '</td>'
-        ), che]
+        return [('<td><i style="margin-right: 20px;" class="fa fa-info-circle" aria-hidden="true"></i></td>' + '<td>' + formattedDate[0] + '</td>' + '<td>' + i.category + '</td>' + '<td>' + i.account + '</td>' + '<td style="color: ' + color_ + ' !important;">' + i.amount + ' <i class="fa fa-rupee"></i></td>' + '<td>' + i.note + '</td>' + '<td>' + '    <a href="javascript:void(0)" onclick="updateModel(' + id + ',' + 0 + ')" class="bg-info mr-2">' + '        <span class="label label-success">\n' + '            Edit\n' + '    </span>' + '    </a>' + '    <a href="javascript:void(0)" onclick="Delete(' + id + ',' + 1 + ', \'' + formattedDate_1 + '\')" class="bg-info ml-2">' + '        <span class="label label-danger">' + '            Delete' + '        </span>' + '    </a>' + '</td>' + '<td name="' + formattedDate[1] + '" style="display:none;" >' + formattedDate[1] + '</td>'), che, color_]
     }
 }
 
@@ -890,8 +803,7 @@ function handleToAccountChange() {
     var a = $('#id_to_account').val();
     $('#id_from_account option[value="' + a + '"]').prop('disabled', true);
     $('#id_from_account option[value!="' + a + '"]').prop('disabled', false);
-};
-document.getElementById('id_to_account').onchange = handleToAccountChange;
+};document.getElementById('id_to_account').onchange = handleToAccountChange;
 
 
 function handleFromAccountChange() {
