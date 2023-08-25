@@ -137,8 +137,15 @@
 
                 <li class="user-profile treeview">
                     <a href="javascript:void(0)" style="padding: 15px 10px 15px 8px !important; ">
-                        <img src="{% static 'user/folder/assets/images/avtar/user.jpg' %}"
-                             style="width: 40px !important;height: 41px !important;" class="rounded-circle" alt="">
+                        {% if request.session.private_admin == 'admin' %}
+                            <img src="{% static 'user/folder/assets/images/avtar/krishna.gif' %}"
+                                 style="width: 40px !important;height: 41px !important;" class="rounded-circle"
+                                 alt="GIF">
+                        {% else %}
+                            <img src="{% static 'user/folder/assets/images/avtar/user.jpg' %}"
+                                 style="width: 40px !important;height: 41px !important;" class="rounded-circle" alt="">
+                        {% endif %}
+
                         <span style="color: black;">
                             {% if request.session.private_admin %} {{ request.session.private_admin }}{% endif %}
                             <input type="hidden" name="count_1" id="count_1" value=""/>
@@ -308,24 +315,25 @@
                 </ul>
             {% endif %}
             {% if request.session.private_admin == 'admin' %}
-            <ul class="sidebar-menu" data-widget="tree">
-                <li class="treeview {% if log_master == 'master' %} {{ 'menu-open' }} {% endif %} ">
-                    <a href="#">
-                        <i class="fa fa-history"></i>
-                        <span>User Log</span>
-                        <span class="pull-right-container">
+                <ul class="sidebar-menu" data-widget="tree">
+                    <li class="treeview {% if log_master == 'master' %} {{ 'menu-open' }} {% endif %} ">
+                        <a href="#">
+                            <i class="fa fa-history"></i>
+                            <span>User Log</span>
+                            <span class="pull-right-container">
                           <i class="fa fa-angle-right pull-right"></i>
                         </span>
-                    </a>
-                    <ul class="treeview-menu {% if log_master == 'master' %} {{ 'res-tb-block mt-2' }} {% else %} {{ 'mt-2' }} {% endif %}">
-                        <li {% if log_active == 'log_master' %} class="active mb-1"
-                                                                          style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}
-                                                                          style="background: rgb(6 0 255 / 11%);"><a
-                                href="/user-log/"><i
-                                class="{% if log_active == 'log_master' %} {{ 'fa fa-circle' }} {% else %} {{ 'fa fa-circle-thin' }} {% endif %}"></i>User Log Page</a></li>
-                    </ul>
-                </li>
-            </ul>
+                        </a>
+                        <ul class="treeview-menu {% if log_master == 'master' %} {{ 'res-tb-block mt-2' }} {% else %} {{ 'mt-2' }} {% endif %}">
+                            <li {% if log_active == 'log_master' %} class="active mb-1"
+                                                                    style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}
+                                                                    style="background: rgb(6 0 255 / 11%);"><a
+                                    href="/user-log/"><i
+                                    class="{% if log_active == 'log_master' %} {{ 'fa fa-circle' }} {% else %} {{ 'fa fa-circle-thin' }} {% endif %}"></i>User
+                                Log Page</a></li>
+                        </ul>
+                    </li>
+                </ul>
             {% endif %}
 
 
@@ -527,14 +535,16 @@
                                                     Add Category
                                                 </label>
                                                 <div>
-                                                    <input type="text" name="newOptionInput" placeholder="Enter Amount..."
+                                                    <input type="text" name="newOptionInput"
+                                                           placeholder="Enter Amount..."
                                                            class="numberinput form-control" id="newOptionInput"
                                                            onkeyup="check_val()">
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-3" style="display: none;" id="add-cat-1">
-                                            <button type="button" class="btn btn-primary mt-4" id="addButton">Add</button>
+                                            <button type="button" class="btn btn-primary mt-4" id="addButton">Add
+                                            </button>
                                             <button type="button" class="btn btn-primary mt-4" id="deleteButton"
                                                     style="display: none;">Delete
                                             </button>
@@ -701,57 +711,57 @@
                 // catch (error) {
                 //
                 // }
-            {% if user_log_master %}
-            {% else %}
-                var sum = 0;
-                var subtraction = 0;
-                var final = 0;
-                var final_1 = 0;
-                var count_1 = 0;
-                {% for i in list %}
-                    count_1 += 1
-                    {% if i.type.type_name == 'Available' or i.type.type_name == 'Income'%}
-                        final_1 += 1
-                        sum += {{ i.amount }};
-                    {% else %}
-                        {% if i.type.type_name == 'Expense' %}
+                {% if user_log_master %}
+                {% else %}
+                    var sum = 0;
+                    var subtraction = 0;
+                    var final = 0;
+                    var final_1 = 0;
+                    var count_1 = 0;
+                    {% for i in list %}
+                        count_1 += 1
+                        {% if i.type.type_name == 'Available' or i.type.type_name == 'Income'%}
                             final_1 += 1
-                            subtraction += {{ i.amount }};
+                            sum += {{ i.amount }};
                         {% else %}
-                            final += 1
-                            {% if private_master %}
+                            {% if i.type.type_name == 'Expense' %}
+                                final_1 += 1
+                                subtraction += {{ i.amount }};
                             {% else %}
-                                {% if i.from_account.account_name == main %}
-                                    subtraction += {{ i.amount }};
+                                final += 1
+                                {% if private_master %}
                                 {% else %}
-                                    sum += {{ i.amount }};
+                                    {% if i.from_account.account_name == main %}
+                                        subtraction += {{ i.amount }};
+                                    {% else %}
+                                        sum += {{ i.amount }};
+                                    {% endif %}
                                 {% endif %}
                             {% endif %}
                         {% endif %}
-                    {% endif %}
-                {% endfor %}
-                if (final_1 >= 1) {
-                    $("#nodatass").css('display', 'none');
-                } else {
-                    $("#nodatass").css('display', 'block');
-                    $("#nodatass").css('text-align', '-webkit-center');
-                }
-                if (final >= 1) {
-                    $("#nodatass_1").css('display', 'none');
-                } else {
-                    $("#nodatass_1").css('display', 'block');
-                    $("#nodatass_1").css('text-align', '-webkit-center');
-                }
-                var result = sum - subtraction;
-                $("#balance-1").val(sum);
-                $("#balance-2").val(subtraction);
-                if (sum === 0) {
-                } else {
-                    $("#balance-3").val(result);
-                }
+                    {% endfor %}
+                    if (final_1 >= 1) {
+                        $("#nodatass").css('display', 'none');
+                    } else {
+                        $("#nodatass").css('display', 'block');
+                        $("#nodatass").css('text-align', '-webkit-center');
+                    }
+                    if (final >= 1) {
+                        $("#nodatass_1").css('display', 'none');
+                    } else {
+                        $("#nodatass_1").css('display', 'block');
+                        $("#nodatass_1").css('text-align', '-webkit-center');
+                    }
+                    var result = sum - subtraction;
+                    $("#balance-1").val(sum);
+                    $("#balance-2").val(subtraction);
+                    if (sum === 0) {
+                    } else {
+                        $("#balance-3").val(result);
+                    }
 
-                $("#count_1").val(count_1);
-            {% endif %}
+                    $("#count_1").val(count_1);
+                {% endif %}
             }
         </script>
     {% else %}
