@@ -518,6 +518,33 @@ def chart_page(request, hid):
     month_ = date_[1]
     year_ = date_[0]
 
+    item = chart_main(request, month_, year_, 0)
+    item['month'] = parsed_date
+    return render(
+        request,
+        'chart-page.html',
+        item
+    )
+
+
+# Chart Page
+@custom_login_required
+def chart_page_1(request):
+    import datetime
+    year_ = datetime.datetime.now().strftime("%Y")
+
+    item = chart_main(request, '', year_, 1)
+    item['month_'] = year_
+    return render(
+        request,
+        'chart-page.html',
+        item
+    )
+    #
+    # return redirect(f'/chart/{datee}/')
+
+
+def chart_main(request, month_, year_, condition):
     user_obj = get_user_obj(request)
     d, cat_obj, account_obj, type_obj = get_forms(user_obj)
     total_ = 0
@@ -530,7 +557,10 @@ def chart_page(request, hid):
         ll = "".join(i.cat_name).strip()
 
         cat = CategoryModel.objects.get(id=i.id)
-        val = ManageModel.objects.filter(user=user_obj, category=cat, date_name__month=month_, date_name__year=year_)
+        if condition == 0:
+            val = ManageModel.objects.filter(user=user_obj, category=cat, date_name__month=month_, date_name__year=year_)
+        else:
+            val = ManageModel.objects.filter(user=user_obj, category=cat, date_name__year=year_)
         temp_income = 0
         temp_expense = 0
         for k in val:
@@ -567,21 +597,8 @@ def chart_page(request, hid):
         'account_obj': account_obj,
         'type_obj': type_obj,
         'm': d,
-        'month': parsed_date
     }
-    return render(
-        request,
-        'chart-page.html',
-        item
-    )
-
-
-# Chart Page
-@custom_login_required
-def chart_page_1(request):
-    import datetime
-    datee = datetime.datetime.now().strftime("%Y-%m")
-    return redirect(f'/chart/{datee}/')
+    return item
 
 
 # Add Category
@@ -692,12 +709,12 @@ def check_balance(request):
     account_list = account_value(user_obj, '')
 
     amount = 0
-    msg = '\n\nAvailable Balance : \n\n'
+    msg = '\n\n\n\nAvailable Balance : \n\n'
     for item in account_list:
         amount += item['amount']
         msg += item['account_name'] + f' Rs: ' + str(item['amount']) + ' ₹ \n'
 
-    msg += f'\n Total Balance Rs: {amount} ₹'
+    msg += f'\n\nTotal Balance Rs: {amount} ₹'
     sent_massages(msg)
     messages.success(request, msg)
     return redirect('/view/')

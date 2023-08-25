@@ -12,7 +12,7 @@ from django.urls import reverse_lazy
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 
-from management.views import custom_login_required_not, sent_massages, user_details
+from management.views import custom_login_required_not, sent_massages, user_details, AccountModel
 from wallet.config import *
 from .models import *
 import smtplib
@@ -147,6 +147,13 @@ def verify(request, auth_token):
             user_obj.is_staff = True
             user_obj.is_active = True
             user_obj.save()
+            try:
+                account_obj = AccountModel()
+                account_obj.account_name = 'cash'
+                account_obj.user = user_obj
+                account_obj.save()
+            except:
+                pass
             messages.success(request, 'Your account has been verified ✔.')
             return redirect('/')
     except:

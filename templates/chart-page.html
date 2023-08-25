@@ -44,7 +44,11 @@
                             <div class="box-body">
                                 <div class="text-center">
                                     <h3 class="text-muted db">
-                                        Data Of {{ month|date:"F Y" }}
+                                        {% if month %}
+                                            Data Of {{ month|date:"F Y" }}
+                                        {% else %}
+                                            Data Of {{ month_ }}
+                                        {% endif %}
                                     </h3>
                                 </div>
                             </div>
@@ -58,9 +62,16 @@
                                         <h3 class="text-muted db">
                                             <form method="post" id="chart_form">
                                                 <input type="hidden" id="chart-value" value='{{ month|date:"Y-m" }}'/>
-                                                <input type="month" name="chart-month" class="numberinput form-control"
-                                                       id="chart-month" value='{{ month|date:"Y-m" }}'
-                                                       onchange="getchart()"/>
+                                                <label for="chart-month" class="requiredField text-capitalize">
+                                                    Select month and Year
+                                                </label>
+                                                <div>
+                                                    <input type="month" name="chart-month"
+                                                           class="numberinput form-control"
+                                                           id="chart-month" value='{{ month|date:"Y-m" }}'
+                                                           onchange="getchart()"/>
+                                                </div>
+
                                                 {% csrf_token %}
                                             </form>
                                         </h3>
