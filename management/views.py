@@ -891,12 +891,15 @@ def convert_date(date_str):
 
 
 def sent_massages(msg):
-    client = Client(account_sid, auth_token)
-    message = client.messages.create(
-        body=msg,
-        from_=from_number,
-        to=to_number
-    )
+    try:
+        client = Client(account_sid, auth_token)
+        message = client.messages.create(
+            body=msg,
+            from_=from_number,
+            to=to_number
+        )
+    except:
+        pass
 
 
 def account_value(user_obj, a_name):
