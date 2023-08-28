@@ -1,10 +1,11 @@
+import smtplib
 import uuid
+from email.message import EmailMessage
 
 from django.contrib import messages
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import PasswordResetConfirmView
-from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
@@ -12,11 +13,20 @@ from django.urls import reverse_lazy
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 
-from management.views import custom_login_required_not, sent_massages, user_details, AccountModel
+from management.views import sent_massages, user_details, AccountModel
 from wallet.config import *
 from .models import *
-import smtplib
-from email.message import EmailMessage
+
+
+# Custom Login Not Required
+def custom_login_required_not(view_func):
+    def wrapper(request, *args, **kwargs):
+        if not request.session.get('private_admin'):
+            return view_func(request, *args, **kwargs)
+        else:
+            return redirect('/view/')
+
+    return wrapper
 
 
 # Registration Page for User

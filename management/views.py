@@ -1,6 +1,8 @@
 import json
 import os
+import smtplib
 from datetime import datetime, timedelta
+from email.message import EmailMessage
 
 from django.contrib import messages
 from django.contrib.auth import authenticate
@@ -13,7 +15,6 @@ from django.shortcuts import render, redirect
 from django_user_agents.utils import get_user_agent
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from twilio.rest import Client
 
 from Types.models import TypeModel
 from User.models import Profile
@@ -558,7 +559,8 @@ def chart_main(request, month_, year_, condition):
 
         cat = CategoryModel.objects.get(id=i.id)
         if condition == 0:
-            val = ManageModel.objects.filter(user=user_obj, category=cat, date_name__month=month_, date_name__year=year_)
+            val = ManageModel.objects.filter(user=user_obj, category=cat, date_name__month=month_,
+                                             date_name__year=year_)
         else:
             val = ManageModel.objects.filter(user=user_obj, category=cat, date_name__year=year_)
         temp_income = 0
@@ -892,14 +894,40 @@ def convert_date(date_str):
 
 def sent_massages(msg):
     try:
-        client = Client(account_sid, auth_token)
-        message = client.messages.create(
-            body=msg,
-            from_=from_number,
-            to=to_number
-        )
+        # client = Client(account_sid, auth_token)
+        # message = client.messages.create(
+        #     body=msg,
+        #     from_=from_number,
+        #     to=to_number
+        # )
+        if 'Total Balance' in msg:
+            subject = 'Balance'
+        elif 'Dear UPI' in msg:
+            subject = 'Transaction Add'
+        elif 'Registration' in msg:
+            subject = 'User Registration'
+        else:
+            subject = 'Testing Mail'
+        send_email(msg, subject, receiver_email_)
     except:
         pass
+
+
+def send_email(body, subject, receiver_email):
+    smtp_server = 'smtp.gmail.com'
+    smtp_port = 587
+    msg = EmailMessage()
+    msg.set_content(body)
+    msg['Subject'] = subject
+    msg['From'] = sender_email
+    msg['To'] = receiver_email
+    try:
+        with smtplib.SMTP(smtp_server, smtp_port) as server:
+            server.starttls()
+            server.login(sender_email, sender_password)
+            server.send_message(msg)
+    except Exception as e:
+        print(f"Error sending email: {e}")
 
 
 def account_value(user_obj, a_name):
