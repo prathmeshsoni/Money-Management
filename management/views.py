@@ -521,6 +521,7 @@ def chart_page(request, hid):
 
     item = chart_main(request, month_, year_, 0)
     item['month'] = parsed_date
+    # item['test_date'] = ''
     return render(
         request,
         'chart-page.html',
@@ -533,16 +534,16 @@ def chart_page(request, hid):
 def chart_page_1(request):
     import datetime
     year_ = datetime.datetime.now().strftime("%Y")
+    test_date = datetime.datetime.now().strftime("%Y-%m")
 
     item = chart_main(request, '', year_, 1)
     item['month_'] = year_
+    item['test_date'] = test_date
     return render(
         request,
         'chart-page.html',
         item
     )
-    #
-    # return redirect(f'/chart/{datee}/')
 
 
 def chart_main(request, month_, year_, condition):

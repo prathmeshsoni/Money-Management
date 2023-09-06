@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="shortcut icon" href="{% static 'admin/folder/images/music_clu.png' %}">
+    <link rel="shortcu icon" href="{% static 'admin/folder/images/music_clu.png' %}">
     <link rel="icon" href="{% static 'admin/folder/images/demo.png' %}" type="image/x-icon">
 
 
@@ -287,8 +287,8 @@
                         <li {% if chart_active == 'chart_master' %} class="active mb-1"
                                                                     style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}
                                                                     style="background: rgb(6 0 255 / 11%);"><a
-                                href="/chart/"><i
-                                class="{% if chart_active == 'chart_master' %} {{ 'fa fa-circle' }} {% else %} {{ 'fa fa-circle-thin' }} {% endif %}"></i>Chart
+                                href="{% if test_date %} /chart/{{ test_date }}/ {% else %} /chart/ {% endif %}">
+                            <i class="{% if chart_active == 'chart_master' %} {{ 'fa fa-circle' }} {% else %} {{ 'fa fa-circle-thin' }} {% endif %}"></i>Chart
                             Page</a></li>
                     </ul>
                 </li>
