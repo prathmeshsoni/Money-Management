@@ -23,7 +23,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-hpxpyx1s9-dl7+h6mdwf^69uy6kz7#jf2&l_k*2al&%=v9!si@'
 
 # SECURITY WARNING: don't run with debug turned on in production! True False
-DEBUG = True
+# DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -58,6 +59,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = True
+
 ROOT_URLCONF = 'wallet.urls'
 
 TEMPLATES = [
@@ -81,27 +85,14 @@ WSGI_APPLICATION = 'wallet.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-"""
-    Mysql Database
-"""
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'wallet',
-#         'HOST': 'localhost',
-#         'USER': 'root',
-#         'PASSWORD': 'password',
-#     },
-# }
-
-"""
-    Sqlite Database
-"""
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'prathmes_money-manager',
+        'HOST': 'localhost',
+        'USER': 'prathmes_admin',
+        'PASSWORD': 'Lookathersmile',
+    },
 }
 
 # Password validation
@@ -137,13 +128,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
+STATIC_ROOT = BASE_DIR / "static"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# STATICFILES_DIRS = [ os.path.join(BASE_DIR, 'static') ]
+# STATICFILES_STORAGE = 'public_html/static'
+# STATICFILES_DIRS = "public_html/static"
 
 MEDIA_URL = '/uploads/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
+

@@ -28,5 +28,5 @@ class ManageModel(models.Model):
             self.from_account = None
         super().save(*args, **kwargs)
 
-    # def __str__(self):
-    #     return "%s" % self.type
+    def __str__(self):
+        return f"Transaction: {self.amount}₹ ({self.note}) {self.date_name.strftime('%d/%m/%Y')}"
