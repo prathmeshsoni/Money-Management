@@ -20,7 +20,7 @@ from django.contrib import admin
 from django.views.static import serve
 
 urlpatterns = [
-    path('admin_side/', admin.site.urls),
+    path('admin/', admin.site.urls),
     path('type/', include('Types.urls')),
     path('account/', include('account.urls')),
     path('category/', include('category.urls')),
