@@ -1,236 +1,165 @@
-import smtplib
 import uuid
-from email.message import EmailMessage
+from datetime import datetime
 
 from django.contrib import messages
-from django.contrib.auth.forms import PasswordResetForm
-from django.contrib.auth.tokens import default_token_generator
-from django.contrib.auth.views import PasswordResetConfirmView
+from django.contrib.auth.views import PasswordChangeForm, PasswordResetConfirmView
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
-from django.template.loader import render_to_string
-from django.urls import reverse_lazy
-from django.utils.encoding import force_bytes
-from django.utils.http import urlsafe_base64_encode
 
-from management.views import sent_massages, user_details, AccountModel
-from wallet.config import *
+from management.views import get_user_obj, custom_login_required, custom_login_required_not
+from .mail import send_mail
 from .models import *
 
 
-# Custom Login Not Required
-def custom_login_required_not(view_func):
-    def wrapper(request, *args, **kwargs):
-        if not request.session.get('private_admin'):
-            return view_func(request, *args, **kwargs)
-        else:
-            return redirect('/view/')
-
-    return wrapper
-
-
-# Registration Page for User
-@custom_login_required_not
+# Register User
 def register_attempt(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
-        email = request.POST.get('email')
+        username = request.POST.get('username').lower()
+        email = request.POST.get('email').lower()
         password = request.POST.get('password')
 
-        # try:
+        if not email.endswith('@gmail.com'):
+            msg = 'Please Enter Valid Email Address.....!'
+            a = {'status': True, 'exists': 'email_error', 'msg': msg}
+            return JsonResponse(a)
+
         if User.objects.filter(username=username).first():
-            a = {'status': True, 'exists': 'existuser'}
+            msg = 'Username Already Exists.....!'
+            a = {'status': True, 'exists': 'existuser', 'msg': msg}
             return JsonResponse(a)
 
         if User.objects.filter(email=email).first():
-            a = {'status': True, 'exists': 'existemail'}
+            msg = 'Email Already Exists.....!'
+            a = {'status': True, 'exists': 'existemail', 'msg': msg}
             return JsonResponse(a)
 
         auth_token = str(uuid.uuid4())
+        try:
+            create_user(username, email, password, auth_token, 'register')
+        except:
+            pass
+
+        msg = f'Account Was Created For {username} And Activation Link Was Sent To {email}.....!'
+        a = {'status': True, 'exists': 'usercreate', 'u_name': 'username', 'msg': msg}
+        return JsonResponse(a)
+
+    else:
+        if 'userid' in request.session:
+            return redirect('/')
+        else:
+            return render(request, 'user/register.html', )
+
+
+# Send Email Verification For Registration
+def create_user(username, email, password, auth_token, check):
+    sub_domain = 'money-manager'
+    site_url = f'http://127.0.0.1:8000/verify/{auth_token}'
+
+    if check == 'register':
         user_obj = User(username=username, email=email)
         user_obj.set_password(password)
         user_obj.save()
 
-        profile_obj = Profile.objects.create(user=user_obj, auth_token=auth_token, is_verified=True)
+        profile_obj = Profile.objects.create(
+            user=user_obj,
+            auth_token=auth_token,
+            is_verified=False
+        )
         profile_obj.save()
-        request.session['test_user'] = username
-        a = {'status': True, 'create': 'usercreate', 'u_name': username}
-        return JsonResponse(a)
 
-    return render(request, 'user/register-1.html')
+    send_mail(email, username, username, site_url, password, check, sub_domain)
 
 
-@custom_login_required_not
-def send_email_(request):
-    if request.method == 'POST':
-        check = request.session.get('test_user')
-        if check:
-            del request.session['test_user']
-            username = check
-            profile_obj = Profile.objects.get(user__username=username)
-            ss = profile_obj.is_verified
-            if ss:
-                token = profile_obj.auth_token
-                receiver_email = profile_obj.user.email
-                subject = 'Registration Complete'
-                email_template_name = 'user/verifymail.html'
-                parameters = {
-                    'domain': 'money-manager.monarksoni.com/verify',
-                    'token': f'{token}',
-                    'protocol': 'https',
-                    'username': f'{username}',
-
-                }
-                html_template = render_to_string(email_template_name, parameters)
-
-                try:
-                    body = f'Registration ::\n\n https://money-manager.monarksoni.com/verify/{token}'
-                    try:
-                        user_details(request, 'Registration')
-                    except:
-                        pass
-                    try:
-                        sent_massages(body)
-                    except:
-                        pass
-                    try:
-                        send_email(body, subject, receiver_email)
-                    except:
-                        pass
-
-                    # send_mail(
-                    #     subject=subject,
-                    #     message='',  # Since you're using an HTML template, message can be empty
-                    #     from_email=sender_email,
-                    #     recipient_list=[receiver_email],
-                    #     fail_silently=False,
-                    #     html_message=html_template,
-                    #     auth_user=sender_email,
-                    #     auth_password=sender_password,
-                    # )
-                except:
-                    pass
-
-        a = {'status': True}
-        return JsonResponse(a)
-    else:
-        return redirect('/register/')
-
-
-def send_email(body, subject, receiver_email):
-    smtp_server = 'smtp.gmail.com'
-    smtp_port = 587
-    msg = EmailMessage()
-    msg.set_content(body)
-    msg['Subject'] = subject
-    msg['From'] = sender_email
-    msg['To'] = receiver_email
-    try:
-        with smtplib.SMTP(smtp_server, smtp_port) as server:
-            server.starttls()
-            server.login(sender_email, sender_password)
-            server.send_message(msg)
-    except Exception as e:
-        print(f"Error sending email: {e}")
-
-
-# After Mail Send Page
-@custom_login_required_not
+# Send Email Verification Page
 def token_send(request):
-    return render(request, 'user/password_reset_done.html')
+    return render(request, 'user/token_send.html')
 
 
-# check Email verification
+# Check Email verification
 def verify(request, auth_token):
     try:
         profile_obj = Profile.objects.filter(auth_token=auth_token).first()
         user_obj = User.objects.filter(username=profile_obj.user.username).first()
 
         if profile_obj:
-            cc = profile_obj.is_verified
-            if not cc:
-                messages.success(request, 'Your account is already verified ✔.')
-                return redirect('/')
-            profile_obj.is_verified = False
-            profile_obj.save()
-            user_obj.is_superuser = True
-            user_obj.is_staff = True
-            user_obj.is_active = True
-            user_obj.save()
-            try:
-                account_obj = AccountModel()
-                account_obj.account_name = 'cash'
-                account_obj.user = user_obj
-                account_obj.save()
-            except:
-                pass
-            messages.success(request, 'Your account has been verified ✔.')
-            return redirect('/')
+            if not profile_obj.is_verified:
+                profile_obj.is_verified = True
+                profile_obj.save()
+                user_obj.save()
+
+            request.session['private_admin'] = profile_obj.user.username
+            request.session['private_id'] = profile_obj.user.id
+            request.session['login_time'] = datetime.now().timestamp()
+
+            messages.success(request, 'Account Logged In Successfully ✔')
+            return redirect('/view/')
+        else:
+            return redirect('/register/')
     except:
         return redirect('/')
 
 
-@custom_login_required_not
-# Forgot Password Page
-def forget_password(request):
+# Change User Password
+@custom_login_required
+def change_password(request):
+    user_obj = get_user_obj(request)
     if request.method == 'POST':
-        password_form = PasswordResetForm(request.POST)
-        if password_form.is_valid():
-            data = password_form.cleaned_data['email']
-            user_obj = User.objects.filter(email=data)
-            if user_obj.exists():
-                user_obj = user_obj.first()
-                subject = "Password Request"
-                email_template_name = 'password_reset_email.html'
-                parameters = {
-                    'email': user_obj.email,
-                    'username': user_obj.username,
-                    'domain': 'money-manager.monarksoni.com',
-                    'uid': urlsafe_base64_encode(force_bytes(user_obj.pk)),
-                    'token': default_token_generator.make_token(user_obj),
-                    'protocol': 'https',
-                }
-                html_template = render_to_string(email_template_name, parameters)
-                receiver_email = data
-
-                try:
-                    body = f'Forget Password ::\n\n https://money-manager.monarksoni.com/password-reset-confirm/{parameters["uid"]}/{parameters["token"]}/'
-                    try:
-                        sent_massages(body)
-                    except:
-                        pass
-                    try:
-                        send_email(body, subject, receiver_email)
-                    except:
-                        pass
-                    # send_mail(
-                    #     subject=subject,
-                    #     message='',  # Since you're using an HTML template, message can be empty
-                    #     from_email=sender_email,
-                    #     recipient_list=[receiver_email],
-                    #     fail_silently=False,
-                    #     html_message=html_template,
-                    #     auth_user=sender_email,
-                    #     auth_password=sender_password,
-                    # )
-                except:
-                    pass
-
-                return render(request, 'password_reset_done.html')
-            else:
-                messages.success(request, "Email Address Not Found.")
-                return redirect('/password-reset/')
+        form = PasswordChangeForm(user=user_obj, data=request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Password Changed Successfully ✔')
+            return redirect('/change-password/')
     else:
-        password_form = PasswordResetForm()
-        context = {
-            'password_form': password_form,
-        }
-    return render(request, 'password_reset_form.html', context)
+        form = PasswordChangeForm(user=request.user)
+    return render(request, 'user/change-password.html', {
+        'search': 'search',
+        'form': form,
+        'password_master': 'master',
+        'password_active': 'password_master',
+    })
 
 
+# Reset User Password
+@custom_login_required_not
+def reset_password(request):
+    if request.method == 'POST':
+        email = request.POST.get('email').lower()
+
+        if not email.endswith('@gmail.com'):
+            messages.success(request, 'Please Enter Valid Email Address.....!')
+            return redirect('/password-reset/')
+
+        if not User.objects.filter(email=email).first():
+            messages.success(request, 'Email Not Exists.....!')
+            return redirect('/password-reset/')
+
+        obj = User.objects.filter(email=email).first()
+        obj_profile = Profile.objects.filter(user=obj).first()
+
+        password = obj.password
+        username = obj.username
+        auth_token = obj_profile.auth_token
+        try:
+            create_user(username, email, password, auth_token, 'forgot')
+        except:
+            pass
+
+        messages.success(request, f'Password Reset Link Was Sent To {email}.....!')
+        return redirect('/password-reset/')
+
+    else:
+        if 'userid' in request.session:
+            return redirect('/')
+        else:
+            return render(
+                request,
+                'user/password-forget.html',
+                {'cartc': '2'}
+            )
+
+
+# Rest User Password Confirm Message
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
-    success_url = reverse_lazy('login')  # Replace with your desired success URL
-
     def form_valid(self, form):
         response = super().form_valid(form)
         messages.success(self.request,

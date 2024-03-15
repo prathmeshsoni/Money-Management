@@ -1,0 +1,169 @@
+{% extends 'masterpage/index-1.html' %}
+{% block title3 %} Manage {{ category }} {% endblock %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+    {% load custom_tags %}
+    {% load custom_filters %}
+
+    <!-- Main content -->
+    <section class="content">
+
+        <div class="row">
+            <div class="col-md-12"
+                 style="padding: 0;border-bottom: 2px solid rgba(120,130,140,.13);margin-bottom: 25px; display:block;">
+                <div class="col-12 col-lg-6 col-xl-4 float-left">
+                    <div class="box">
+                        <div class="box-body">
+                            <div class="text-center">
+
+                                <h3 class="text-muted db">{{ category }} Name</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% if category == 'Account' %}
+                    <div class="col-12 col-lg-6 col-xl-6 float-left">
+                        <div class="box">
+                            <div class="box-body">
+                                <div class="text-center">
+                                    <a href="javascript:void(0)">
+                                        <h3 class=" db mr-2" style="width: auto; float: left;">
+                                                <span>
+                                                    <i style="margin-right: 20px;" class="fa fa-info-circle"
+                                                       aria-hidden="true"></i>
+                                                </span>
+                                            {% if category == 'Account' %}
+                                                Available Balance :
+                                            {% endif %}
+                                        </h3>
+                                        <div style="padding-top: 8px;">
+                                            {% if category == 'Account' %}
+                                                <input type="text"
+                                                       style="width: 70px !important; font-weight: bold; font-size: 15px; font-family: cursive; float: left;"
+                                                       id="balance-2" class="form-control" readonly/>
+                                            {% endif %}
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+            {% if list %}
+                {% for i in list %}
+                    <div class="col-12 col-lg-6 col-xl-3" id="filter_{{ i.id }}">
+                        <div class="box">
+                            <div class="box-body">
+                                <div class="product-img">
+                                    <h3 class="box-title mb-0">
+
+                                        {% if type_nam == 'account_name' %}
+                                            {{ i.account_name }}: {{ i.amount }} <i class="fa fa-rupee"></i>
+                                        {% else %}
+                                            {% get_attribute i type_nam %}
+                                        {% endif %}
+                                    </h3>
+                                    {% if category == 'Type' %}
+                                    {% else %}
+                                        <div class="pro-img-overlayy pro-img-overlay" style="top: -10px !important;">
+                                            <a href="javascript:void(0)" onclick="updateModel({{ i.id }})"
+                                               class="bg-info"
+                                               style="width: auto !important;height: auto !important;padding: 10px 25px !important;margin: 0 !important;">Edit</a>
+                                            <a href="javascript:void(0)" onclick="Delete({{ i.id }})" class="bg-danger"
+                                               style="width: auto !important;height: auto !important;padding: 10px 25px !important;margin: 0 !important;">
+                                                Delete
+                                            </a>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <input type="hidden" id="nodata" value="0">
+                <h1>
+                    NO DATA
+                </h1>
+            {% endif %}
+        </div>
+
+        {% if messages and type_nam == 'account_name' %}
+
+            {% for message in messages %}
+
+                <div class="row">
+                    <div class="col-4">
+                        <div class="fog-pwd">
+                            <div style="
+                                    {% if message.tags == 'success' %}
+                                        border-color: #1e88e5 !important;
+                                        color: #1e88e5 !important;
+                                        background-color: #403df41a !important;
+                                    {% else %}
+                                        border-color: red !important;
+                                        color: red !important;
+                                        background-color: #ff5e5929 !important;
+                                    {% endif %}
+                                    "
+                                 class="alert alert-info">
+                                {{ message|safe }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+    </section>
+    <!-- /.content -->
+    </div>
+
+
+    <div class="modal center-modal fade" id="categoryModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title " id="add_cat" style="display: none;">ADD {{ category }}</h5>
+                    <h5 class="modal-title " id="edit_cat" style="display: none;">EDIT {{ category }}</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" id="Addcategory" enctype="multipart/form-data">
+                        <input type="hidden" name="id" id="id" value=""/>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    {% if category|lower == 'type' %}
+                                        {{ m.type_name|as_crispy_field }}
+                                    {% else %}
+                                        {% if category|lower == 'category' %}
+                                            {{ m.cat_name|as_crispy_field }}
+                                        {% else %}
+                                            {{ m.account_name|as_crispy_field }}
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% csrf_token %}
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-dark" data-dismiss="modal"><span class="text-light">Close</span>
+                            </button>
+                            <button type="submit" class="btn btn-primary ">Submit</button>
+                        </div>
+                    </form>
+                    <input type="hidden" name="confirm_delete" id="confirm_delete" value="1"/>
+                    <input type="hidden" name="cname" id="cname" value="{{ category }}"/>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

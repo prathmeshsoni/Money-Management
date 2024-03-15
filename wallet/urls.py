@@ -11,7 +11,7 @@ Class-based views
     1. Add an import:  from other_app.views import Home
     2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
 Including another URLconf
-    1. Import the include() function: from django.urls import include, path
+    1. Import to include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path, include, re_path
@@ -21,12 +21,12 @@ from django.views.static import serve
 
 urlpatterns = [
     path('admin_side/', admin.site.urls),
-    path('', include('management.urls')),
     path('type/', include('Types.urls')),
     path('account/', include('account.urls')),
     path('category/', include('category.urls')),
+    path('', include('management.urls')),
     path('', include('User.urls')),
-    re_path(r'^hit/uploads/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+    re_path(r'^uploads/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
 ]
 
 handler404 = "management.views.page_not_found_view"

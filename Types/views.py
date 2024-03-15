@@ -13,7 +13,7 @@ from .serializer import TypeSerialize
 
 # Create your views here.
 @custom_login_required
-def cat_page(request):
+def type_page(request):
     if request.method == 'POST':
         try:
             id_1 = request.POST.get('id')
@@ -59,11 +59,11 @@ def cat_page(request):
             'type_nam': 'type_name',
             'type_nam_field': 'm.instance.type_name|as_crispy_field'
         }
-        return render(request, "admin/filter.html", x)
+        return render(request, "cate_wise.html", x)
 
 
 @api_view(['POST'])
-def updateCat(request):
+def updatetype(request):
     id_1 = request.POST.get('id')
     get_data = TypeModel.objects.get(id=id_1)
     serializer = TypeSerialize(get_data)
@@ -71,7 +71,7 @@ def updateCat(request):
 
 
 @custom_login_required
-def remove_cat(request):
+def remove_type(request):
     if request.method == 'POST':
         try:
             hid = request.POST.get('id')
@@ -85,10 +85,8 @@ def remove_cat(request):
                     obj.delete()
                     a = {'status': True, 'exists': 'done', 'name': name}
                     return JsonResponse(a)
-                # messages.success(request,"Delete successfully ✔")
                 a = {'status': True, 'exists': 'confirmdelete', 'name': name}
                 return JsonResponse(a)
-                # return redirect('/user/address/')
             else:
                 a = {'status': True, 'exists': 'orderexist', 'name': name}
                 return JsonResponse(a)

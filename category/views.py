@@ -23,7 +23,6 @@ def cat_page(request):
         except:
             d = CategoryForm(request.POST or None, request.FILES or None)
             check = 0
-        print(d)
         if d.is_valid():
             unique_field_value = d.cleaned_data['cat_name'].lower()
             existing_records = CategoryModel.objects.filter(cat_name__iexact=unique_field_value, user=user_obj)
@@ -61,7 +60,7 @@ def cat_page(request):
             'category': 'Category',
             'type_nam': 'cat_name'
         }
-        return render(request, "admin/filter.html", x)
+        return render(request, "cate_wise.html", x)
 
 
 @api_view(['POST'])
@@ -87,10 +86,8 @@ def remove_cat(request):
                     obj.delete()
                     a = {'status': True, 'exists': 'done', 'name': name}
                     return JsonResponse(a)
-                # messages.success(request,"Delete successfully ✔")
                 a = {'status': True, 'exists': 'confirmdelete', 'name': name}
                 return JsonResponse(a)
-                # return redirect('/user/address/')
             else:
                 a = {'status': True, 'exists': 'orderexist', 'name': name}
                 return JsonResponse(a)

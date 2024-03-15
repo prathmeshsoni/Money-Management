@@ -21,12 +21,11 @@ function gettransaction() {
             var table = $('#myTable_2').DataTable();
             table.clear();
             $('#date-iss').val(data.hid);
+            $('#date_value').html('');
+            $('#date_value').html(data.date);
+            $('#date_value').css('background', 'rgb(0 0 0 / 72%)');
+            $('#date_value').css('color', 'beige');
             if (data.status === true) {
-
-                $('#date_value').html('');
-                $('#date_value').html(data.date);
-                $('#date_value').css('background', 'rgb(0 0 0 / 72%)');
-                $('#date_value').css('color', 'beige');
                 $('#nodatass').css('display', 'none');
                 if (data.not_transfer.length > 0) {
                     for (var i = 0; i < data.not_transfer.length; i++) {
@@ -305,7 +304,7 @@ function Delete(id, h_id, s_id) {
             var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
             var date_val = $('#date-iss').val();
             $.ajax({
-                url: '/remove_pri/',
+                url: '/remove_transaction/',
                 data: {'id': id, csrfmiddlewaretoken: csrf_token, 'date_val': date_val},
                 dataType: 'JSON',
                 method: 'POST',

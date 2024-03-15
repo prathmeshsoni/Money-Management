@@ -6,25 +6,30 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="shortcu icon" href="{% static 'admin/folder/images/music_clu.png' %}">
-    <link rel="icon" href="{% static 'admin/folder/images/demo.png' %}" type="image/x-icon">
-
-
+    
+    <link rel="shortcut icon" href="{% static 'admin/folder/images/logo-mini-money-manager.png' %}">
+    <link rel="icon" href="{% static 'admin/folder/images/logo-mini-money-manager.png' %}" type="image/x-icon">
+    
     <title>Admin | {% block title3 %} DashBoard {% endblock %}</title>
+    
+    <meta name="description" content="This Website is for Money Management and Tracking Expenses."/>
+    <meta name="author" content="Prathmesh Soni"/>
+    <meta property="og:title" content="Prathmesh Soni"/>
+    <meta property="og:site_name" content="Prathmesh Soni Money Manager Website"/>
+    <meta property="og:url" content=""/>
+    <meta property="og:description" content="This Website is for Money Management and Tracking Expenses."/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content="https://money-manager.prathmeshsoni.works/static/admin/folder/images/pretty-snap-25-09-2023.png"/>
 
-    <!-- Bootstrap 4.0-->
-    <link rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/sweetalert/sweetalert.css' %}"></link>
-
-    <link rel="stylesheet"
-          href="{% static 'admin/folder/assets/vendor_components/bootstrap/dist/css/bootstrap.min.css' %}">
     <script src="https://use.fontawesome.com/c0fc7bc651.js"></script>
+    
+    <!-- Bootstrap 4.0-->
+    <link rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/sweetalert/sweetalert.css' %}">
+
+    <link rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/bootstrap/dist/css/bootstrap.min.css' %}">
     <!-- Bootstrap extend-->
     <link rel="stylesheet" href="{% static 'admin/folder/css/bootstrap-extend.css' %}">
-
-    <link rel="stylesheet" type="text/css"
-          href="{% static 'admin/folder/assets/vendor_components/datatable/datatables.min.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'admin/folder/assets/vendor_components/datatable/datatables.min.css' %}"/>
 
     <!-- Theme style -->
     <link rel="stylesheet" href="{% static 'admin/folder/css/skins/master_style.css' %}">
@@ -36,13 +41,9 @@
     <link rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/linea-icons/linea.css' %}">
     <link rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/glyphicons/glyphicon.css' %}">
     <link rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/flag-icon/css/flag-icon.css' %}">
-    <link rel="stylesheet"
-          href="{% static 'admin/folder/assets/vendor_components/material-design-iconic-font/css/materialdesignicons.css' %}">
-    <link rel="stylesheet"
-          href="{% static 'admin/folder/assets/vendor_components/simple-line-icons-master/css/simple-line-icons.css' %}">
-    <link rel="stylesheet"
-          href="{% static 'admin/folder/assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.css' %}">
-
+    <link rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/material-design-iconic-font/css/materialdesignicons.css' %}">
+    <link rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/simple-line-icons-master/css/simple-line-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'admin/folder/assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.css' %}">
 </head>
 <body class="hold-transition skin-blue-light sidebar-mini"
       style="min-height: 100% !important; height: 100% !important;">
@@ -73,34 +74,60 @@
     .popup-content {
         margin: 0;
     }
+    /*#logo-money-manager {*/
+    /*    max-height: 100%;*/
+    /*    max-width: 100%;*/
+    /*    width: 200px;*/
+    /*    height: 60px;*/
+    /*    background: url('https://money-manager.prathmeshsoni.works/static/admin/folder/images/logo-money-manager.png') no-repeat scroll center center transparent;*/
+    /*    background-size: cover;*/
+    /*    float: left;*/
+    /*}*/
+    
+    @media (max-width:768px) {
+        .set-hehe-1 {
+            position: fixed;
+            z-index: 2;
+        }
+        .set-hehe-2 {
+            position: fixed;
+            z-index: 2;
+            right: 0;
+        }
+        
+        .hehe-1 {
+            padding-top: 60px;
+        }
+    }
 </style>
 <div class="wrapper">
 
     <header class="main-header">
         <!-- Logo -->
-        <a href="/" class="logo" style="position: fixed">
+        <a href="/" class="logo" style="position: fixed; z-index: 1;">
             <!-- mini logo -->
             <b class="logo-mini" style="display: none;">
-                <span class="light-logo"><img src="{% static 'admin/folder/images/music_clu.png' %}"
-                                              style="height: 60px;width: 50px;" alt="logo"></span>
-                <span class="dark-logo"><img src="{% static 'admin/folder/images/music_clu.png' %}" alt="logo"></span>
+                <span class="light-logo"><img src="{% static 'admin/folder/images/logo-mini-money-manager.png' %}"
+                                              style="height: 60px;width: 50px; mix-blend-mode: hue;" alt="logo"></span>
+                <span class="dark-logo"><img src="{% static 'admin/folder/images/logo-mini-money-manager.png' %}"
+                                              style="height: 60px;width: 50px; mix-blend-mode: hue;" alt="logo"></span>
             </b>
             <!-- logo-->
-            <span class="logo-lg">
-            		  <img src="{% static 'admin/folder/images/music_club.png' %}" alt="logo"
-                           style="width: 200px;height: 60px;" class="light-logo">
-            	  </span>
+            <span class="logo-lg" id='logo-money-manager'>
+    		    <img src="{% static 'admin/folder/images/logo-money-manager.png' %}" alt="logo"
+                    style="width: 200px;height: 60px; mix-blend-mode: hue;" class="light-logo">
+    	    </span>
         </a>
         <nav class="navbar navbar-static-top">
             <!-- Sidebar toggle button-->
-            <div>
+            <div class="set-hehe-1">
                 <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
                     <span class="sr-only">Toggle navigation</span>
                 </a>
 
             </div>
 
-            <div class="navbar-custom-menu">
+            <div class="navbar-custom-menu set-hehe-2">
                 <ul class="nav navbar-nav">
                     <!-- User Account-->
                     <li class="dropdown user user-menu">
@@ -128,7 +155,7 @@
         </nav>
     </header>
 
-    <aside class="main-sidebar" style="position: fixed">
+    <aside class="main-sidebar hehe-1" style="position: fixed">
         <!-- sidebar-->
         <section class="sidebar">
 
@@ -137,17 +164,11 @@
 
                 <li class="user-profile treeview">
                     <a href="javascript:void(0)" style="padding: 15px 10px 15px 8px !important; ">
-                        {% if request.session.private_admin == 'admin' %}
-                            <img src="{% static 'user/folder/assets/images/avtar/krishna.gif' %}"
-                                 style="width: 40px !important;height: 41px !important;" class="rounded-circle"
-                                 alt="GIF">
-                        {% else %}
-                            <img src="{% static 'user/folder/assets/images/avtar/user.jpg' %}"
-                                 style="width: 40px !important;height: 41px !important;" class="rounded-circle" alt="">
-                        {% endif %}
+                        <img src="{% static 'user/folder/assets/images/avtar/user.png' %}"
+                             style="width: 40px !important;height: 41px !important;" class="rounded-circle" alt="Profile Icon">
 
-                        <span style="color: black;">
-                            {% if request.session.private_admin %} {{ request.session.private_admin }}{% endif %}
+                        <span class="pl-10" style="color: black; font-size: 22px;">
+                            <b> {{ request.session.private_admin|upper }} </b>
                             <input type="hidden" name="count_1" id="count_1" value=""/>
                         </span>
                     </a>
@@ -293,7 +314,14 @@
                     </ul>
                 </li>
             </ul>
-            {% if password_master == 'master' %}
+             <ul class="sidebar-menu">
+                    <li class="treeview">
+                        <a href="/balance/">
+                            <i class="fa fa-inr" aria-hidden="true"></i>
+                            <span>Balance</span>
+                        </a>
+                    </li>
+                </ul>
                 <ul class="sidebar-menu" data-widget="tree">
                     <li class="treeview {% if password_master == 'master' %} {{ 'menu-open' }} {% endif %} ">
                         <a href="#">
@@ -313,30 +341,6 @@
                         </ul>
                     </li>
                 </ul>
-            {% endif %}
-            {% if request.session.private_admin == 'admin' %}
-                <ul class="sidebar-menu" data-widget="tree">
-                    <li class="treeview {% if log_master == 'master' %} {{ 'menu-open' }} {% endif %} ">
-                        <a href="#">
-                            <i class="fa fa-history"></i>
-                            <span>User Log</span>
-                            <span class="pull-right-container">
-                          <i class="fa fa-angle-right pull-right"></i>
-                        </span>
-                        </a>
-                        <ul class="treeview-menu {% if log_master == 'master' %} {{ 'res-tb-block mt-2' }} {% else %} {{ 'mt-2' }} {% endif %}">
-                            <li {% if log_active == 'log_master' %} class="active mb-1"
-                                                                    style="background: rgb(6 0 255 / 22%); border-radius: 5px;" {% endif %}
-                                                                    style="background: rgb(6 0 255 / 11%);"><a
-                                    href="/user-log/"><i
-                                    class="{% if log_active == 'log_master' %} {{ 'fa fa-circle' }} {% else %} {{ 'fa fa-circle-thin' }} {% endif %}"></i>User
-                                Log Page</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            {% endif %}
-
-
         </section>
     </aside>
 
@@ -387,10 +391,7 @@
                                 {% else %}
                                     {% if private_master %}
                                         <i class="fa fa-file"></i>
-                                        <a href="/balance/" >
-
                                         Management
-                                        </a>
                                     {% else %}
                                         <i class="fa fa-filter"></i>
                                         Filter Master
@@ -573,23 +574,18 @@
     {% endif %}
 
     <footer class="main-footer">
-        <div class="pull-right d-none d-sm-inline-block">
-            <ul class="nav nav-primary nav-dotted nav-dot-separated justify-content-center justify-content-md-end">
-                <li class="nav-item">
-                    <a class="nav-link" href="javascript:void(0)">Support</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="javascript:void(0)">Docs</a>
-                </li>
-                <li class="nav-item">
-
-                    <a class="nav-link" href="#">Purchase Now</a>
-                </li>
-            </ul>
-        </div>
-        &copy; 2015 - 2018 <a href="#">Music Club
-
-    </a> All Rights Reserved.
+        <ul class="nav">
+            <li class="nav-item">
+                <a href="https://prathmeshsoni.works/" target="_blank" class="nav-link">
+                    Prathmesh Soni <i class="fa fa-heart ml-1" style="color: red"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="https://prathmeshsoni.works/project/" target="_blank" class="nav-link">
+                    Project
+                </a>
+            </li>
+        </ul>
     </footer>
     <div class="control-sidebar-bg"></div>
 
@@ -677,7 +673,7 @@
                         {% else %}
                             heading: 'Updated',
                         {% endif %}
-                        text: '{{message}}',
+                        text: '{{ message|safe }}',
                         position: 'top-right',
                         loaderBg: '#fc4b6c !important',
                         icon: 'success',
@@ -690,30 +686,12 @@
     {% endif %}
 
     {% if request.session.private_admin %}
-
-
-
         <script type="text/javascript">
 
             window.onload = function exampleFunction() {
-                {#try{#}
-                {#      $('#myTable').DataTable();#}
-                {# }#}
-                {# catch (error) {#}
-                {##}
-                {# }#}
-                // try{
-                //     $('#myTable_1').DataTable();
-                // }
-                // catch (error) {
-                //
-                // }
-                // try{
-                //     $('#myTable_2').DataTable();
-                // }
-                // catch (error) {
-                //
-                // }
+                {% block script %}
+                {% endblock %}
+
                 {% if user_log_master %}
                 {% else %}
                     var sum = 0;

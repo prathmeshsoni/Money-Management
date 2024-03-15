@@ -28,6 +28,7 @@ class ManageForm(forms.ModelForm):
 
     class Meta:
         model = ManageModel
+
         exclude = [
             'user'
         ]
@@ -39,6 +40,5 @@ class ManageForm(forms.ModelForm):
             'amount',
             'note',
             'to_account',
-            # 'to_account',
             'from_account',
         ]

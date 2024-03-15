@@ -1,6 +1,16 @@
 function getchart() {
     var data = $('#chart_form').serializeArray()[0]['value'];
-    window.location.href = '/chart/' + data + '/';
+    var type = $('input[name="type_date"]:checked').val();
+
+
+    if (type == 'year'){
+        if (data.split('-')[0])
+            window.location.href = '/chart/' + data.split('-')[0] + '/';
+    }
+    else {
+        if (data)
+            window.location.href = '/chart/' + data + '/';
+    }
 }
 
 function chart_shows(names, values) {

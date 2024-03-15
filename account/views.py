@@ -5,15 +5,14 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from management.models import ManageModel
-from management.views import account_value
-from management.views import custom_login_required, get_user_obj
+from management.views import account_value, custom_login_required, get_user_obj
 from .forms import AccountForm
 from .models import AccountModel
 from .serializer import AccountSerialize
 
 
 @custom_login_required
-def cat_page(request):
+def acc_page(request):
     user_obj = get_user_obj(request)
     if request.method == 'POST':
         try:
@@ -65,11 +64,11 @@ def cat_page(request):
             'category': 'Account',
             'type_nam': 'account_name'
         }
-        return render(request, "admin/filter.html", x)
+        return render(request, "cate_wise.html", x)
 
 
 @api_view(['POST'])
-def updateCat(request):
+def updateacc(request):
     id_1 = request.POST.get('id')
     get_data = AccountModel.objects.get(id=id_1)
     serializer = AccountSerialize(get_data)
@@ -77,7 +76,7 @@ def updateCat(request):
 
 
 @custom_login_required
-def remove_cat(request):
+def remove_acc(request):
     if request.method == 'POST':
         try:
             hid = request.POST.get('id')
@@ -91,7 +90,6 @@ def remove_cat(request):
                     obj.delete()
                     a = {'status': True, 'exists': 'done', 'name': name}
                     return JsonResponse(a)
-                # messages.success(request,"Delete successfully ✔")
                 a = {'status': True, 'exists': 'confirmdelete', 'name': name}
                 return JsonResponse(a)
             else:

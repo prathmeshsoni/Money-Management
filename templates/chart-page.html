@@ -44,7 +44,7 @@
                             <div class="box-body">
                                 <div class="text-center">
                                     <h3 class="text-muted db">
-                                        {% if month %}
+                                        {% if not month_ %}
                                             Data Of {{ month|date:"F Y" }}
                                         {% else %}
                                             Data Of {{ month_ }}
@@ -70,6 +70,20 @@
                                                            class="numberinput form-control"
                                                            id="chart-month" value='{{ month|date:"Y-m" }}'
                                                            onchange="getchart()"/>
+                                                </div>
+                                                <div class="pt-15">
+                                                    <input type="radio" id="month_sele" name="type_date" value="month" onchange="getchart()"
+                                                    {% if not month_ %}
+                                                         checked
+                                                    {% endif %}
+                                                    >
+                                                    <label for="month_sele">Month</label>
+                                                    <input type="radio" id="year_sele" name="type_date" value="year" onchange="getchart()"
+                                                    {% if month_ %}
+                                                         checked
+                                                    {% endif %}
+                                                    >
+                                                    <label for="year_sele">Year</label>
                                                 </div>
 
                                                 {% csrf_token %}

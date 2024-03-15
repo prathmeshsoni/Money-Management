@@ -1,0 +1,572 @@
+{% extends 'masterpage/index-1.html' %}
+{% block title3 %} Transaction Window {% endblock %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12"
+             style="padding: 0;border-bottom: 2px solid rgba(120,130,140,.13);margin-bottom: 25px; display:block;">
+            <div class="col-12 col-lg-6 col-xl-3 float-left">
+                <div class="box">
+                    <div class="box-body">
+                        <div class="text-center">
+                            <h3 class="text-muted db">
+                                {% if main %}
+                                    Type: {{ main }}
+                                {% else %}
+                                    All Transaction of <br>
+                                    <span id="date_value">
+                                        {{ month|date:"F Y" }}
+                                    </span>
+                                {% endif %}
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6 col-xl-8 float-left">
+                <div class="box">
+                    <div class="box-body">
+                        {% if main == 'Available' or main == 'Income' %}
+                            <div class="col-12 col-lg-6 col-xl-6" style="float: left">
+                                <a href="javascript:void(0)">
+                                    <h3 class=" db mr-2" style="width: auto; float: left;">
+                                            <span>
+                                                <i style="margin-right: 20px;" class="fa fa-info-circle"
+                                                   aria-hidden="true"></i>
+                                            </span>
+                                        Income :
+                                    </h3>
+                                    <div style="padding-top: 8px;">
+                                        <input type="text"
+                                               style="width: 120px !important; font-weight: bold; font-size: 15px; font-family: cursive; float: left;"
+                                               id="balance-1" value="0" class="form-control mr-1" readonly/>
+                                    </div>
+                                </a>
+                            </div>
+                        {% else %}
+                            {% if main == 'Expense' %}
+                                <div class="col-12 col-lg-6 col-xl-6 mt-4" style="float: left">
+                                    <a href="javascript:void(0)">
+                                        <h3 class=" db mr-2" style="width: auto; float: left;">
+                                                <span>
+                                                <i style="margin-right: 20px;" class="fa fa-info-circle"
+                                                   aria-hidden="true"></i>
+                                            </span>
+                                            Expense :
+                                        </h3>
+                                        <div style="padding-top: 8px;">
+                                            <input type="text"
+                                                   style="width: 120px !important; font-weight: bold; font-size: 15px; font-family: cursive; float: left;"
+                                                   id="balance-2" value="0" class="form-control mr-1" readonly/>
+                                        </div>
+                                    </a>
+                                </div>
+                            {% endif %}
+                            <div class="col-12 col-lg-6 col-xl-6" style="float: left">
+                                <a href="javascript:void(0)">
+                                    <h3 class=" db mr-2" style="width: auto; float: left;">
+                                            <span>
+                                                <i style="margin-right: 20px;" class="fa fa-info-circle"
+                                                   aria-hidden="true"></i>
+                                            </span>
+                                        Income :
+                                    </h3>
+                                    <div style="padding-top: 8px;">
+                                        <input type="text"
+                                               style="width: 120px !important; font-weight: bold; font-size: 15px; font-family: cursive; float: left;"
+                                               id="balance-1" value="0" class="form-control mr-1" readonly/>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="col-12 col-lg-6 col-xl-6 " style="float: left">
+                                <a href="javascript:void(0)">
+                                    <h3 class=" db mr-2" style="width: auto; float: left;">
+                                            <span>
+                                            <i style="margin-right: 20px;" class="fa fa-info-circle"
+                                               aria-hidden="true"></i>
+                                        </span>
+                                        Expense :
+                                    </h3>
+                                    <div style="padding-top: 8px;">
+                                        <input type="text"
+                                               style="width: 120px !important; font-weight: bold; font-size: 15px; font-family: cursive; float: left;"
+                                               id="balance-2" value="0" class="form-control mr-1" readonly/>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-12 col-lg-6 col-xl-6 mt-4" style="float: left">
+                                <a href="javascript:void(0)">
+                                    <h3 class=" db mr-2" style="width: auto; float: left;">
+                                            <span>
+                                            <i style="margin-right: 20px;" class="fa fa-info-circle"
+                                               aria-hidden="true"></i>
+                                        </span>
+                                        Total :
+                                    </h3>
+                                    <div style="padding-top: 8px;">
+                                        <input type="text"
+                                               style="width: 120px !important; font-weight: bold; font-size: 15px; font-family: cursive; float: left;"
+                                               id="balance-3" value="0" class="form-control mr-1" readonly/>
+                                    </div>
+                                </a>
+                            </div>
+                            {% if not main %}
+                                <div class="col-12 col-lg-6 col-xl-6 mt-4" style="float: left">
+                                    <a href="javascript:void(0)">
+                                        <form method="post" id="transaction_form">
+                                            <div>
+                                                <input type="month" name="transaction-month"
+                                                       class="numberinput form-control" id="transaction-month"
+                                                       value='{{ month|date:"Y-m" }}' onchange="gettransaction()"/>
+                                           </div>
+                                            <div class="pt-15">
+                                                <input type="radio" id="html" name="type_date" value="month" onchange="gettransaction()" checked>
+                                                <label for="html">Month</label>
+                                                <input type="radio" id="css" name="type_date" onchange="gettransaction()" value="year">
+                                                <label for="css">Year</label>
+                                            </div>
+                                            {% csrf_token %}
+                                        </form>
+                                    </a>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12"
+             style="{% if reletedtype %}{% if main == 'Transfer' %}display:none;{% endif %}{% endif %}">
+            <div class="box">
+                <div class="box-body">
+                    <div class="table-responsive">
+                        <table class="table text-center  table-bordered table-hover display nowrap"
+                               style="color: black !important;" id="myTable">
+                            <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Category</th>
+                                <th>Account</th>
+                                <th>Amount</th>
+                                <th>note</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {% for date, entries in untransfer_data.items %}
+                            <tr id="date-{{ date }}" style="background: #e4f3ff;" >
+                                <td>{{ date }}</td>
+                                {% if entries.price.temp_add == 0 %}
+                                    <td></td>
+                                {% else %}
+                                    <td style="color: #000fff !important;">{{ entries.price.temp_add }} <i
+                                            class="fa fa-rupee"></i></td>
+                                {% endif %}
+                                {% if entries.price.temp_sub == 0 %}
+                                    <td></td>
+                                {% else %}
+                                    <td style="color: #ff0000 !important;">{{ entries.price.temp_sub }} <i
+                                        class="fa fa-rupee"></i></td>
+                                {% endif %}
+                                <td colspan="4" ></td>
+                            </tr>
+                            {% for i in entries.list %}
+                                <tr id="tra_{{ i.id }}">
+                                    <td><i style="margin-right: 20px;" class="fa fa-info-circle"
+                                           aria-hidden="true"></i></td>
+                                    <td>{{ i.date_name|time:"g:iA" }}</td>
+                                    {% if request.session.not_show %}
+                                        <td>food</td>
+                                    {% else %}
+                                        <td>{{ i.category }}</td>
+                                    {% endif %}
+
+                                    <td>{{ i.account }}</td>
+                                    <td style="
+                                            {% if i.type.type_name == 'Available' or i.type.type_name == 'Income' %}
+                                                color: #000fff !important;
+                                            {% else %}
+                                                {% if i.type.type_name == 'Expense' %}
+                                                    color: #ff0000 !important;
+                                                {% else %}
+                                                    {% if private_master %}
+
+                                                    {% else %}
+                                                        {% if i.from_account.account_name == main %}
+                                                            color: #ff0000 !important;
+                                                        {% else %}
+                                                            color: #000fff !important;
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endif %}
+                                            ">{{ i.amount }} <i class="fa fa-rupee"></i></td>
+                                    {% if request.session.not_show %}
+                                        <td></td>
+                                    {% else %}
+                                        <td>{{ i.note }}</td>
+                                    {% endif %}
+                                    <td>
+                                        <a href="javascript:void(0)" onclick="updateModel({{ i.id }}, 0)"
+                                           class="bg-info mr-2">
+                                                <span class="label label-success">
+                                                    Edit
+                                                </span>
+                                        </a>
+                                        <a href="javascript:void(0)"
+                                           onclick="Delete({{ i.id }}, 1, '{{ i.date_name|date:'M d' }} {{ i.date_name|time:'g:iA' }}')"
+                                           class="bg-info ml-2">
+                                                <span class="label label-danger">
+                                                    Delete
+                                                </span>
+                                        </a>
+                                    </td>
+                                    <td name="{{ date }}" style="display:none;">{{ date }}</td>
+                                </tr>
+                            {% endfor %}
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+                        <h1 id="nodatass" style="display:none;">
+                            NO DATA
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12" style="{% if reletedcat %} display:none;{% else %}
+            {% if reletedtype %}{% if not main == 'Transfer' %}display:none;{% endif %}{% endif %}{% endif %}">
+            <div class="box">
+                <div class="box-body">
+                    <div class="table-responsive">
+                        <table class="table text-center" style="color: black !important;" id="myTable_1">
+                            <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>From Account</th>
+                                <th>To Account</th>
+                                <th>Amount</th>
+                                <th>note</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {% for dates, entrie in transfer_data.items %}
+                                <tr id="date-{{ dates }}">
+                                    <td>{{ dates }}</td>
+                                    <td style="color: #000fff !important;">{{ entrie.price.temp_add }} <i
+                                            class="fa fa-rupee"></i></td>
+                                    <td style="color: #ff0000 !important;">{{ entrie.price.temp_sub }} <i
+                                            class="fa fa-rupee"></i></td>
+                                </tr>
+                                {% for i in entrie.list %}
+                                    <tr id="tra_{{ i.id }}">
+                                        <td><i style="margin-right: 20px;" class="fa fa-info-circle"
+                                               aria-hidden="true"></i></td>
+                                        <td>{{ i.date_name|time:"g:iA" }}</td>
+                                        <td>{{ i.from_account }}</td>
+                                        <td>{{ i.to_account }}</td>
+                                        <td style="
+                                                {% if i.type.type_name == 'Available' or i.type.type_name == 'Income' %}
+                                                    color: #000fff !important;
+                                                {% else %}
+                                                    {% if i.type.type_name == 'Expense' %}
+                                                        color: #ff0000 !important;
+                                                    {% else %}
+                                                        {% if private_master %}
+
+                                                        {% else %}
+                                                            {% if i.from_account.account_name == main %}
+                                                                color: #ff0000 !important;
+                                                            {% else %}
+                                                                color: #000fff !important;
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endif %}
+                                                ">{{ i.amount }} <i class="fa fa-rupee"></i></td>
+                                        {% if request.session.not_show %}
+
+                                        {% else %}
+                                            <td>{{ i.note }}</td>
+                                        {% endif %}
+
+                                        <td>
+                                            <a href="javascript:void(0)" onclick="updateModel({{ i.id }}, 0)"
+                                               class="bg-info mr-2">
+                                                <span class="label label-success">
+                                                    Edit
+                                                </span>
+                                            </a>
+                                            <a href="javascript:void(0)"
+                                               onclick="Delete({{ i.id }}, 1, '{{ i.date_name|date:'M d' }} {{ i.date_name|time:'g:iA' }}')"
+                                               class="bg-info ml-2">
+                                                <span class="label label-danger">
+                                                    Delete
+                                                </span>
+                                            </a>
+                                        </td>
+                                        <td name="{{ dates }}" style="display:none;">{{ dates }}</td>
+                                    </tr>
+                                {% endfor %}
+                            {% endfor %}
+
+                            </tbody>
+
+                        </table>
+                        <h1 id="nodatass_1" style="display:none;">
+                            NO DATA
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-5"
+             style="{% if reletedtype %}{% if main == 'Transfer' %}display:none;{% endif %}{% endif %}">
+            <div class="box">
+                <div class="box-body">
+                    <div class="table-responsive">
+                        <table class="table text-center" style="color: black !important;" id="myTable_2">
+                            <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Income</th>
+                                <th>Expense</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {% for date, entries in untransfer_data.items %}
+                                <tr>
+                                    <td>{{ date }}</td>
+                                    <td style="color: #000fff !important;">{{ entries.price.temp_add }} <i
+                                            class="fa fa-rupee"></i></td>
+                                    <td style="color: #ff0000 !important;">{{ entries.price.temp_sub }} <i
+                                            class="fa fa-rupee"></i></td>
+                                </tr>
+                            {% endfor %}
+
+                            </tbody>
+
+                        </table>
+                        <h1 id="nodatass_1" style="display:none;">
+                            NO DATA
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12"
+             style="padding: 0;border-bottom: 2px solid rgba(120,130,140,.13);margin-bottom: 25px;">
+            <div class="col-12 col-lg-6 col-xl-4">
+                <div class="box">
+                    <div class="box-body">
+                        <div class="text-center">
+                            <h3 class="text-muted db">
+                                Filters
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if main %}
+        {% if reletedtype %}
+            <div class="row">
+                {% for i in type_obj %}
+                    {% if i.id == reletedtype %}
+                    {% else %}
+                        <div class="col-12 col-lg-6 col-xl-3">
+                            <div class="box">
+                                <div class="box-body">
+                                    <div>
+                                        <a href="/view/type/{{ i.type_name }}/">
+                                            <h3 class="box-title mb-0">
+                                                    <span>
+                                                        <i style="margin-right: 20px;" class="fa fa-info-circle"
+                                                           aria-hidden="true"></i>
+                                                    </span>
+                                                {{ i.type_name }}
+                                            </h3>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% if reletedaccount %}
+            <div class="row">
+                {% for i in account_obj %}
+                    {% if i.id == reletedaccount %}
+                    {% else %}
+                        <div class="col-12 col-lg-6 col-xl-3">
+                            <div class="box">
+                                <div class="box-body">
+                                    <div>
+                                        <a href="/view/account/{{ i.account_name }}/">
+                                            <h3 class="box-title mb-0">
+                                                    <span>
+                                                        <i style="margin-right: 20px;" class="fa fa-info-circle"
+                                                           aria-hidden="true"></i>
+                                                    </span>
+                                                {{ i.account_name }}
+                                            </h3>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% if reletedcat %}
+            <div class="row">
+                {% for i in cat_obj %}
+                    {% if i.id == reletedcat %}
+                    {% else %}
+                        <div class="col-12 col-lg-6 col-xl-3">
+                            <div class="box">
+                                <div class="box-body">
+                                    <div>
+                                        <a href="/view/category/{{ i.cat_name }}/">
+                                            <h3 class="box-title mb-0">
+                                                    <span>
+                                                        <i style="margin-right: 20px;" class="fa fa-info-circle"
+                                                           aria-hidden="true"></i>
+                                                    </span>
+                                                {{ i.cat_name }}
+                                            </h3>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="row">
+            {% for i in type_obj %}
+                {% if i.id == reletedtype %}
+                {% else %}
+                    <div class="col-12 col-lg-6 col-xl-3">
+                        <div class="box">
+                            <div class="box-body">
+                                <div>
+                                    <a href="/view/type/{{ i.type_name }}/">
+                                        <h3 class="box-title mb-0">
+                                                <span>
+                                                    <i style="margin-right: 20px;" class="fa fa-info-circle"
+                                                       aria-hidden="true"></i>
+                                                </span>
+                                            {{ i.type_name }}
+                                        </h3>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div class="row">
+            {% for i in account_obj %}
+                {% if i.id == reletedaccount %}
+                {% else %}
+                    <div class="col-12 col-lg-6 col-xl-3">
+                        <div class="box">
+                            <div class="box-body">
+                                <div>
+                                    <a href="/view/account/{{ i.account_name }}/">
+                                        <h3 class="box-title mb-0">
+                                                <span>
+                                                    <i style="margin-right: 20px;" class="fa fa-info-circle"
+                                                       aria-hidden="true"></i>
+                                                </span>
+                                            {{ i.account_name }}
+                                        </h3>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div class="row">
+            {% for i in cat_obj %}
+                {% if i.id == reletedcat %}
+                {% else %}
+                    <div class="col-12 col-lg-6 col-xl-3">
+                        <div class="box">
+                            <div class="box-body">
+                                <div>
+                                    <a href="/view/category/{{ i.cat_name }}/">
+                                        <h3 class="box-title mb-0">
+                                                <span>
+                                                    <i style="margin-right: 20px;" class="fa fa-info-circle"
+                                                       aria-hidden="true"></i>
+                                                </span>
+                                            {{ i.cat_name }}
+                                        </h3>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+</section>
+<!-- /.content -->
+</div>
+<div style="background-color: #ffffff;
+            margin: 0;
+            height: 100vh;
+            width: 100vw;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            z-index: 99;
+            top: 0;
+            left: 0;" id="login_loader">
+    <img src="/static/admin/folder/images/loader.gif" style="max-height: 130px;" alt="loader">
+</div>
+
+{% endblock %}
+
+
+{% block script %}
+    try{
+        $('#myTable_2').DataTable();
+    }
+    catch (error) {
+    }
+
+{% endblock %}

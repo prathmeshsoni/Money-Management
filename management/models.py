@@ -1,9 +1,8 @@
-from django.contrib.auth.models import User
-from django.db import models
-
 from Types.models import TypeModel
 from account.models import AccountModel
 from category.models import CategoryModel
+from django.contrib.auth.models import User
+from django.db import models
 
 
 class ManageModel(models.Model):
@@ -18,6 +17,7 @@ class ManageModel(models.Model):
     amount = models.IntegerField()
     note = models.TextField(null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if self.type.type_name == 'Transfer':

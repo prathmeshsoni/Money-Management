@@ -1,30 +1,130 @@
-{% extends 'index.html' %}
 {% load static %}
-{% block title %} Page Not Found {% endblock %}
-{% block content %}
-
-    <div class="container text-center" style="position: relative; bottom: 100px;">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="error-template text-white">
-                    <h1>
-                        Oops!</h1>
-                    <h2 style="margin-bottom: 5px;">
-                        404 Not Found</h2>
-                    <div class="error-details" style="margin-bottom: 10px;">
-                        Sorry, an error has occured, Requested page not found!
-                    </div>
-                    <div class="error-actions">
-                        <a href="/view/" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-home"></span>
-                            Take Me Home </a>
-
-                        <span>
-                            Auto Redirect
-                        </span>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>404 Not Found</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="next-head-count" content="3">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="icon" href="https://money-manager.prathmeshsoni.works/static/admin/folder/images/music_clu.png">
+        <link rel="stylesheet" href="{% static '/css/style.css' %}">
+    </head>
+    <body style="">
+        <div id="__next">
+            <div class="mil-wrapper" id="top">
+                <div class="mil-content">
+                    <div id="swupMain" class="mil-main-transition">
+                        <div class="mil-404-banner mil-dark-bg">
+                            <div class="mil-animation-frame">
+                                <div class="mil-animation mil-position-4 mil-scale" data-value-1="9" data-value-2="1.4"
+                                     style="right: 40%; translate: none; rotate: none; scale: none; transform: translate3d(0px, 0px, 0px) scale(2.6956, 2.6956);">
+                                    <div class="mil-dodecahedron">
+                                        <div class="mil-pentagon">
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                        </div>
+                                        <div class="mil-pentagon">
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                        </div>
+                                        <div class="mil-pentagon">
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                        </div>
+                                        <div class="mil-pentagon">
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                        </div>
+                                        <div class="mil-pentagon">
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                        </div>
+                                        <div class="mil-pentagon">
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                        </div>
+                                        <div class="mil-pentagon">
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                        </div>
+                                        <div class="mil-pentagon">
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                        </div>
+                                        <div class="mil-pentagon">
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                        </div>
+                                        <div class="mil-pentagon">
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                        </div>
+                                        <div class="mil-pentagon">
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                        </div>
+                                        <div class="mil-pentagon">
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mi-invert-fix mil-up"
+                                 style="translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1;">
+                                <div class="container">
+                                    <div class="mil-404-frame">
+                                        <div class="mil-scale-frame"><h1 class="mil-404" data-text="404">404</h1></div>
+                                        <h4 class="mil-404-text mil-dark mil-mb-60">Oops! Something went wrong :(</h4><a
+                                            class="mil-button mil-arrow-place"
+                                            href="/"><span>Back to homepage</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="mil-arrow">
+                                            <path d="M 14 5.3417969 C 13.744125 5.3417969 13.487969 5.4412187 13.292969 5.6367188 L 13.207031 5.7226562 C 12.816031 6.1136563 12.816031 6.7467188 13.207031 7.1367188 L 17.070312 11 L 4 11 C 3.448 11 3 11.448 3 12 C 3 12.552 3.448 13 4 13 L 17.070312 13 L 13.207031 16.863281 C 12.816031 17.254281 12.816031 17.887344 13.207031 18.277344 L 13.292969 18.363281 C 13.683969 18.754281 14.317031 18.754281 14.707031 18.363281 L 20.363281 12.707031 C 20.754281 12.316031 20.754281 11.682969 20.363281 11.292969 L 14.707031 5.6367188 C 14.511531 5.4412187 14.255875 5.3417969 14 5.3417969 z"></path>
+                                        </svg>
+                                    </a></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-
-{% endblock %}
+    </body>
+</html>
