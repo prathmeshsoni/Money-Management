@@ -150,6 +150,8 @@ Visit our [Screenshots Page](https://private-app.prathmeshsoni.works/view/115) f
 Demo Video 👇:
 
 
+https://github.com/prathmeshsoni/Money-Management/assets/78293392/36d7c633-c1f5-4a1d-8e54-15736b647b1d
+
 
 <br />
 
