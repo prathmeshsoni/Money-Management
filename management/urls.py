@@ -3,7 +3,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.admin_private),
+    path('login/', views.admin_private),
     path('logout/', views.logout_private_admin),
     path('view/', views.admin_private_view, {'template_name': 'transaction.html'}),
     path('viewe/', views.category_add),

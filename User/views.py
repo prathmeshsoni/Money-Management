@@ -11,6 +11,11 @@ from .mail import send_mail
 from .models import *
 
 
+# Home Page
+def home(request):
+    return render(request, 'user/home.html')
+
+
 # Register User
 def register_attempt(request):
     if request.method == 'POST':
