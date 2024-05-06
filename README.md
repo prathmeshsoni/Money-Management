@@ -30,7 +30,7 @@ Welcome to Money Manager, your digital financial assistant! Streamline personal 
 
 # Live Demo 👇:
 
-[money-manager.me](https://money-manager.me)
+<a href="https://money-manager.me" target="_blank">money-manager.me</a>
 
 <br>
 
@@ -80,7 +80,7 @@ To get a local copy up and running follow these simple example steps.
 
 Install Python 3.7 or above
 
-*  [Python](https://python.org/downloads/)
+*  <a href="https://python.org/downloads/" target="_blank">Python</a>
 
 ### Installation
 
@@ -150,7 +150,7 @@ Visit [`http://127.0.0.1:8000`](http://localhost:8000) in your browser. The app 
 
 ## Screenshots
 
-Visit our [Screenshots Page](https://private-app.prathmeshsoni.works/view/115) for a visual walkthrough of the Money Manager Website.
+Visit our <a href="https://private-app.prathmeshsoni.works/view/115" target="_blank">Screenshots Page</a> for a visual walkthrough of the Money Manager Website.
 
 Demo Video 👇:
 
@@ -187,4 +187,4 @@ The repository is a starting point for most of my professional projects; for thi
 
 
 ---
-**[Money Manager](https://money-manager.me)** - Provided by **[Prathmesh Soni](https://prathmeshsoni.works/)**
+**<a href="https://money-manager.me" target="_blank">Money Manager</a>** - Provided by **<a href="https://prathmeshsoni.works" target="_blank">Prathmesh Soni</a>**
