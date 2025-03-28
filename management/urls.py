@@ -18,4 +18,5 @@ urlpatterns = [
     path('search/', views.search_page),
     path('chart/<str:hid>/', views.chart_page),
     path('chart/', views.chart_page_1),
+    path('delete/',views.delete_user),
 ]

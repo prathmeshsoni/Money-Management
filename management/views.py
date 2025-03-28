@@ -60,6 +60,31 @@ def get_user_obj(request):
     user_obj = User.objects.get(username=user)
     return user_obj
 
+# delete User
+
+def delete_user(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user_obj2 = User.objects.filter(Q(username=username) | Q(email=username)).first()
+        user_obj = User.objects.filter(email=username).first()
+        if user_obj:
+            user_obj2 = user_obj
+
+        if user_obj2 is None:
+            messages.error(request, 'Username/Email not found.')
+            return redirect(request.META.get('HTTP_REFERER'))
+        user11 = authenticate(username=user_obj2, password=password)
+        if user11 is None:
+            messages.error(request, 'Wrong Password.')
+            return redirect('/delete/')
+        user_obj2.delete()
+        msg = f'Account Was Succesfully {username} deleted from Datasource!'
+        a = {'status': True, 'exists': 'userdelete', 'u_name': 'username', 'msg': msg}
+        return JsonResponse(a)
+    if 'login_time' in request.session:
+        logout_private_admin(request,redirect_url='/delete/')
+    return render(request, 'user/delete.html', {"Title": ""})
 
 # Login Page
 @custom_login_required_not
@@ -103,7 +128,7 @@ def admin_private(request):
 
 
 # Logout Page
-def logout_private_admin(request):
+def logout_private_admin(request,redirect_url='/'):
     if 'private_admin' in request.session:
         del request.session['private_admin']
     if 'login_time' in request.session:
@@ -111,7 +136,7 @@ def logout_private_admin(request):
     if 'private_id' in request.session:
         del request.session['private_id']
 
-    return redirect('/')
+    return redirect(redirect_url)
 
 
 """
