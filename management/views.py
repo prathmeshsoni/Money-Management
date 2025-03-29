@@ -128,7 +128,7 @@ def admin_private(request):
 
 
 # Logout Page
-def logout_private_admin(request,redirect_url='/'):
+def logout_private_admin(request,redirect_url='/login/'):
     if 'private_admin' in request.session:
         del request.session['private_admin']
     if 'login_time' in request.session:
