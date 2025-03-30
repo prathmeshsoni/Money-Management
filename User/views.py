@@ -23,7 +23,7 @@ def register_attempt(request):
         email = request.POST.get('email').lower()
         password = request.POST.get('password')
 
-        if not email.endswith('@gmail.com'):
+        if not (email.endswith('@gmail.com') or email.endswith("@outlook.com")):
             msg = 'Please Enter Valid Email Address.....!'
             a = {'status': True, 'exists': 'email_error', 'msg': msg}
             return JsonResponse(a)
@@ -130,7 +130,7 @@ def reset_password(request):
     if request.method == 'POST':
         email = request.POST.get('email').lower()
 
-        if not email.endswith('@gmail.com'):
+        if not (email.endswith('@gmail.com') or email.endswith('@outlook.com')):
             messages.success(request, 'Please Enter Valid Email Address.....!')
             return redirect('/password-reset/')
 
